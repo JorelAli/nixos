@@ -151,7 +151,7 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+#  services.printing.enable = true;
 
   # Enable sound.
   sound.enable = true;
@@ -174,13 +174,14 @@
 #  services.xserver.desktopManager.plasma5.enable = true;
 #  services.xserver.displayManager.sessionCommands = "xmodmap .Xmodmap";
 
-  services = {
+  services = { 
+    printing.enable = true;
     xserver = {
       enable = true;
       layout = "gb";
       libinput.enable = true;			# Touchpad support
       synaptics.twoFingerScroll = true;
-      displaymanager = {
+      displayManager = {
         sddm.enable = true;			
         sessionCommands = "xmodmap .Xmodmap";	# Remap keys on start
       };
