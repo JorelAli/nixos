@@ -150,9 +150,6 @@
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
 
-  # Enable CUPS to print documents.
-#  services.printing.enable = true;
-
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
@@ -160,32 +157,29 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = false;
 
-  # Enable the X11 windowing system.
-#  services.xserver.enable = true;
-#  services.xserver.layout = "gb";
-#  services.xserver.xkbOptions = "eurosign:e";
+  security.pam.services.login.fprintAuth = true;
 
-  # Enable touchpad support.
-#  services.xserver.libinput.enable = true;
-#  services.xserver.synaptics.twoFingerScroll = true;
-
-  # Enable the KDE Desktop Environment.
-#  services.xserver.displayManager.sddm.enable = true;
-#  services.xserver.desktopManager.plasma5.enable = true;
-#  services.xserver.displayManager.sessionCommands = "xmodmap .Xmodmap";
-
-  services = { 
-    printing.enable = true;
+  services = {
+    fprintd.enable = true;			# Fingerprint reader 
+    printing.enable = true;			# Printing (duh)
     xserver = {
-      enable = true;
-      layout = "gb";
+      enable = true;				# GUI
+      layout = "gb";				# Use the GB English keyboard layout
       libinput.enable = true;			# Touchpad support
-      synaptics.twoFingerScroll = true;
+      synaptics.twoFingerScroll = true;		# Two finger scroll for touchpad
       displayManager = {
-        sddm.enable = true;			
+        #sddm.enable = true;	
+        slim = {				# Login screen
+          enable = true;
+          defaultUser = "jorel";
+          theme = pkgs.fetchurl {
+            url = "https://github.com/edwtjo/nixos-black-theme/archive/v1.0.tar.gz";
+            sha256 = "13bm7k3p6k7yq47nba08bn48cfv536k4ipnwwp1q1l2ydlp85r9d";
+          };
+        };		
         sessionCommands = "xmodmap .Xmodmap";	# Remap keys on start
       };
-      desktopManager.plasma5.enable = true;
+      desktopManager.plasma5.enable = true;	# Fancy desktop manager
     };
   };
 
