@@ -14,6 +14,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.useOSProber = true;
+
+  # I'm pretty sure none of this works
   boot.loader.grub.splashImage = ./grub_bg.png;
   boot.loader.grub.fontSize = 16;
   boot.loader.grub.backgroundColor = "#00B79C";
@@ -22,14 +24,6 @@
   networking.networkmanager.enable = true;
 
   #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.wireless.networks = {
-    SEALAN = {
-      psk = "QK3AQNBD";
-    };
-    NOWTV8A068 = {
-      psk = "RQYFDVFQSX";
-    };
-  };
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -123,6 +117,7 @@
 
   ];
 
+  # I like setting the redshift manually
   environment.shellAliases = {
     day = "redshift -x";
     night = "redshift -O 4500K";
@@ -166,17 +161,32 @@
   hardware.bluetooth.powerOnBoot = false;
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.layout = "gb";
-  services.xserver.xkbOptions = "eurosign:e";
+#  services.xserver.enable = true;
+#  services.xserver.layout = "gb";
+#  services.xserver.xkbOptions = "eurosign:e";
 
   # Enable touchpad support.
-  services.xserver.libinput.enable = true;
+#  services.xserver.libinput.enable = true;
+#  services.xserver.synaptics.twoFingerScroll = true;
 
   # Enable the KDE Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
-  services.xserver.displayManager.sessionCommands = "xmodmap .Xmodmap";
+#  services.xserver.displayManager.sddm.enable = true;
+#  services.xserver.desktopManager.plasma5.enable = true;
+#  services.xserver.displayManager.sessionCommands = "xmodmap .Xmodmap";
+
+  services = {
+    xserver = {
+      enable = true;
+      layout = "gb";
+      libinput.enable = true;			# Touchpad support
+      synaptics.twoFingerScroll = true;
+      displaymanager = {
+        sddm.enable = true;			
+        sessionCommands = "xmodmap .Xmodmap";	# Remap keys on start
+      };
+      desktopManager.plasma5.enable = true;
+    };
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jorel = {
