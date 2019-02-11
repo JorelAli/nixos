@@ -45,22 +45,19 @@
 
     ### Command line utilities ###
     baobab				# Disk usage viewer
+    dmenu				# Easily launch applications
     elinks				# Terminal web browser
     fish 				# Friendly Interface SHell (better than bash)
     git 				# Version control
     gnumake3				# Make command
-    jekyll				# Static site generator (for blog)
     p7zip				# 7z zip manager
-    ruby				# Ruby programming language.
     screenfetch				# Display info about themes to console
     telnet 				# Telnet client
     tree 				# Print file tree
-    unzip 				# ?
     vim 				# Text editor
     wget				# Download web files
     youtube-dl 				# YouTube downloader
-    zip  				# ?
-
+    
     ### Applications ###
     atom 				# Glorified text editor
     chromium				# Browser
@@ -167,6 +164,7 @@
     fprintd.enable = true;			# Fingerprint reader 
     printing.enable = true;			# Printing (duh)
     xserver = {
+      xkbOptions = "prior:home, next:end";
       enable = true;				# GUI
       layout = "gb";				# Use the GB English keyboard layout
       libinput.enable = true;			# Touchpad support
@@ -181,7 +179,7 @@
             sha256 = "13bm7k3p6k7yq47nba08bn48cfv536k4ipnwwp1q1l2ydlp85r9d";
           };
         };		
-        sessionCommands = "xmodmap .Xmodmap";	# Remap keys on start
+       # sessionCommands = "xmodmap .Xmodmap";	# Remap keys on start
       };
       desktopManager.plasma5.enable = true;	# Fancy desktop manager
     };
