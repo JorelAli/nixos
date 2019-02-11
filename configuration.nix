@@ -49,7 +49,9 @@
     fish 				# Friendly Interface SHell (better than bash)
     git 				# Version control
     gnumake3				# Make command
+   #jekyll				# Static site generator (for blog)
     p7zip				# 7z zip manager
+    ruby				# Ruby programming language.
     screenfetch				# Display info about themes to console
     telnet 				# Telnet client
     tree 				# Print file tree
@@ -157,6 +159,7 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = false;
 
+  # fprintd-enroll
   security.pam.services.login.fprintAuth = true;
 
   services = {
