@@ -49,7 +49,7 @@
     fish 				# Friendly Interface SHell (better than bash)
     git 				# Version control
     gnumake3				# Make command
-   #jekyll				# Static site generator (for blog)
+    jekyll				# Static site generator (for blog)
     p7zip				# 7z zip manager
     ruby				# Ruby programming language.
     screenfetch				# Display info about themes to console
@@ -69,6 +69,7 @@
     gparted 				# Partition manager
     inkscape 				# Vector artwork
     libsForQt5.vlc 			# Video player
+    qutebrowser				# Super minimal browser
     redshift				# Screen temperature changer
     shutter				# Screenshot tool
 
