@@ -10,6 +10,9 @@
       ./hardware-configuration.nix
     ];
 
+  # Enable exFAT format for USB/External HDD
+  #boot.extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -38,7 +41,7 @@
 
   # Set your time zone.
   time.timeZone = "Europe/London";
-
+  
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -58,6 +61,9 @@
     wget				# Download web files
     youtube-dl 				# YouTube downloader
     
+    #konsole				# konsole
+    #polybar
+
     ### Applications ###
     atom 				# Glorified text editor
     chromium				# Browser
@@ -88,11 +94,14 @@
     ### System tools ###
     plasma5.sddm-kcm			# KDE Config Module for SDDM
     networkmanagerapplet  		# GUI for networking
+    ntfs3g				# Access a USB drive
     xorg.xmodmap xorg.xev 		# Keyboard key remapping
 
     ### Nix related stuff ###
     cachix 				# Nix binary hosting
 
+    ruby_2_4
+ 
     ### Dictionaries ###
     aspell
     aspellDicts.en
@@ -158,30 +167,41 @@
   hardware.bluetooth.powerOnBoot = false;
 
   # fprintd-enroll
-  security.pam.services.login.fprintAuth = true;
+  #security.pam.services.login.fprintAuth = true;
 
   services = {
-    fprintd.enable = true;			# Fingerprint reader 
+    gnome3.gnome-disks.enable = true;		# Something something USBs
+    udisks2.enable = true;			# Something something USBs
+    #fprintd.enable = true;			# Fingerprint reader 
     printing.enable = true;			# Printing (duh)
     xserver = {
-      xkbOptions = "prior:home, next:end";
+      #xkbOptions = "prior:home, next:end";
+      
       enable = true;				# GUI
       layout = "gb";				# Use the GB English keyboard layout
       libinput.enable = true;			# Touchpad support
       synaptics.twoFingerScroll = true;		# Two finger scroll for touchpad
+
       displayManager = {
-        #sddm.enable = true;	
-        slim = {				# Login screen
-          enable = true;
-          defaultUser = "jorel";
-          theme = pkgs.fetchurl {
-            url = "https://github.com/edwtjo/nixos-black-theme/archive/v1.0.tar.gz";
-            sha256 = "13bm7k3p6k7yq47nba08bn48cfv536k4ipnwwp1q1l2ydlp85r9d";
-          };
-        };		
-       # sessionCommands = "xmodmap .Xmodmap";	# Remap keys on start
+        sddm.enable = true;			# Login screen manager
+        sddm.theme = "clairvoyance";
+        #slim = {				# Login screen
+
+        #  enable = true;
+        #  defaultUser = "jorel";
+        #  theme = pkgs.fetchurl {
+        #    url = "https://github.com/edwtjo/nixos-black-theme/archive/v1.0.tar.gz";
+        #    sha256 = "13bm7k3p6k7yq47nba08bn48cfv536k4ipnwwp1q1l2ydlp85r9d";
+        #  };
+        #};		
+       sessionCommands = "xmodmap .Xmodmap";	# Remap keys on start
       };
+
       desktopManager.plasma5.enable = true;	# Fancy desktop manager
+      
+      #windowManager.bspwm = {
+      #  enable = true;
+      #};
     };
   };
 
@@ -204,6 +224,9 @@
       "hie-nix.cachix.org-1:EjBSHzF6VmDnzqlldGXbi0RM3HdjfTU3yDRi9Pd0jTY="
     ];
     trustedUsers = [ "root" "jorel" ];
+
+    # ULTIMATE CONTROL
+    readOnlyStore = false;
   };
 
   nixpkgs.config.allowUnfree = true;
