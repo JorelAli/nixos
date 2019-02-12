@@ -100,13 +100,14 @@
     ### Nix related stuff ###
     cachix 				# Nix binary hosting
 
-    ruby_2_4
+    ### Haskell packages ###
+    haskellPackages.hoogle
+    haskellPackages.container	
  
     ### Dictionaries ###
-    aspell
-    aspellDicts.en
-    aspellDicts.en-computers
-    aspellDicts.en-science
+    hunspell				# Dictionary for GhostWriter
+    hunspellDicts.en-gb-ize
+    hunspellDicts.en-us			
 
     ### How to get the best Haskell setup ###############################################
     # Install the following Haskell packages: stack cabal-install ghc			#
