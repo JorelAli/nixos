@@ -11,7 +11,7 @@
     ];
 
   # Enable exFAT format for USB/External HDD
-  #boot.extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -61,9 +61,9 @@
     wget				# Download web files
     youtube-dl 				# YouTube downloader
     
-    #konsole				# konsole
-    #polybar
-
+    ranger
+    gtk3
+ 
     ### Applications ###
     atom 				# Glorified text editor
     chromium				# Browser
@@ -73,14 +73,16 @@
     gparted 				# Partition manager
     inkscape 				# Vector artwork
     libsForQt5.vlc 			# Video player
+    minecraft				# Minecraft
     qutebrowser				# Super minimal browser
     redshift				# Screen temperature changer
-    typora				# Better markdown editor than ghostwriter
+   # typora				# Better markdown editor than ghostwriter
     shutter				# Screenshot tool
 
     ### Other random stuff ###
     cool-retro-term 			# A retro looking terminal for bants
-
+   # zeroad
+   
     ### Programming (Java) ###
     eclipses.eclipse-platform		# Java IDE
     openjdk10 				# Java Development Kit 10
@@ -103,14 +105,14 @@
     cachix 				# Nix binary hosting
 
     ### Haskell packages ###
-    haskellPackages.hoogle
-    haskellPackages.container	
-    haskellPackages.zlib
+    haskellPackages.hoogle		# Haskell documentation database
+    haskellPackages.container		# 
+    haskellPackages.zlib		# Compression library for Haskell
  
     ### Dictionaries ###
     hunspell				# Dictionary for GhostWriter
-    hunspellDicts.en-gb-ize
-     hunspellDicts.en-us			
+    hunspellDicts.en-gb-ize		# English (GB with '-ize' spellings)
+    hunspellDicts.en-us			# English (US)
 
     ### How to get the best Haskell setup ###############################################
     # Install the following system packages: stack cabal-install ghc cachix atom	#
@@ -167,7 +169,7 @@
   hardware.pulseaudio.enable = true;
 
   hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = false;
+  hardware.bluetooth.powerOnBoot = true;
 
   # fprintd-enroll
   #security.pam.services.login.fprintAuth = true;
