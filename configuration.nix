@@ -69,11 +69,13 @@
     chromium				# Browser
     deluge 				# Torrent client
     ghostwriter 			# Markdown editor
+    gimp				# Image editor
     gparted 				# Partition manager
     inkscape 				# Vector artwork
     libsForQt5.vlc 			# Video player
     qutebrowser				# Super minimal browser
     redshift				# Screen temperature changer
+    typora				# Better markdown editor than ghostwriter
     shutter				# Screenshot tool
 
     ### Other random stuff ###
@@ -103,20 +105,20 @@
     ### Haskell packages ###
     haskellPackages.hoogle
     haskellPackages.container	
+    haskellPackages.zlib
  
     ### Dictionaries ###
     hunspell				# Dictionary for GhostWriter
     hunspellDicts.en-gb-ize
-    hunspellDicts.en-us			
+     hunspellDicts.en-us			
 
     ### How to get the best Haskell setup ###############################################
-    # Install the following Haskell packages: stack cabal-install ghc			#
+    # Install the following system packages: stack cabal-install ghc cachix atom	#
     # To install hie (Haskell IDE Engine): 						#
     #   1) "cachix use hie-nix"							 	#
     #   2) "nix-env -iA hies -f https://github.com/domenkozar/hie-nix/tarball/master" 	#
     # Optional: Install Hasklig (I use Fira Code Medium)				#
-    # Install atom									#
-    # Install the following packages for atom:						#
+    # Install the following packages for atom (using the built in package manager):	#
     #   atom-ide-ui									#
     #   ide-haskell-hie									#
     #   language-haskell								#
