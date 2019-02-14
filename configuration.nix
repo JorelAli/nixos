@@ -32,7 +32,11 @@
 
   # Set your time zone.
   time.timeZone = "Europe/London";
-  
+ 
+  environment.variables = {
+    # MY_ENV_VAR = "\${HOME}/my/dir";
+  };
+ 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -66,7 +70,7 @@
 
     ### Games ###
     minecraft					# Minecraft video game
-    # zeroad					# 0ad video game - like Age of Empires
+    zeroad					# 0ad video game - like Age of Empires
 
     ### Other random stuff ###
     cool-retro-term 				# A retro looking terminal for show
@@ -122,12 +126,7 @@
 
   ];
 
-  # I like setting the redshift manually
-  #environment.shellAliases = {
-  #  day = "redshift -x";
-  #  night = "redshift -O 4500K";
-  #};
-
+  # 'day' and 'night' aliases for redshift
   programs.fish.enable = true;
   programs.fish.shellAliases = {
     day = "redshift -x";
@@ -135,8 +134,8 @@
   };
 
   fonts.fonts = with pkgs; [
-    fira-code-symbols 		# Fancy font with programming ligatures*
-    fira-code			# Fancy font with programming ligatures*
+    fira-code-symbols 				# Fancy font with programming ligatures*
+    fira-code					# Fancy font with programming ligatures*
 
     # *This means that -> will look like an actual arrow and
     # >= and <= actually look like less than or equal and greater 
@@ -162,6 +161,8 @@
   # in the terminal, and scan your fingerprint a few times. I
   # disabled this because this can be a bit unreliable sometimes.
   # security.pam.services.login.fprintAuth = true;
+
+  security.sudo.wheelNeedsPassword = false;	# Use 'sudo' without needing password
 
   services = {
     gnome3.gnome-disks.enable = true;		# Something something USBs
@@ -189,7 +190,7 @@
     isNormalUser = true;
     home = "/home/jorel";
     description = "C'Taz'M'Kazm";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "disk" "audio" "video" ];
     uid = 1000;
     shell = pkgs.fish;				# Use fish as the default shell
   };
