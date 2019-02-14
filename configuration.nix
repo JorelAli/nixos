@@ -23,21 +23,12 @@
   boot.loader.grub.fontSize = 16;
   boot.loader.grub.backgroundColor = "#00B79C";
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
-  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Select internationalisation properties.
-  # i18n = {
-  #   consoleFont = "Lat2-Terminus16";
-  #   consoleKeyMap = "us";
-  #   defaultLocale = "en_US.UTF-8";
-  # };
+  # Use wireless networking via wpa_supplicant. This is NOT required because
+  # I'm using networking.networkmanager above, which does this for us.
+  # networking.wireless.enable = true; 
 
   # Set your time zone.
   time.timeZone = "Europe/London";
@@ -47,72 +38,72 @@
   environment.systemPackages = with pkgs; [
 
     ### Command line utilities ###
-    baobab				# Disk usage viewer
-    dmenu				# Easily launch applications
-    elinks				# Terminal web browser
-    fish 				# Friendly Interface SHell (better than bash)
-    git 				# Version control
-    gnumake3				# Make command
-    p7zip				# 7z zip manager
-    screenfetch				# Display info about themes to console
-    telnet 				# Telnet client
-    tree 				# Print file tree
-    vim 				# Text editor
-    wget				# Download web files
-    youtube-dl 				# YouTube downloader
+    baobab					# Disk usage viewer (with GUI)
+    fish 					# Friendly Interface SHell (better than bash)
+    git 					# Version control
+    gnumake3					# Make command to build executables
+    p7zip					# 7z zip manager
+    rofi					# Window switcher & App launcher
+    screenfetch					# Display info about themes to console
+    telnet 					# Telnet client
+    tree 					# Print file tree in terminal
+    vim 					# Text editor
+    wget					# Download web files
+    youtube-dl 					# YouTube downloader
     
-    ranger
-    gtk3
- 
     ### Applications ###
-    atom 				# Glorified text editor
-    chromium				# Browser
-    deluge 				# Torrent client
-    ghostwriter 			# Markdown editor
-    gimp				# Image editor
-    gparted 				# Partition manager
-    inkscape 				# Vector artwork
-    libsForQt5.vlc 			# Video player
-    minecraft				# Minecraft
-    qutebrowser				# Super minimal browser
-    redshift				# Screen temperature changer
-   # typora				# Better markdown editor than ghostwriter
-    shutter				# Screenshot tool
+    atom 					# Glorified text editor
+    chromium					# Browser (opensource chrome)
+    deluge 					# Torrent client
+    ghostwriter 				# Markdown editor
+    gimp					# Image editor
+    gparted 					# Partition manager
+    inkscape 					# Vector artwork
+    libsForQt5.vlc 				# Video player
+    qutebrowser					# Super minimal browser
+    redshift					# Screen temperature changer
+    shutter					# Screenshot tool
+
+    ### Games ###
+    minecraft					# Minecraft video game
+    # zeroad					# 0ad video game - like Age of Empires
 
     ### Other random stuff ###
-    cool-retro-term 			# A retro looking terminal for bants
-   # zeroad
+    cool-retro-term 				# A retro looking terminal for show
    
     ### Programming (Java) ###
-    eclipses.eclipse-platform		# Java IDE
-    openjdk10 				# Java Development Kit 10
-    maven 				# Java dependency manager
+    eclipses.eclipse-platform			# Java IDE
+    openjdk10 					# Java Development Kit for Java 10
+    maven 					# Java dependency manager
 
     ### Programming (Other) ###
-    cabal-install			# CLI for Cabal + Hackage (Haskell)
-    gcc 				# C/C++ compiler
-    ghc					# Haskell compiler
-    python3				# Python 3
-    stack 				# Haskell compiler + package manager
+    gcc 					# C/C++ compiler
+    python					# Python 2.7.15
+    python3					# Python 3.6.8
 
     ### System tools ###
-    plasma5.sddm-kcm			# KDE Config Module for SDDM
-    networkmanagerapplet  		# GUI for networking
-    ntfs3g				# Access a USB drive
-    xorg.xmodmap xorg.xev 		# Keyboard key remapping
+    plasma5.sddm-kcm				# KDE Config Module for SDDM
+    networkmanagerapplet  			# GUI for networking
+    ntfs3g					# Access a USB drive
+    xorg.xmodmap				# Keyboard key remapping
+    xorg.xev 					# Program to find xmodmap key-bindings
 
     ### Nix related stuff ###
-    cachix 				# Nix binary hosting
+    cachix 					# Nix binary hosting for easy installation
 
-    ### Haskell packages ###
-    haskellPackages.hoogle		# Haskell documentation database
-    haskellPackages.container		# 
-    haskellPackages.zlib		# Compression library for Haskell
+    ### Haskell packages + Haskell stuff ###
+    cabal-install				# CLI for Cabal + Hackage (for Haskell)
+    ghc						# Haskell compiler
+    stack					# Haskell compiler + package manager
+
+    haskellPackages.hoogle			# Haskell documentation database
+    haskellPackages.container			# Represents Haskell containers (e.g. Monoid)
+    haskellPackages.zlib			# Compression library for Haskell
  
     ### Dictionaries ###
-    hunspell				# Dictionary for GhostWriter
-    hunspellDicts.en-gb-ize		# English (GB with '-ize' spellings)
-    hunspellDicts.en-us			# English (US)
+    hunspell					# Dictionary for GhostWriter
+    hunspellDicts.en-gb-ize			# English (GB with '-ize' spellings)
+    hunspellDicts.en-us				# English (US)
 
     ### How to get the best Haskell setup ###############################################
     # Install the following system packages: stack cabal-install ghc cachix atom	#
@@ -132,10 +123,10 @@
   ];
 
   # I like setting the redshift manually
-  environment.shellAliases = {
-    day = "redshift -x";
-    night = "redshift -O 4500K";
-  };
+  #environment.shellAliases = {
+  #  day = "redshift -x";
+  #  night = "redshift -O 4500K";
+  #};
 
   programs.fish.enable = true;
   programs.fish.shellAliases = {
@@ -144,69 +135,52 @@
   };
 
   fonts.fonts = with pkgs; [
-    fira-code-symbols
-    fira-code
+    fira-code-symbols 		# Fancy font with programming ligatures*
+    fira-code			# Fancy font with programming ligatures*
+
+    # *This means that -> will look like an actual arrow and
+    # >= and <= actually look like less than or equal and greater 
+    # than or equal symbols, as opposed to what they look like on
+    # a computer
   ];
 
+  # Set default monospace font to the fancy ligatures font. Good for terminals
   fonts.fontconfig.defaultFonts.monospace = [ "Fira Code Medium" ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = { enable = true; enableSSHSupport = true; };
-
   # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
 
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
-
+  
+  # Bluetooth
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
 
-  # fprintd-enroll
-  #security.pam.services.login.fprintAuth = true;
+  # Use finterprint recognition on the login screen to log
+  # in. To add a fingerprint, use the 'fprintd-enroll' command
+  # in the terminal, and scan your fingerprint a few times. I
+  # disabled this because this can be a bit unreliable sometimes.
+  # security.pam.services.login.fprintAuth = true;
 
   services = {
     gnome3.gnome-disks.enable = true;		# Something something USBs
     udisks2.enable = true;			# Something something USBs
-    #fprintd.enable = true;			# Fingerprint reader 
-    printing.enable = true;			# Printing (duh)
+    #fprintd.enable = true;			# Fingerprint reader (Disabled -> unreliable)
+    printing.enable = true;			# Printing (You know, to a printer...)
     xserver = {
-      #xkbOptions = "prior:home, next:end";
-      
-      enable = true;				# GUI
+      enable = true;				# GUI for the entire computer
       layout = "gb";				# Use the GB English keyboard layout
       libinput.enable = true;			# Touchpad support
       synaptics.twoFingerScroll = true;		# Two finger scroll for touchpad
 
       displayManager = {
         sddm.enable = true;			# Login screen manager
-        sddm.theme = "clairvoyance";
-        #slim = {				# Login screen
-
-        #  enable = true;
-        #  defaultUser = "jorel";
-        #  theme = pkgs.fetchurl {
-        #    url = "https://github.com/edwtjo/nixos-black-theme/archive/v1.0.tar.gz";
-        #    sha256 = "13bm7k3p6k7yq47nba08bn48cfv536k4ipnwwp1q1l2ydlp85r9d";
-        #  };
-        #};		
+        sddm.theme = "clairvoyance";		# Ellis' clairvoyance theme for sddm
        sessionCommands = "xmodmap .Xmodmap";	# Remap keys on start
       };
 
       desktopManager.plasma5.enable = true;	# Fancy desktop manager
-      
-      #windowManager.bspwm = {
-      #  enable = true;
-      #};
     };
   };
 
@@ -217,7 +191,7 @@
     description = "C'Taz'M'Kazm";
     extraGroups = [ "wheel" "networkmanager" ];
     uid = 1000;
-    shell = pkgs.fish;
+    shell = pkgs.fish;				# Use fish as the default shell
   };
 
   nix = {
@@ -230,16 +204,16 @@
     ];
     trustedUsers = [ "root" "jorel" ];
 
-    # ULTIMATE CONTROL
-    readOnlyStore = false;
+    # USE WITH CAUTION
+    readOnlyStore = false;			# Allows writing access to /nix/store
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfree = true;		# Allow unfree/proprietary packages
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "18.09"; # Did you read the comment?
+  system.stateVersion = "18.09";
 
 }
