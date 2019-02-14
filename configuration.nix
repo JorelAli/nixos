@@ -63,6 +63,7 @@
     gimp					# Image editor
     gparted 					# Partition manager
     inkscape 					# Vector artwork
+    libreoffice-fresh				# Documents/Spreadsheets/Presentations
     libsForQt5.vlc 				# Video player
     qutebrowser					# Super minimal browser
     redshift					# Screen temperature changer
