@@ -42,7 +42,6 @@
   environment.systemPackages = with pkgs; [
 
     ### Command line utilities ###
-    baobab					    # Disk usage viewer (with GUI)
     fish 					    # Friendly Interface SHell (better than bash)
     git 					    # Version control
     gnumake3				    # Make command to build executables
@@ -74,10 +73,14 @@
     ### Games ###
     minecraft				    # Minecraft video game
     pacvim					    # Game that teaches you vim
+    #steam
+    #steam-run
+    #steamcontroller
     zeroad					    # 0ad video game - like Age of Empires
 
     ### Other random stuff ###
     cool-retro-term 		    # A retro looking terminal for show
+    sl
    
     ### Programming (Java) ###
     eclipses.eclipse-platform	# Java IDE
@@ -107,9 +110,10 @@
     xorg.xbacklight				# Enable screen backlight adjustments
 
     ### Unused stuff ###
-    libpulseaudio				# Library for sound
-    pulseaudio					# Sound (e.g. detect the volume of the laptop)
-    polybar					    # Status bar
+    # libpulseaudio				    # Library for sound
+    # pulseaudio					# Sound (e.g. detect the volume of the laptop)
+    # polybar					    # Status bar
+    #baobab					    # Disk usage viewer (with GUI)
     
     ### Nix related stuff ###
     cachix 					    # Nix binary hosting for easy installation
@@ -154,12 +158,13 @@
             name = "vim";
 
             # List of stuff that would go in ~/.vimrc
+            
+            # autocmd vimenter * NERDTree
             vimrcConfig.customRC = ''
                 syntax enable
                 set tabstop=4
                 set background=dark
                 colorscheme solarized
-                # autocmd vimenter * NERDTree
                 set number
                 set mouse=a
                 let g:airline_powerline_fonts = 1
@@ -219,6 +224,10 @@
   # Bluetooth
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
+  
+  # Support for 32 bit stuff (for Steam)
+  hardware.opengl.driSupport32Bit = true;
+  hardware.pulseaudio.support32Bit = true;
 
   # Use fingerprint recognition on the login screen to log
   # in. To add a fingerprint, use the 'fprintd-enroll' command
@@ -242,6 +251,10 @@
       displayManager = {
         sddm.enable = true;			# Login screen manager
         sddm.theme = "clairvoyance";		# Ellis' clairvoyance theme for sddm
+        sddm.extraConfig = ''
+          [General]
+          InputMethod=
+          '';
        sessionCommands = ''
 			xmodmap .Xmodmap
 			feh --bg-fill ~/Documents/Background.jpg
