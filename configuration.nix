@@ -47,13 +47,18 @@
     git 					# Version control
     gnumake3					# Make command to build executables
     p7zip					# 7z zip manager
+    ranger					# Terminal file manager
     rofi					# Window switcher & App launcher
     screenfetch					# Display info about themes to console
+    speedtest-cli				# Speed test in terminal
     telnet 					# Telnet client
     tree 					# Print file tree in terminal
-    vim 					# Text editor
+    #vim 					# Text editor
     wget					# Download web files
+
     youtube-dl 					# YouTube downloader
+
+    #(import ./vim.nix)
     
     ### Applications ###
     atom 					# Glorified text editor
@@ -68,9 +73,11 @@
     qutebrowser					# Super minimal browser
     redshift					# Screen temperature changer
     shutter					# Screenshot tool
+    vscode					# Code editor
 
     ### Games ###
     minecraft					# Minecraft video game
+    pacvim					# Game that teaches you vim
     zeroad					# 0ad video game - like Age of Empires
 
     ### Other random stuff ###
@@ -78,6 +85,7 @@
    
     ### Programming (Java) ###
     eclipses.eclipse-platform			# Java IDE
+    openjdk					# Java Development Kit for Java 8
     openjdk10 					# Java Development Kit for Java 10
     maven 					# Java dependency manager
 
@@ -87,12 +95,22 @@
     python3					# Python 3.6.8
 
     ### System tools ###
-    plasma5.sddm-kcm				# KDE Config Module for SDDM
+    feh						# Image viewer (+background image)
+    gnome3.nautilus				# File browser
+    i3status-rust				# Better i3 status bar
+    #  sudo nix-shell -p cargo dbus pkgconfig libpulseaudio pulseaudio --pure --run 'cargo build --release'
     networkmanagerapplet  			# GUI for networking
     ntfs3g					# Access a USB drive
+    upower					# Read bettery info
     xorg.xmodmap				# Keyboard key remapping
     xorg.xev 					# Program to find xmodmap key-bindings
+    xorg.xbacklight				# Enable screen backlight adjustments
 
+    ### Unused stuff ###
+    libpulseaudio				# Library for sound
+    pulseaudio					# Sound (e.g. detect the volume of the laptop)
+    polybar					# Status bar
+    
     ### Nix related stuff ###
     cachix 					# Nix binary hosting for easy installation
 
@@ -107,7 +125,7 @@
  
     ### Dictionaries ###
     hunspell					# Dictionary for GhostWriter
-    hunspellDicts.en-gb-ize			# English (GB with '-ize' spellings)
+    hunspellDicts.en-gb-ise			# English (GB with '-ise' spellings)
     hunspellDicts.en-us				# English (US)
 
     ### How to get the best Haskell setup ###############################################
@@ -124,6 +142,42 @@
     #   Settings -> Absolute path to hie executable					#
     #   => hie-wrapper									#
     #####################################################################################
+    
+    (
+        with import <nixpkgs> {};
+
+        vim_configurable.customize {
+            # Specifies the vim binary name.
+            # E.g. set this to "my-vim" and you need to type "my-vim" to open this vim
+            # This allows to have multiple vim packages installed (e.g. with a different set of plugins)
+            name = "vim";
+            vimrcConfig.customRC = ''
+                # Here you can specify what usually goes into `~/.vimrc` 
+                syntax enable
+                set tabstop=4
+                set background=dark
+                colorscheme solarized
+                autocmd vimenter * NERDTree
+                
+            '';
+            vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
+ 	    vimrcConfig.vam.pluginDictionaries = [
+                { names = [
+                	# Here you can place all your vim plugins
+            		# They are installed managed by `vam` (a vim plugin manager)
+	           	"Syntastic"
+	            	"ctrlp"
+                        "vim-airline"
+                        "nerdtree"
+                        "youcompleteme"
+                        "solarized"
+                        "rainbow_parentheses"
+                        "vim-nix"
+                        "vim-toml"
+                ]; }
+            ];
+        }
+    )
 
   ];
 
@@ -137,6 +191,7 @@
   fonts.fonts = with pkgs; [
     fira-code-symbols 				# Fancy font with programming ligatures*
     fira-code					# Fancy font with programming ligatures*
+    font-awesome_4				# Fancy icons font
 
     # *This means that -> will look like an actual arrow and
     # >= and <= actually look like less than or equal and greater 
@@ -157,7 +212,7 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
 
-  # Use finterprint recognition on the login screen to log
+  # Use fingerprint recognition on the login screen to log
   # in. To add a fingerprint, use the 'fprintd-enroll' command
   # in the terminal, and scan your fingerprint a few times. I
   # disabled this because this can be a bit unreliable sometimes.
@@ -179,8 +234,14 @@
       displayManager = {
         sddm.enable = true;			# Login screen manager
         sddm.theme = "clairvoyance";		# Ellis' clairvoyance theme for sddm
-       sessionCommands = "xmodmap .Xmodmap";	# Remap keys on start
+       sessionCommands = ''
+			xmodmap .Xmodmap
+			feh --bg-fill ~/Documents/Background.jpg
+			'';	
+# Remap keys on start
       };
+
+      windowManager.i3.enable = true;		# Fancy window manager
 
       desktopManager.plasma5.enable = true;	# Fancy desktop manager
     };
@@ -210,7 +271,14 @@
     readOnlyStore = false;			# Allows writing access to /nix/store
   };
 
-  nixpkgs.config.allowUnfree = true;		# Allow unfree/proprietary packages
+  nixpkgs.config = {
+    allowUnfree = true;				# Allow unfree/proprietary packages
+    packageOverrides = pkgs: rec {
+      polybar = pkgs.polybar.override {
+        i3Support = true;
+      };
+    };
+  };
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
@@ -218,4 +286,7 @@
   # should.
   system.stateVersion = "18.09";
 
+#  vimrcConfig.plug.plugins = with pkgs.vimPlugins; [vim-addon-nix youcompleteme];
+
 }
+
