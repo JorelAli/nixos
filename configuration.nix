@@ -202,14 +202,15 @@
   };
 
   fonts.fonts = with pkgs; [
-    fira-code-symbols 			# Fancy font with programming ligatures*
-    fira-code					# Fancy font with programming ligatures*
-    font-awesome_4				# Fancy icons font
-
     # *This means that -> will look like an actual arrow and
     # >= and <= actually look like less than or equal and greater 
     # than or equal symbols, as opposed to what they look like on
     # a computer
+
+    fira-code-symbols 			# Fancy font with programming ligatures*
+    fira-code					# Fancy font with programming ligatures*
+    font-awesome_4				# Fancy icons font
+
   ];
 
   # Set default monospace font to the fancy ligatures font. Good for terminals
@@ -239,27 +240,27 @@
 
   services = {
     gnome3.gnome-disks.enable = true;		# Something something USBs
-    udisks2.enable = true;			# Something something USBs
-    #fprintd.enable = true;			# Fingerprint reader (Disabled -> unreliable)
-    printing.enable = true;			# Printing (You know, to a printer...)
+    udisks2.enable = true;			        # Something something USBs
+    #fprintd.enable = true;			        # Fingerprint reader (Disabled -> unreliable)
+    printing.enable = true;			        # Printing (You know, to a printer...)
     xserver = {
-      enable = true;				# GUI for the entire computer
-      layout = "gb";				# Use the GB English keyboard layout
-      libinput.enable = true;			# Touchpad support
+      enable = true;				        # GUI for the entire computer
+      layout = "gb";				        # Use the GB English keyboard layout
+      libinput.enable = true;			    # Touchpad support
       synaptics.twoFingerScroll = true;		# Two finger scroll for touchpad
 
       displayManager = {
-        sddm.enable = true;			# Login screen manager
+        sddm.enable = true;			        # Login screen manager
         sddm.theme = "clairvoyance";		# Ellis' clairvoyance theme for sddm
         sddm.extraConfig = ''
           [General]
           InputMethod=
           '';
-       sessionCommands = ''
-			xmodmap .Xmodmap
+        # Remap keys on start  
+        sessionCommands = ''
+			xmodmap .Xmodmap                
 			feh --bg-fill ~/Documents/Background.jpg
 			'';	
-# Remap keys on start
       };
 
       # Tiling manager to manage windows using keyboard 
