@@ -68,6 +68,7 @@
     inkscape 				    # Vector artwork
     libreoffice-fresh		    # Documents/Spreadsheets/Presentations
     libsForQt5.vlc 			    # Video player
+    pcmanfm                     # A file manager
     qutebrowser				    # Super minimal browser
     redshift				    # Screen temperature changer
     shutter					    # Screenshot tool
@@ -83,7 +84,7 @@
 
     ### Other random stuff ###
     cool-retro-term 		    # A retro looking terminal for show
-    sl
+    sl                          # Steam Locomotive
    
     ### Programming (Java) ###
     eclipses.eclipse-platform	# Java IDE
@@ -95,9 +96,7 @@
     python					    # Python 2.7.15
     python3					    # Python 3.6.8
 
-    ### System tools ###
-    feh						    # Image viewer (+background image)
-    gnome3.nautilus				# File browser
+    ### GUI/Window Manager ###
     i3status-rust				# Better i3 status bar
     # Installing i3status-rust is a pain on NixOS. The current package which is
     # on the nixpkgs is outdated and doesn't have the major features that I want
@@ -105,9 +104,11 @@
     # following command:
     # sudo nix-shell -p cargo dbus pkgconfig libpulseaudio pulseaudio --pure --run 'cargo build --release'
 
+    ### System tools ###
     networkmanagerapplet  		# GUI for networking
     ntfs3g			      		# Access a USB drive
     upower				    	# Read bettery info
+    xarchiver                   # File archiver
     xorg.xmodmap				# Keyboard key remapping
     xorg.xev 					# Program to find xmodmap key-bindings
     xorg.xbacklight				# Enable screen backlight adjustments
@@ -243,13 +244,24 @@
   security.sudo.wheelNeedsPassword = false;	# Use 'sudo' without needing password
 
   services = {
+
+    compton = {
+        enable = true;
+        inactiveOpacity = "0.9";
+        opacityRules = [ "95:class_g = 'konsole'" ];
+    };
+
     gnome3.gnome-disks.enable = true;		# Something something USBs
     udisks2.enable = true;			        # Something something USBs
+
     #fprintd.enable = true;			        # Fingerprint reader (Disabled -> unreliable)
+
     printing.enable = true;			        # Printing (You know, to a printer...)
+
     xserver = {
       enable = true;				        # GUI for the entire computer
       layout = "gb";				        # Use the GB English keyboard layout
+
       libinput.enable = true;			    # Touchpad support
       synaptics.twoFingerScroll = true;		# Two finger scroll for touchpad
 
@@ -260,15 +272,16 @@
           [General]
           InputMethod=
           '';
+
         # Remap keys on start  
         sessionCommands = ''
 			xmodmap .Xmodmap                
-			feh --bg-fill ~/Documents/Background.jpg
 			'';	
       };
 
       # Tiling manager to manage windows using keyboard 
       # shortcuts instead of dragging and dropping
+      windowManager.i3.package = pkgs.i3-gaps;
       windowManager.i3.enable = true;	
 
       # Despite the fact that I don't actually use this desktop manager
