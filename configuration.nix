@@ -55,6 +55,9 @@
     wget					    # Download web files
     youtube-dl 				    # YouTube downloader
 
+    ruby
+    
+
     ### Applications ###
     atom 					    # Glorified text editor
     chromium				    # Browser (opensource chrome)
@@ -159,7 +162,6 @@
 
             # List of stuff that would go in ~/.vimrc
             
-            # autocmd vimenter * NERDTree
             vimrcConfig.customRC = ''
                 syntax enable
                 set tabstop=4
@@ -168,7 +170,8 @@
                 set number
                 set mouse=a
                 let g:airline_powerline_fonts = 1
-                
+                autocmd vimenter * NERDTree
+                set backspace=indent,eol,start
             '';
             vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
 
@@ -191,6 +194,7 @@
             ];
         }
     )
+
 
   ];
 
@@ -284,6 +288,7 @@
     uid = 1000;
     shell = pkgs.fish;				# Use fish as the default shell
   };
+
 
   nix = {
     binaryCaches = [
