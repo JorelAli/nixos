@@ -3,7 +3,7 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
- 
+
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -16,27 +16,32 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  #boot.loader.grub.enable = true;
   boot.loader.grub.useOSProber = true;
+  #boot.loader.grub.version = 2;
 
   # I'm pretty sure none of this works
-  boot.loader.grub.splashImage = ./grub_bg.png;
-  boot.loader.grub.fontSize = 16;
-  boot.loader.grub.backgroundColor = "#00B79C";
+  #boot.loader.grub.splashImage = ./grub_bg.png;
+  #boot.loader.grub.fontSize = 16;
+  #boot.loader.grub.backgroundColor = "#00B79C";
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
   # Use wireless networking via wpa_supplicant. This is NOT required because
   # I'm using networking.networkmanager above, which does this for us.
-  # networking.wireless.enable = true; 
+  # networking.wireless.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/London";
- 
+
   environment.variables = {
     # MY_ENV_VAR = "\${HOME}/my/dir";
+   # SWT_GTK3=0 = "eclipse";
+   SWT_GTK3 = "0";
   };
- 
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -48,15 +53,16 @@
     p7zip					    # 7z zip manager
     ranger					    # Terminal file manager
     rofi					    # Window switcher & App launcher
+    ruby                        # Ruby (Programming language)
     screenfetch				    # Display info about themes to console
     speedtest-cli			    # Speed test in terminal
+    sqlitebrowser
     telnet 					    # Telnet client
     tree 					    # Print file tree in terminal
     wget					    # Download web files
     youtube-dl 				    # YouTube downloader
 
-    ruby
-    
+    universal-ctags
 
     ### Applications ###
     atom 					    # Glorified text editor
@@ -64,6 +70,7 @@
     deluge 					    # Torrent client
     ghostwriter 			    # Markdown editor
     gimp					    # Image editor
+    gitkraken                   # Version control management software
     gparted 				    # Partition manager
     inkscape 				    # Vector artwork
     libreoffice-fresh		    # Documents/Spreadsheets/Presentations
@@ -84,8 +91,9 @@
 
     ### Other random stuff ###
     cool-retro-term 		    # A retro looking terminal for show
+    elinks                      # Useless terminal based browser
     sl                          # Steam Locomotive
-   
+
     ### Programming (Java) ###
     eclipses.eclipse-platform	# Java IDE
     openjdk10 					# Java Development Kit for Java 10
@@ -114,11 +122,11 @@
     xorg.xbacklight				# Enable screen backlight adjustments
 
     ### Unused stuff ###
+    # baobab					    # Disk usage viewer (with GUI)
     # libpulseaudio				    # Library for sound
     # pulseaudio					# Sound (e.g. detect the volume of the laptop)
     # polybar					    # Status bar
-    #baobab					    # Disk usage viewer (with GUI)
-    
+
     ### Nix related stuff ###
     cachix 					    # Nix binary hosting for easy installation
 
@@ -130,7 +138,7 @@
     haskellPackages.hoogle		# Haskell documentation database
     haskellPackages.container	# Represents Haskell containers (e.g. Monoid)
     haskellPackages.zlib		# Compression library for Haskell
- 
+
     ### Dictionaries ###
     hunspell					# Dictionary for GhostWriter
     hunspellDicts.en-gb-ise		# English (GB with '-ise' spellings)
@@ -150,7 +158,7 @@
     #   Settings -> Absolute path to hie executable					#
     #   => hie-wrapper									#
     #####################################################################################
-    
+
     # Vim installation for NixOS
     (
         with import <nixpkgs> {};
@@ -162,7 +170,7 @@
             name = "vim";
 
             # List of stuff that would go in ~/.vimrc
-            
+
             vimrcConfig.customRC = ''
                 syntax enable
                 set tabstop=4
@@ -179,18 +187,23 @@
             # List of vim plugins, installed via VAM
  	        vimrcConfig.vam.pluginDictionaries = [
                 { names = [
-        	           	"Syntastic"
-	                	"ctrlp"
-                        "vim-airline"
-                        "vim-airline-themes"
-                        "nerdtree"
-                        "youcompleteme"
-                        "solarized"
-                        "rainbow_parentheses"
-                        "vim-nix"
-                        "vim-toml"
-                        "vim-indent-guides"
-                        "gitgutter"
+        	           	"Syntastic"               # Fancy syntax errors + status
+	                	"ctrlp"                   # Fuzzy finder
+                        "vim-airline"             # Fancy status bar
+                        "vim-airline-themes"      # Fancy status bar themes
+                        "nerdtree"                # File tree on the side of vim
+                        "youcompleteme"           # Code completer 
+                        #TODO: This needs to be enabled using install.py!!
+
+                        "solarized"               # Solarized theme
+                        "rainbow_parentheses"     # Rainbow brackets for easy brackets
+                        #TODO: Enable and set this up
+
+                        "vim-nix"                 # Syntax etc. for .nix files
+                        "vim-toml"                # Syntax etc. for .toml files
+                        "gitgutter"               # Shows git changes in sidebar
+                        "tagbar"                  # Class outline viewer
+                        "easymotion"
                 ]; }
             ];
         }
@@ -208,7 +221,7 @@
 
   fonts.fonts = with pkgs; [
     # *This means that -> will look like an actual arrow and
-    # >= and <= actually look like less than or equal and greater 
+    # >= and <= actually look like less than or equal and greater
     # than or equal symbols, as opposed to what they look like on
     # a computer
 
@@ -226,11 +239,11 @@
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
-  
+
   # Bluetooth
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
-  
+
   # Support for 32 bit stuff (for Steam)
   hardware.opengl.driSupport32Bit = true;
   hardware.pulseaudio.support32Bit = true;
@@ -273,22 +286,22 @@
           InputMethod=
           '';
 
-        # Remap keys on start  
+        # Remap keys on start
         sessionCommands = ''
-			xmodmap .Xmodmap                
-			'';	
+			xmodmap .Xmodmap
+			'';
       };
 
-      # Tiling manager to manage windows using keyboard 
+      # Tiling manager to manage windows using keyboard
       # shortcuts instead of dragging and dropping
       windowManager.i3.package = pkgs.i3-gaps;
-      windowManager.i3.enable = true;	
+      windowManager.i3.enable = true;
 
       # Despite the fact that I don't actually use this desktop manager
       # I keep it installed because it includes the lovely things that
       # I like about KDE, such as Konsole
       desktopManager.plasma5.enable = true;
-      
+
     };
   };
 
@@ -333,4 +346,3 @@
   system.stateVersion = "18.09";
 
 }
-
