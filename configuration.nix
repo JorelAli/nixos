@@ -46,6 +46,9 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
 
+    # Definitely. This. First.
+    qutebrowser
+
     ### Command line utilities ###
     fish 					    # Friendly Interface SHell (better than bash)
     git 					    # Version control
@@ -95,7 +98,9 @@
     sl                          # Steam Locomotive
 
     ### Programming (Java) ###
-    eclipses.eclipse-platform	# Java IDE
+    ant                         # Java building thingy
+#    eclipses.eclipse-platform	# Java IDE
+    eclipses.eclipse-sdk
     openjdk10 					# Java Development Kit for Java 10
     maven 					    # Java dependency manager
 
@@ -225,8 +230,6 @@
 
                         "solarized"               # Solarized theme
                         "rainbow_parentheses"     # Rainbow brackets for easy brackets
-                        #TODO: Enable and set this up
-
                         "vim-nix"                 # Syntax etc. for .nix files
                         "vim-toml"                # Syntax etc. for .toml files
                         "gitgutter"               # Shows git changes in sidebar
