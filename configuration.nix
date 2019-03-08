@@ -17,14 +17,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  #boot.loader.grub.enable = true;
   boot.loader.grub.useOSProber = true;
-  #boot.loader.grub.version = 2;
-
-  # I'm pretty sure none of this works
-  #boot.loader.grub.splashImage = ./grub_bg.png;
-  #boot.loader.grub.fontSize = 16;
-  #boot.loader.grub.backgroundColor = "#00B79C";
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
@@ -32,6 +25,8 @@
   # Use wireless networking via wpa_supplicant. This is NOT required because
   # I'm using networking.networkmanager above, which does this for us.
   # networking.wireless.enable = true;
+  #
+  # If doom and gloom, use nm-connection-editor command
 
   # Set your time zone.
   time.timeZone = "Europe/London";
@@ -138,7 +133,7 @@
     # baobab					    # Disk usage viewer (with GUI)
     # libpulseaudio				    # Library for sound
     # pulseaudio					# Sound (e.g. detect the volume of the laptop)
-    # polybar					    # Status bar
+    polybar					    # Status bar
 
     ### Nix related stuff ###
     cachix 					    # Nix binary hosting for easy installation
