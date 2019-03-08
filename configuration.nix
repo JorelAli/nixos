@@ -51,6 +51,15 @@
 
     ### Command line utilities ###
     fish 					    # Friendly Interface SHell (better than bash)
+
+    ## My Fish setup ####################################
+    # Color scheme:                                     #
+    #   curl -L https://get.oh-my.fish | fish           #
+    #   omf install agnoster                            #
+    # Highlight Colors:                                 #
+    #   set fish_color_search_match --background=d33682 #
+    #####################################################
+
     git 					    # Version control
     gnumake3				    # Make command to build executables
     p7zip					    # 7z zip manager
@@ -99,7 +108,6 @@
 
     ### Programming (Java) ###
     ant                         # Java building thingy
-#    eclipses.eclipse-platform	# Java IDE
     eclipses.eclipse-sdk
     openjdk10 					# Java Development Kit for Java 10
     maven 					    # Java dependency manager
@@ -151,23 +159,29 @@
     hunspellDicts.en-us			# English (US)
 
     ### How to get the best Haskell setup ###############################################
-    # Install the following system packages: stack cabal-install ghc cachix atom	#
-    # To install hie (Haskell IDE Engine): 						#
-    #   1) "cachix use hie-nix"							 	#
-    #   2) "nix-env -iA hies -f https://github.com/domenkozar/hie-nix/tarball/master" 	#
-    # Optional: Install Hasklig (I use Fira Code Medium)				#
-    # Install the following packages for atom (using the built in package manager):	#
-    #   atom-ide-ui									#
-    #   ide-haskell-hie									#
-    #   language-haskell								#
-    # In atom, Ctrl + , ide-haskell-hie package:					#
-    #   Settings -> Absolute path to hie executable					#
-    #   => hie-wrapper									#
-    # Optional: git clone hie-nix and run the ./update.sh file				#
-    # In ~/.stack/config.yaml:								#
-    #   nix:										#
-    #     enable: true									#
-    #     packages: [zlib.dev, zlib.out]						#
+    # Install the following system packages: stack cabal-install ghc cachix atom zlib   #
+    #                                                                                   #
+    # To install hie (Haskell IDE Engine):                                              #
+    #   1) "cachix use hie-nix"                                                         #
+    #   2) "nix-env -iA hies -f https://github.com/domenkozar/hie-nix/tarball/master"   #
+    #                                                                                   #
+    # Optional: Install Hasklig (I use Fira Code Medium)                                #
+    #                                                                                   #
+    # Install the following packages for atom (using the built in package manager):     #
+    #   atom-ide-ui                                                                     #
+    #   ide-haskell-hie                                                                 #
+    #   language-haskell                                                                #
+    #                                                                                   #
+    # In atom, Ctrl + , ide-haskell-hie package:                                        #
+    #   Settings -> Absolute path to hie executable                                     #
+    #   => hie-wrapper                                                                  #
+    #                                                                                   #
+    # Optional: git clone hie-nix and run the ./update.sh file                          #
+    #                                                                                   #
+    # In ~/.stack/config.yaml:                                                          #
+    #   nix:                                                                            #
+    #     enable: true                                                                  #
+    #     packages: [zlib.dev, zlib.out]                                                
     #####################################################################################
 
     # Vim installation for NixOS
