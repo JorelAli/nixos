@@ -139,6 +139,7 @@
     cabal-install				# CLI for Cabal + Hackage (for Haskell)
     ghc						    # Haskell compiler
     stack					    # Haskell compiler + package manager
+    zlib
 
     haskellPackages.hoogle		# Haskell documentation database
     haskellPackages.container	# Represents Haskell containers (e.g. Monoid)
@@ -162,6 +163,11 @@
     # In atom, Ctrl + , ide-haskell-hie package:					#
     #   Settings -> Absolute path to hie executable					#
     #   => hie-wrapper									#
+    # Optional: git clone hie-nix and run the ./update.sh file				#
+    # In ~/.stack/config.yaml:								#
+    #   nix:										#
+    #     enable: true									#
+    #     packages: [zlib.dev, zlib.out]						#
     #####################################################################################
 
     # Vim installation for NixOS
