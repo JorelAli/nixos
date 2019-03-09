@@ -35,6 +35,7 @@
     # MY_ENV_VAR = "\${HOME}/my/dir";
    # SWT_GTK3=0 = "eclipse";
    SWT_GTK3 = "0";
+   QT_QPA_PLATFORMTHEME = "qt5ct";
   };
 
   # List packages installed in system profile. To search, run:
@@ -87,6 +88,9 @@
     redshift				    # Screen temperature changer
     shutter					    # Screenshot tool
     vscode					    # Code editor
+    
+    qt5ct
+    breeze-icons
 
     ### Games ###
     minecraft				    # Minecraft video game
