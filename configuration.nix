@@ -35,6 +35,7 @@
     # MY_ENV_VAR = "\${HOME}/my/dir";
    # SWT_GTK3=0 = "eclipse";
    SWT_GTK3 = "0";
+   QT_QPA_PLATFORMTHEME = "qt5ct";
   };
 
   # List packages installed in system profile. To search, run:
@@ -87,6 +88,9 @@
     redshift				    # Screen temperature changer
     shutter					    # Screenshot tool
     vscode					    # Code editor
+
+    breeze-icons                
+    qt5ct                       # Fixes dolphin on i3
 
     ### Games ###
     minecraft				    # Minecraft video game
@@ -200,7 +204,7 @@
                 set mouse=a
                 let g:airline_powerline_fonts = 1
                 let g:NERDTreeWinSize=20
-                autocmd vimenter * NERDTree
+                " autocmd vimenter * NERDTree
                 set backspace=indent,eol,start
 
                 let g:rbpt_colorpairs = [
@@ -274,6 +278,7 @@
     fira-code-symbols 			# Fancy font with programming ligatures*
     fira-code					# Fancy font with programming ligatures*
     font-awesome_4				# Fancy icons font
+    siji                        # Iconic bitmap font
 
   ];
 
