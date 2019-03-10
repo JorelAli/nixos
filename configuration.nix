@@ -88,6 +88,9 @@
     redshift				    # Screen temperature changer
     shutter					    # Screenshot tool
     vscode					    # Code editor
+    
+    qt5ct
+    breeze-icons
 
     breeze-icons                
     qt5ct                       # Fixes dolphin on i3
