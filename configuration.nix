@@ -33,9 +33,30 @@
 
   environment.variables = {
     # MY_ENV_VAR = "\${HOME}/my/dir";
-   # SWT_GTK3=0 = "eclipse";
-   SWT_GTK3 = "0";
-   QT_QPA_PLATFORMTHEME = "qt5ct";
+    # SWT_GTK3=0 = "eclipse";
+    QT_QPA_PLATFORMTHEME = "qt5ct";
+    XCURSOR_PATH = [
+      "${config.system.path}/share/icons"
+      "$HOME/.icons"
+      "$HOME/.nix-profile/share/icons"
+    ];
+
+    GTK_DATA_PREFIX = [
+      "${config.system.path}"
+    ];
+    XDG_CONFIG_HOME = "$HOME/.config";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_CACHE_HOME = "$HOME/.cache";
+
+    # export XDG_DATA_DIRS=/nix/store/4nbisdmcv7max2h2xjviqg5gbbvpvqyh-gtk+3-3.22.30/share/
+  };
+
+  environment.etc."xdg/gtk-3.0/settings.ini" = {
+    text = ''
+      [Settings]
+      gtk-icon-theme-name=breeze
+      gtk-theme-name=Breeze-gtk
+    '';
   };
 
   # List packages installed in system profile. To search, run:
@@ -56,11 +77,17 @@
     #   set fish_color_search_match --background=d33682 #
     #####################################################
 
+    breeze-icons
+    gnome3.adwaita-icon-theme
+    hicolor_icon_theme
+
+    ark
     git 					    # Version control
     gnumake3				    # Make command to build executables
     p7zip					    # 7z zip manager
     ranger					    # Terminal file manager
     rofi					    # Window switcher & App launcher
+    rtv
     ruby                        # Ruby (Programming language)
     screenfetch				    # Display info about themes to console
     speedtest-cli			    # Speed test in terminal
@@ -71,6 +98,8 @@
     youtube-dl 				    # YouTube downloader
 
     universal-ctags
+    zip
+    unzip
 
     ### Applications ###
     atom 					    # Glorified text editor
@@ -91,6 +120,8 @@
     
     qt5ct
     breeze-icons
+
+    arc-theme
 
     breeze-icons                
     qt5ct                       # Fixes dolphin on i3
