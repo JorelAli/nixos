@@ -47,8 +47,7 @@
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
-
-    # export XDG_DATA_DIRS=/nix/store/4nbisdmcv7max2h2xjviqg5gbbvpvqyh-gtk+3-3.22.30/share/
+   # XDG_DATA_DIRS = "/nix/store/4nbisdmcv7max2h2xjviqg5gbbvpvqyh-gtk+3-3.22.30/share/gsettings-schemas/gtk+3-3.22.30/";
   };
 
   environment.etc."xdg/gtk-3.0/settings.ini" = {
@@ -58,6 +57,15 @@
       gtk-theme-name=Breeze-gtk
     '';
   };
+
+  environment.etc."xdg/gtk-2.0/gtkrc" = {
+    text = ''
+      gtk-icon-theme-name = "breeze"
+      gtk-theme-name = "Breeze-gtk"
+    '';
+  };
+
+
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -80,6 +88,24 @@
     breeze-icons
     gnome3.adwaita-icon-theme
     hicolor_icon_theme
+
+    (pkgs.typora.overrideAttrs (oldAttrs: {
+      installPhase = ''
+    mkdir -p $out/bin $out/share/typora
+    {
+      cd usr
+      mv share/typora/resources/app/* $out/share/typora
+      mv share/applications $out/share
+      mv share/icons $out/share
+      mv share/doc $out/share
+    }
+    makeWrapper ${electron_3}/bin/electron $out/bin/typora \
+      --add-flags $out/share/typora \
+      "''${gappsWrapperArgs[@]}" \
+      --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
+      --prefix LD_LIBRARY_PATH : "${stdenv.lib.makeLibraryPath [ stdenv.cc.cc ]}"
+  '';
+    }))
 
     ark
     git 					    # Version control
@@ -118,9 +144,6 @@
     shutter					    # Screenshot tool
     vscode					    # Code editor
     
-    qt5ct
-    breeze-icons
-
     arc-theme
 
     breeze-icons                
@@ -161,7 +184,7 @@
     ### System tools ###
     networkmanagerapplet  		# GUI for networking
     ntfs3g			      		# Access a USB drive
-    upower				    	# Read bettery info
+    #upower				    	# Read bettery info
     xarchiver                   # File archiver
     xorg.xmodmap				# Keyboard key remapping
     xorg.xev 					# Program to find xmodmap key-bindings
@@ -181,6 +204,7 @@
     ghc						    # Haskell compiler
     stack					    # Haskell compiler + package manager
     zlib
+
 
     haskellPackages.hoogle		# Haskell documentation database
     haskellPackages.container	# Represents Haskell containers (e.g. Monoid)
@@ -355,6 +379,7 @@
     #fprintd.enable = true;			        # Fingerprint reader (Disabled -> unreliable)
 
     printing.enable = true;			        # Printing (You know, to a printer...)
+    upower.enable = true;                   # Battery info
 
     xserver = {
       enable = true;				        # GUI for the entire computer
