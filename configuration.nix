@@ -88,6 +88,9 @@
     breeze-icons
     gnome3.adwaita-icon-theme
     hicolor_icon_theme
+#    steam
+
+    google-play-music-desktop-player
 
     (pkgs.typora.overrideAttrs (oldAttrs: {
       installPhase = ''
@@ -126,6 +129,7 @@
     universal-ctags
     zip
     unzip
+    lxappearance
 
     ### Applications ###
     atom 					    # Glorified text editor
@@ -172,6 +176,11 @@
     gcc 					    # C/C++ compiler
     python					    # Python 2.7.15
     python3					    # Python 3.6.8
+    python27Packages.debian
+
+    ### Programming (Rust) ###
+    cargo
+    rustc
 
     ### GUI/Window Manager ###
     i3status-rust				# Better i3 status bar
@@ -263,6 +272,7 @@
                 let g:airline_powerline_fonts = 1
                 let g:NERDTreeWinSize=20
                 " autocmd vimenter * NERDTree
+                autocmd VimEnter *.rs TagbarOpen
                 set backspace=indent,eol,start
 
                 let g:rbpt_colorpairs = [
