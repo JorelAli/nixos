@@ -1,6 +1,5 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# My glorious all powerful NixOS configuration file
+# https://github.com/JorelAli/nixos
 
 { config, pkgs, ... }:
 
@@ -10,6 +9,8 @@
       ./hardware-configuration.nix
     ];
 
+  ### Boot Settings ############################################################
+
   # Enable exFAT format for USB/External HDD
   boot.extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
 
@@ -17,24 +18,26 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Search for other operating systems
   boot.loader.grub.useOSProber = true;
+
+  ### Networking Settings ######################################################
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
-  # Use wireless networking via wpa_supplicant. This is NOT required because
-  # I'm using networking.networkmanager above, which does this for us.
-  # networking.wireless.enable = true;
-  #
-  # If doom and gloom, use nm-connection-editor command
+  # If stuck, use the 'nm-connection-editor' command
 
-  # Set your time zone.
+  ### Regional Settings ########################################################
+
   time.timeZone = "Europe/London";
 
+  ### Environment Variables ####################################################
+
   environment.variables = {
-    # MY_ENV_VAR = "\${HOME}/my/dir";
-    # SWT_GTK3=0 = "eclipse";
+
     QT_QPA_PLATFORMTHEME = "qt5ct";
+
     XCURSOR_PATH = [
       "${config.system.path}/share/icons"
       "$HOME/.icons"
@@ -44,12 +47,17 @@
     GTK_DATA_PREFIX = [
       "${config.system.path}"
     ];
+
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
-   # XDG_DATA_DIRS = "/nix/store/4nbisdmcv7max2h2xjviqg5gbbvpvqyh-gtk+3-3.22.30/share/gsettings-schemas/gtk+3-3.22.30/";
+   #XDG_DATA_DIRS = "/nix/store/4nbisdmcv7max2h2xjviqg5gbbvpvqyh-gtk+3-3.22.30/share/gsettings-schemas/gtk+3-3.22.30/";
+
   };
 
+  ### /etc/ Files ##############################################################
+
+  # Settings file for GTK 3
   environment.etc."xdg/gtk-3.0/settings.ini" = {
     text = ''
       [Settings]
@@ -58,13 +66,7 @@
     '';
   };
 
-  #environment.etc."udev/rules.d/backlight.rules" = {
-  #  text = ''
-  #    ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="/bin/chgrp video /sys/class/backlight/%k/brightness"
-  #    ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="/bin/chmod g+w /sys/class/backlight/%k/brightness"
-  #  '';
-  #};
-
+  # Settings file for GTK 2
   environment.etc."xdg/gtk-2.0/gtkrc" = {
     text = ''
       gtk-icon-theme-name = "breeze"
@@ -72,14 +74,22 @@
     '';
   };
 
+  # A failed attempt to enable scroll support for i3status-rust
+  #environment.etc."udev/rules.d/backlight.rules" = {
+  #  text = ''
+  #    ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="/bin/chgrp video /sys/class/backlight/%k/brightness"
+  #    ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="/bin/chmod g+w /sys/class/backlight/%k/brightness"
+  #  '';
+  #};
 
+  ### System Packages ##########################################################
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
 
     # Definitely. This. First.
-    qutebrowser
+    # By placing this first, I believe this installs the correct version of Qt
+    # which prevents conflicts with other programs
+    qutebrowser                         # Lightweight minimal browser
 
     ### Command line utilities #################################################
 
@@ -104,14 +114,17 @@
     speedtest-cli                       # Speed test in terminal
     telnet                              # Telnet client
     tree                                # Print file tree in terminal
+    unzip                               # Command to unzip files
     wget                                # Download web files
     youtube-dl                          # YouTube downloader
+    zip                                 # Command to zip files
 
     ### Applications ###########################################################
 
     arandr                              # Multiple display manager
     ark                                 # Archive manager
     atom                                # Glorified text editor
+    chromium                            # Opensource Chrome browser
     deluge                              # Torrent client
     ghostwriter                         # Markdown editor
     gimp                                # Image editor
@@ -151,104 +164,60 @@
 
     vscode                              # Code editor
 
-    breeze-icons
-    gnome3.adwaita-icon-theme
-    hicolor_icon_theme
+    ### System-wide theming ####################################################
 
+    breeze-icons                        # Breeze theme icons
+    gnome3.adwaita-icon-theme           # Adwaita theme icons
+    hicolor_icon_theme                  # Hicolor theme icons
 
+    lxappearance                        # Program to theme GTK+
+    qt5ct                               # Program to theme Qt5 (Fixes dolphin on i3)
 
+    arc-theme                           # Arc theme for GTK+
 
+    ### Games ##################################################################
 
-
-
-    universal-ctags
-    zip
-    unzip
-    lxappearance
-
-    ### Applications ###
-
-    pkgs.chromium            # Browser (opensource chrome)
-#    pkgs.firefoxWrapper
-
-
-
-
-    arc-theme
-
-    breeze-icons
-    qt5ct                       # Fixes dolphin on i3
-
-    ### Games ###
-    minecraft            # Minecraft video game
-    pacvim              # Game that teaches you vim
+    minecraft                           # Minecraft video game
+    pacvim                              # Game that teaches you vim
     #steam
     #steam-run
     #steamcontroller
-    zeroad              # 0ad video game - like Age of Empires
+    zeroad                              # 0ad video game - like Age of Empires
 
-    ### Other random stuff ###
-    cool-retro-term         # A retro looking terminal for show
-    elinks                      # Useless terminal based browser
-    sl                          # Steam Locomotive
+    ### Other random stuff #####################################################
 
-    ### Programming (Java) ###
-    ant                         # Java building thingy
-    eclipses.eclipse-sdk
-    openjdk10           # Java Development Kit for Java 10
-    maven               # Java dependency manager
+    cool-retro-term                     # A retro looking terminal for showing off
+    elinks                              # Useless terminal based browser
+    sl                                  # Display a steam locomotive in terminal
 
-    ### Programming (Other) ###
-    gcc               # C/C++ compiler
-    python              # Python 2.7.15
-    python3              # Python 3.6.8
-    python27Packages.debian
+    ### Programming (Java) #####################################################
+    ant                                 # Java building thingy
+    eclipses.eclipse-sdk                # Eclipse IDE for Java
+    maven                               # Java dependency manager
+    openjdk10                           # Java Development Kit for Java 10
 
-    ### Programming (Rust) ###
-    cargo
-    rustc
+    ### Programming (Other) ####################################################
 
-    ### GUI/Window Manager ###
-    i3status-rust        # Better i3 status bar
-    # Installing i3status-rust is a pain on NixOS. The current package which is
-    # on the nixpkgs is outdated and doesn't have the major features that I want
-    # Instead, I built it manually by git cloning the repository, and running the
-    # following command:
-    # sudo nix-shell -p cargo dbus pkgconfig libpulseaudio pulseaudio --pure --run 'cargo build --release'
+    gcc                                 # C/C++ compiler
+    python                              # Python 2.7.15
+    python27Packages.debian             # Python 2.7 'debian' package
+    python3                             # Python 3.6.8
 
-    ### System tools ###
-    networkmanagerapplet      # GUI for networking
-    ntfs3g                # Access a USB drive
-    #upower              # Read bettery info
-    xarchiver                   # File archiver
-    xorg.xmodmap        # Keyboard key remapping
-    xorg.xev           # Program to find xmodmap key-bindings
-    xorg.xbacklight        # Enable screen backlight adjustments
+    ### Programming (Rust) #####################################################
 
-    ### Unused stuff ###
-    # baobab              # Disk usage viewer (with GUI)
-    # libpulseaudio            # Library for sound
-    # pulseaudio          # Sound (e.g. detect the volume of the laptop)
-    # polybar              # Status bar
+    cargo                               # Rust package manager
+    rustc                               # Rust compiler
 
-    ### Nix related stuff ###
-    cachix               # Nix binary hosting for easy installation
+    ### Programming (Haskell) ##################################################
 
-    ### Haskell packages + Haskell stuff ###
-    cabal-install        # CLI for Cabal + Hackage (for Haskell)
-    ghc                # Haskell compiler
-    stack              # Haskell compiler + package manager
-    zlib
+    cabal-install                       # CLI for Cabal + Hackage (for Haskell)
+    ghc                                 # Haskell compiler
+    stack                               # Haskell compiler + package manager
+    zlib                                # Some zipping library for C?
 
-
-    haskellPackages.hoogle    # Haskell documentation database
-    haskellPackages.container  # Represents Haskell containers (e.g. Monoid)
-    haskellPackages.zlib    # Compression library for Haskell
-
-    ### Dictionaries ###
-    hunspell          # Dictionary for GhostWriter
-    hunspellDicts.en-gb-ise    # English (GB with '-ise' spellings)
-    hunspellDicts.en-us      # English (US)
+    haskellPackages.hoogle              # Haskell documentation database
+    haskellPackages.container           # Represents Haskell containers (e.g. Monoid)
+    haskellPackages.zlib                # Compression library for Haskell
 
     ### How to get the best Haskell setup ###############################################
     # Install the following system packages: stack cabal-install ghc cachix atom zlib   #
@@ -257,7 +226,7 @@
     #   1) "cachix use hie-nix"                                                         #
     #   2) "nix-env -iA hies -f https://github.com/domenkozar/hie-nix/tarball/master"   #
     #                                                                                   #
-    # Optional: Install Hasklig (I use Fira Code Medium)                                #
+    # Optional: Install Hasklig font (I use Fira Code Medium)                           #
     #                                                                                   #
     # Install the following packages for atom (using the built in package manager):     #
     #   atom-ide-ui                                                                     #
@@ -273,10 +242,36 @@
     # In ~/.stack/config.yaml:                                                          #
     #   nix:                                                                            #
     #     enable: true                                                                  #
-    #     packages: [zlib.dev, zlib.out]
+    #     packages: [zlib.dev, zlib.out]                                                #
     #####################################################################################
 
-    # Vim installation for NixOS
+    ### GUI/Window Manager #####################################################
+
+    # i3status-rust        coming soon: https://github.com/JorelAli/i3status-rust
+    # i3status-rust                     # Better i3 status bar
+
+    ### System tools ###########################################################
+
+    networkmanagerapplet                # GUI for networking
+    ntfs3g                              # Access a USB drive
+
+    universal-ctags                     # Tool for browsing source code quickly
+
+    xorg.xbacklight                     # Enable screen backlight adjustments
+    xorg.xev                            # Program to find xmodmap key-bindings
+    xorg.xmodmap                        # Keyboard key remapping
+
+    ### Nix related stuff ######################################################
+
+    cachix                              # Compiled binary hosting for Nix
+
+    ### Dictionaries ###
+    hunspell                            # Dictionary for GhostWriter
+    hunspellDicts.en-gb-ise             # English (GB with '-ise' spellings)
+    hunspellDicts.en-us                 # English (US)
+
+    ### Vim (with my chosen packages of choice) ################################
+
     (
         with import <nixpkgs> {};
 
@@ -297,7 +292,6 @@
                 set mouse=a
                 let g:airline_powerline_fonts = 1
                 let g:NERDTreeWinSize=20
-                " autocmd vimenter * NERDTree
                 autocmd VimEnter *.rs TagbarOpen
                 set backspace=indent,eol,start
 
@@ -328,13 +322,14 @@
                 au Syntax * RainbowParenthesesLoadSquare
                 au Syntax * RainbowParenthesesLoadBraces
             '';
-            vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
 
-            # List of vim plugins, installed via VAM
-           vimrcConfig.vam.pluginDictionaries = [
+            ### Vim plugins (installed via VAM) ################################
+
+            vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
+            vimrcConfig.vam.pluginDictionaries = [
                 { names = [
-                       "Syntastic"               # Fancy syntax errors + status
-                    "ctrlp"                   # Fuzzy finder
+                        "Syntastic"                # Fancy syntax errors + status
+                        "ctrlp"                    # Fuzzy finder
                         "vim-airline"             # Fancy status bar
                         "vim-airline-themes"      # Fancy status bar themes
                         "nerdtree"                # File tree on the side of vim
@@ -356,32 +351,36 @@
 
   ];
 
+  programs.fish.enable = true;          # Fish shell
+
   # 'day' and 'night' aliases for redshift
-  programs.fish.enable = true;
-  programs.fish.shellAliases = {
-      day = "redshift -x";
-      night = "redshift -O 4500K";
-  };
+  #programs.fish.shellAliases = {
+  #    day = "redshift -x";
+  #    night = "redshift -O 4500K";
+  #};
+
+  ### Fonts ####################################################################
 
   fonts.fonts = with pkgs; [
+
+    fira-code-symbols                   # Fancy font with programming ligatures*
+    fira-code                           # Fancy font with programming ligatures*
+    font-awesome_4                      # Fancy icons font
+    siji                                # Iconic bitmap font
+
     # *This means that -> will look like an actual arrow and
     # >= and <= actually look like less than or equal and greater
     # than or equal symbols, as opposed to what they look like on
     # a computer
 
-    fira-code-symbols       # Fancy font with programming ligatures*
-    fira-code          # Fancy font with programming ligatures*
-    font-awesome_4        # Fancy icons font
-    siji                        # Iconic bitmap font
-
   ];
 
-  # Set default monospace font to the fancy ligatures font. Good for terminals
+  # Set default monospace font to the fancy ligatures font. Good for programming
   fonts.fontconfig.defaultFonts.monospace = [ "Fira Code Medium" ];
 
-  # List services that you want to enable:
+  ### Hardware Settings ########################################################
 
-  # Enable sound.
+  # Enable sound. Duh.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
@@ -401,31 +400,34 @@
 
   security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without needing password
 
+  ### Services #################################################################
+
   services = {
 
+    # Enable opacity for inactive programs
     compton = {
         enable = true;
         inactiveOpacity = "0.9";
 #        opacityRules = [ "95:class_g = 'konsole'" ];
     };
 
-    gnome3.gnome-disks.enable = true;    # Something something USBs
+    gnome3.gnome-disks.enable = true;   # Something something USBs
     udisks2.enable = true;              # Something something USBs
 
-    #fprintd.enable = true;              # Fingerprint reader (Disabled -> unreliable)
+    #fprintd.enable = true;             # Fingerprint reader (Disabled -> unreliable)
 
-    printing.enable = true;              # Printing (You know, to a printer...)
-    upower.enable = true;                   # Battery info
+    printing.enable = true;             # Printing (You know, to a printer...)
+    upower.enable = true;               # Battery info
 
     xserver = {
-      enable = true;                # GUI for the entire computer
-      layout = "gb";                # Use the GB English keyboard layout
+      enable = true;                    # GUI for the entire computer
+      layout = "gb";                    # Use the GB English keyboard layout
 
-      libinput.enable = true;          # Touchpad support
-      synaptics.twoFingerScroll = true;    # Two finger scroll for touchpad
+      libinput.enable = true;           # Touchpad support
+      synaptics.twoFingerScroll = true; # Two finger scroll for touchpad
 
       displayManager = {
-        sddm.enable = true;              # Login screen manager
+        sddm.enable = true;             # Login screen manager
         sddm.theme = "clairvoyance";    # Ellis' clairvoyance theme for sddm
         sddm.extraConfig = ''
           [General]
@@ -434,8 +436,8 @@
 
         # Remap keys on start
         sessionCommands = ''
-      xmodmap .Xmodmap
-      '';
+          xmodmap .Xmodmap
+        '';
       };
 
       # Tiling manager to manage windows using keyboard
@@ -451,16 +453,18 @@
     };
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  ### User Accounts ############################################################
+
   users.users.jorel = {
     isNormalUser = true;
     home = "/home/jorel";
     description = "C'Taz'M'Kazm";
     extraGroups = [ "wheel" "networkmanager" "disk" "audio" "video" ];
     uid = 1000;
-    shell = pkgs.fish;        # Use fish as the default shell
+    shell = pkgs.fish;                  # Use fish as the default shell
   };
 
+  ### Nix Configuration (Honestly, I have no idea what this is) ################
 
   nix = {
     binaryCaches = [
@@ -473,31 +477,22 @@
     trustedUsers = [ "root" "jorel" ];
 
     # USE WITH CAUTION
-    readOnlyStore = false;      # Allows writing access to /nix/store
+    readOnlyStore = false;              # Allows writing access to /nix/store
   };
 
+  ### NixPkgs Configuration ####################################################
+
   nixpkgs.config = {
-    allowUnfree = true;        # Allow unfree/proprietary packages
+    allowUnfree = true;                 # Allow unfree/proprietary packages
     packageOverrides = pkgs: rec {
       polybar = pkgs.polybar.override {
         i3Support = true;
       };
     };
-
-    chromium = {
-      #enablePepperFlash = true;
-    };
-
-    firefox = {
-      enableAdobeFlash = true;
-    };
-
   };
 
-  # This value determines the NixOS release with which your system is to be
-  # compatible, in order to avoid breaking some software such as database
-  # servers. You should change this only after NixOS release notes say you
-  # should.
+  ### NixOS System Version (Do not touch) ######################################
+
   system.stateVersion = "18.09";
 
 }
