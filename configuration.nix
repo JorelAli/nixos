@@ -112,7 +112,6 @@
     ruby                                # Ruby (Programming language)
     screenfetch                         # Display info about themes to console
     speedtest-cli                       # Speed test in terminal
-    telnet                              # Telnet client
     tree                                # Print file tree in terminal
     unzip                               # Command to unzip files
     wget                                # Download web files
