@@ -58,6 +58,13 @@
     '';
   };
 
+  #environment.etc."udev/rules.d/backlight.rules" = {
+  #  text = ''
+  #    ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="/bin/chgrp video /sys/class/backlight/%k/brightness"
+  #    ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="/bin/chmod g+w /sys/class/backlight/%k/brightness"
+  #  '';
+  #};
+
   environment.etc."xdg/gtk-2.0/gtkrc" = {
     text = ''
       gtk-icon-theme-name = "breeze"
@@ -74,8 +81,9 @@
     # Definitely. This. First.
     qutebrowser
 
-    ### Command line utilities ###
-    fish 					    # Friendly Interface SHell (better than bash)
+    ### Command line utilities #################################################
+
+    fish                                # Friendly Interface SHell
 
     ## My Fish setup ####################################
     # Color scheme:                                     #
@@ -85,46 +93,73 @@
     #   set fish_color_search_match --background=d33682 #
     #####################################################
 
+    git                                 # Version control
+    gnumake3                            # 'make' command to build executables
+    p7zip                               # 7z zip manager
+    ranger                              # Terminal file manager
+    rofi                                # Window switcher & App launcher
+    rtv                                 # Reddit in terminal
+    ruby                                # Ruby (Programming language)
+    screenfetch                         # Display info about themes to console
+    speedtest-cli                       # Speed test in terminal
+    telnet                              # Telnet client
+    tree                                # Print file tree in terminal
+    wget                                # Download web files
+    youtube-dl                          # YouTube downloader
+
+    ### Applications ###########################################################
+
+    arandr                              # Multiple display manager
+    ark                                 # Archive manager
+    atom                                # Glorified text editor
+    deluge                              # Torrent client
+    ghostwriter                         # Markdown editor
+    gimp                                # Image editor
+    gitkraken                           # Version control management software
+    google-play-music-desktop-player    # Google Play Music for desktop
+    gparted                             # Partition manager
+    inkscape                            # Vector artwork
+    libreoffice-fresh                   # Documents/Spreadsheets/Presentations
+    libsForQt5.vlc                      # Video player (VLC)
+    redshift                            # Screen temperature changer
+    shutter                             # Screenshot tool
+    sqlitebrowser                       # SQLite .db file browser
+
+    # Typora - another markdown editor with fancy features
+    # (such as exporting to PDF). This overrides the build
+    # script for typora, in particular:
+    # --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
+    # Which fixes a bug where GTK+ doesn't interact with
+    # Typora properly.
+    (pkgs.typora.overrideAttrs (oldAttrs: {
+      installPhase = ''
+        mkdir -p $out/bin $out/share/typora
+        {
+          cd usr
+          mv share/typora/resources/app/* $out/share/typora
+          mv share/applications $out/share
+          mv share/icons $out/share
+          mv share/doc $out/share
+        }
+        makeWrapper ${electron_3}/bin/electron $out/bin/typora \
+          --add-flags $out/share/typora \
+          "''${gappsWrapperArgs[@]}" \
+          --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
+          --prefix LD_LIBRARY_PATH : "${stdenv.lib.makeLibraryPath [ stdenv.cc.cc ]}"
+        '';
+    }))
+
+    vscode                              # Code editor
+
     breeze-icons
     gnome3.adwaita-icon-theme
     hicolor_icon_theme
-#    steam
 
-    google-play-music-desktop-player
 
-    (pkgs.typora.overrideAttrs (oldAttrs: {
-      installPhase = ''
-    mkdir -p $out/bin $out/share/typora
-    {
-      cd usr
-      mv share/typora/resources/app/* $out/share/typora
-      mv share/applications $out/share
-      mv share/icons $out/share
-      mv share/doc $out/share
-    }
-    makeWrapper ${electron_3}/bin/electron $out/bin/typora \
-      --add-flags $out/share/typora \
-      "''${gappsWrapperArgs[@]}" \
-      --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
-      --prefix LD_LIBRARY_PATH : "${stdenv.lib.makeLibraryPath [ stdenv.cc.cc ]}"
-  '';
-    }))
 
-    ark
-    git 					    # Version control
-    gnumake3				    # Make command to build executables
-    p7zip					    # 7z zip manager
-    ranger					    # Terminal file manager
-    rofi					    # Window switcher & App launcher
-    rtv
-    ruby                        # Ruby (Programming language)
-    screenfetch				    # Display info about themes to console
-    speedtest-cli			    # Speed test in terminal
-    sqlitebrowser
-    telnet 					    # Telnet client
-    tree 					    # Print file tree in terminal
-    wget					    # Download web files
-    youtube-dl 				    # YouTube downloader
+
+
+
 
     universal-ctags
     zip
@@ -132,50 +167,41 @@
     lxappearance
 
     ### Applications ###
-    atom 					    # Glorified text editor
-    chromium				    # Browser (opensource chrome)
-    deluge 					    # Torrent client
-    ghostwriter 			    # Markdown editor
-    gimp					    # Image editor
-    gitkraken                   # Version control management software
-    gparted 				    # Partition manager
-    inkscape 				    # Vector artwork
-    libreoffice-fresh		    # Documents/Spreadsheets/Presentations
-    libsForQt5.vlc 			    # Video player
-    pcmanfm                     # A file manager
-    qutebrowser				    # Super minimal browser
-    redshift				    # Screen temperature changer
-    shutter					    # Screenshot tool
-    vscode					    # Code editor
-    
+
+    pkgs.chromium            # Browser (opensource chrome)
+#    pkgs.firefoxWrapper
+
+
+
+
     arc-theme
 
-    breeze-icons                
+    breeze-icons
     qt5ct                       # Fixes dolphin on i3
 
     ### Games ###
-    minecraft				    # Minecraft video game
-    pacvim					    # Game that teaches you vim
+    minecraft            # Minecraft video game
+    pacvim              # Game that teaches you vim
     #steam
     #steam-run
     #steamcontroller
-    zeroad					    # 0ad video game - like Age of Empires
+    zeroad              # 0ad video game - like Age of Empires
 
     ### Other random stuff ###
-    cool-retro-term 		    # A retro looking terminal for show
+    cool-retro-term         # A retro looking terminal for show
     elinks                      # Useless terminal based browser
     sl                          # Steam Locomotive
 
     ### Programming (Java) ###
     ant                         # Java building thingy
     eclipses.eclipse-sdk
-    openjdk10 					# Java Development Kit for Java 10
-    maven 					    # Java dependency manager
+    openjdk10           # Java Development Kit for Java 10
+    maven               # Java dependency manager
 
     ### Programming (Other) ###
-    gcc 					    # C/C++ compiler
-    python					    # Python 2.7.15
-    python3					    # Python 3.6.8
+    gcc               # C/C++ compiler
+    python              # Python 2.7.15
+    python3              # Python 3.6.8
     python27Packages.debian
 
     ### Programming (Rust) ###
@@ -183,7 +209,7 @@
     rustc
 
     ### GUI/Window Manager ###
-    i3status-rust				# Better i3 status bar
+    i3status-rust        # Better i3 status bar
     # Installing i3status-rust is a pain on NixOS. The current package which is
     # on the nixpkgs is outdated and doesn't have the major features that I want
     # Instead, I built it manually by git cloning the repository, and running the
@@ -191,38 +217,38 @@
     # sudo nix-shell -p cargo dbus pkgconfig libpulseaudio pulseaudio --pure --run 'cargo build --release'
 
     ### System tools ###
-    networkmanagerapplet  		# GUI for networking
-    ntfs3g			      		# Access a USB drive
-    #upower				    	# Read bettery info
+    networkmanagerapplet      # GUI for networking
+    ntfs3g                # Access a USB drive
+    #upower              # Read bettery info
     xarchiver                   # File archiver
-    xorg.xmodmap				# Keyboard key remapping
-    xorg.xev 					# Program to find xmodmap key-bindings
-    xorg.xbacklight				# Enable screen backlight adjustments
+    xorg.xmodmap        # Keyboard key remapping
+    xorg.xev           # Program to find xmodmap key-bindings
+    xorg.xbacklight        # Enable screen backlight adjustments
 
     ### Unused stuff ###
-    # baobab					    # Disk usage viewer (with GUI)
-    # libpulseaudio				    # Library for sound
-    # pulseaudio					# Sound (e.g. detect the volume of the laptop)
-    polybar					    # Status bar
+    # baobab              # Disk usage viewer (with GUI)
+    # libpulseaudio            # Library for sound
+    # pulseaudio          # Sound (e.g. detect the volume of the laptop)
+    # polybar              # Status bar
 
     ### Nix related stuff ###
-    cachix 					    # Nix binary hosting for easy installation
+    cachix               # Nix binary hosting for easy installation
 
     ### Haskell packages + Haskell stuff ###
-    cabal-install				# CLI for Cabal + Hackage (for Haskell)
-    ghc						    # Haskell compiler
-    stack					    # Haskell compiler + package manager
+    cabal-install        # CLI for Cabal + Hackage (for Haskell)
+    ghc                # Haskell compiler
+    stack              # Haskell compiler + package manager
     zlib
 
 
-    haskellPackages.hoogle		# Haskell documentation database
-    haskellPackages.container	# Represents Haskell containers (e.g. Monoid)
-    haskellPackages.zlib		# Compression library for Haskell
+    haskellPackages.hoogle    # Haskell documentation database
+    haskellPackages.container  # Represents Haskell containers (e.g. Monoid)
+    haskellPackages.zlib    # Compression library for Haskell
 
     ### Dictionaries ###
-    hunspell					# Dictionary for GhostWriter
-    hunspellDicts.en-gb-ise		# English (GB with '-ise' spellings)
-    hunspellDicts.en-us			# English (US)
+    hunspell          # Dictionary for GhostWriter
+    hunspellDicts.en-gb-ise    # English (GB with '-ise' spellings)
+    hunspellDicts.en-us      # English (US)
 
     ### How to get the best Haskell setup ###############################################
     # Install the following system packages: stack cabal-install ghc cachix atom zlib   #
@@ -247,7 +273,7 @@
     # In ~/.stack/config.yaml:                                                          #
     #   nix:                                                                            #
     #     enable: true                                                                  #
-    #     packages: [zlib.dev, zlib.out]                                                
+    #     packages: [zlib.dev, zlib.out]
     #####################################################################################
 
     # Vim installation for NixOS
@@ -296,7 +322,7 @@
 
                 let g:rbpt_max = 16
                 let g:rbpt_loadcmd_toggle = 0
-                
+
                 au VimEnter * RainbowParenthesesToggle
                 au Syntax * RainbowParenthesesLoadRound
                 au Syntax * RainbowParenthesesLoadSquare
@@ -305,14 +331,14 @@
             vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
 
             # List of vim plugins, installed via VAM
- 	        vimrcConfig.vam.pluginDictionaries = [
+           vimrcConfig.vam.pluginDictionaries = [
                 { names = [
-        	           	"Syntastic"               # Fancy syntax errors + status
-	                	"ctrlp"                   # Fuzzy finder
+                       "Syntastic"               # Fancy syntax errors + status
+                    "ctrlp"                   # Fuzzy finder
                         "vim-airline"             # Fancy status bar
                         "vim-airline-themes"      # Fancy status bar themes
                         "nerdtree"                # File tree on the side of vim
-                        "youcompleteme"           # Code completer 
+                        "youcompleteme"           # Code completer
                         #TODO: This needs to be enabled using install.py!!
 
                         "solarized"               # Solarized theme
@@ -343,9 +369,9 @@
     # than or equal symbols, as opposed to what they look like on
     # a computer
 
-    fira-code-symbols 			# Fancy font with programming ligatures*
-    fira-code					# Fancy font with programming ligatures*
-    font-awesome_4				# Fancy icons font
+    fira-code-symbols       # Fancy font with programming ligatures*
+    fira-code          # Fancy font with programming ligatures*
+    font-awesome_4        # Fancy icons font
     siji                        # Iconic bitmap font
 
   ];
@@ -373,34 +399,34 @@
   # disabled this because this can be a bit unreliable sometimes.
   # security.pam.services.login.fprintAuth = true;
 
-  security.sudo.wheelNeedsPassword = false;	# Use 'sudo' without needing password
+  security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without needing password
 
   services = {
 
     compton = {
         enable = true;
         inactiveOpacity = "0.9";
-        opacityRules = [ "95:class_g = 'konsole'" ];
+#        opacityRules = [ "95:class_g = 'konsole'" ];
     };
 
-    gnome3.gnome-disks.enable = true;		# Something something USBs
-    udisks2.enable = true;			        # Something something USBs
+    gnome3.gnome-disks.enable = true;    # Something something USBs
+    udisks2.enable = true;              # Something something USBs
 
-    #fprintd.enable = true;			        # Fingerprint reader (Disabled -> unreliable)
+    #fprintd.enable = true;              # Fingerprint reader (Disabled -> unreliable)
 
-    printing.enable = true;			        # Printing (You know, to a printer...)
+    printing.enable = true;              # Printing (You know, to a printer...)
     upower.enable = true;                   # Battery info
 
     xserver = {
-      enable = true;				        # GUI for the entire computer
-      layout = "gb";				        # Use the GB English keyboard layout
+      enable = true;                # GUI for the entire computer
+      layout = "gb";                # Use the GB English keyboard layout
 
-      libinput.enable = true;			    # Touchpad support
-      synaptics.twoFingerScroll = true;		# Two finger scroll for touchpad
+      libinput.enable = true;          # Touchpad support
+      synaptics.twoFingerScroll = true;    # Two finger scroll for touchpad
 
       displayManager = {
-        sddm.enable = true;			        # Login screen manager
-        sddm.theme = "clairvoyance";		# Ellis' clairvoyance theme for sddm
+        sddm.enable = true;              # Login screen manager
+        sddm.theme = "clairvoyance";    # Ellis' clairvoyance theme for sddm
         sddm.extraConfig = ''
           [General]
           InputMethod=
@@ -408,8 +434,8 @@
 
         # Remap keys on start
         sessionCommands = ''
-			xmodmap .Xmodmap
-			'';
+      xmodmap .Xmodmap
+      '';
       };
 
       # Tiling manager to manage windows using keyboard
@@ -432,7 +458,7 @@
     description = "C'Taz'M'Kazm";
     extraGroups = [ "wheel" "networkmanager" "disk" "audio" "video" ];
     uid = 1000;
-    shell = pkgs.fish;				# Use fish as the default shell
+    shell = pkgs.fish;        # Use fish as the default shell
   };
 
 
@@ -447,16 +473,25 @@
     trustedUsers = [ "root" "jorel" ];
 
     # USE WITH CAUTION
-    readOnlyStore = false;			# Allows writing access to /nix/store
+    readOnlyStore = false;      # Allows writing access to /nix/store
   };
 
   nixpkgs.config = {
-    allowUnfree = true;				# Allow unfree/proprietary packages
+    allowUnfree = true;        # Allow unfree/proprietary packages
     packageOverrides = pkgs: rec {
       polybar = pkgs.polybar.override {
         i3Support = true;
       };
     };
+
+    chromium = {
+      #enablePepperFlash = true;
+    };
+
+    firefox = {
+      enableAdobeFlash = true;
+    };
+
   };
 
   # This value determines the NixOS release with which your system is to be
