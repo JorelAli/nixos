@@ -174,6 +174,11 @@
 
     arc-theme                           # Arc theme for GTK+
 
+    i3lock-color
+    i3lock-fancy
+
+    (import ./clairvoyance.nix)
+
     ### Games ##################################################################
 
     minecraft                           # Minecraft video game
