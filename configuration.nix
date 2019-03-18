@@ -177,7 +177,9 @@
     i3lock-color
     i3lock-fancy
 
-    (import ./clairvoyance.nix)
+    ((import ./clairvoyance.nix).overrideAttrs (oldAttrs: {
+      autoFocusPassword = "true";
+    }))
 
     ### Games ##################################################################
 
