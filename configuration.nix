@@ -403,6 +403,12 @@
 
   services = {
 
+    # Adds support for scrolling to change the brightness for i3status-rs
+    udev.extraRules = ''  
+      ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
+      ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
+    '';
+
     # Enable opacity for inactive programs
     compton = {
         enable = true;
@@ -424,6 +430,7 @@
 
       libinput.enable = true;           # Touchpad support
       synaptics.twoFingerScroll = true; # Two finger scroll for touchpad
+      synaptics.horizTwoFingerScroll = true;
 
       displayManager = {
         sddm.enable = true;             # Login screen manager
