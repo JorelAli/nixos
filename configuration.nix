@@ -136,6 +136,7 @@
     redshift                            # Screen temperature changer
     shutter                             # Screenshot tool
     sqlitebrowser                       # SQLite .db file browser
+    zathura                             # PDF viewer
 
     # Typora - another markdown editor with fancy features
     # (such as exporting to PDF). This overrides the build
@@ -173,9 +174,7 @@
     qt5ct                               # Program to theme Qt5 (Fixes dolphin on i3)
 
     arc-theme                           # Arc theme for GTK+
-
-    i3lock-color
-    i3lock-fancy
+    adapta-gtk-theme
 
     ((import ./clairvoyance.nix).overrideAttrs (oldAttrs: {
       autoFocusPassword = "true";
