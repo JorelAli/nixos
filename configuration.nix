@@ -105,6 +105,7 @@
 
     git                                 # Version control
     gnumake3                            # 'make' command to build executables
+    neofetch                            # screenfetch, but better
     p7zip                               # 7z zip manager
     ranger                              # Terminal file manager
     rofi                                # Window switcher & App launcher
@@ -123,6 +124,7 @@
     arandr                              # Multiple display manager
     ark                                 # Archive manager
     atom                                # Glorified text editor
+    blueman                             # Bluetooth manager
     chromium                            # Opensource Chrome browser
     deluge                              # Torrent client
     ghostwriter                         # Markdown editor
@@ -330,7 +332,7 @@
 
             ### Vim plugins (installed via VAM) ################################
 
-            vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
+            vimrcConfig.vam.knownPlugins = pkgs.vimPlugins; 
             vimrcConfig.vam.pluginDictionaries = [
                 { names = [
                         "Syntastic"                # Fancy syntax errors + status
@@ -417,7 +419,8 @@
 
     # Enable opacity for inactive programs
     compton = {
-        enable = true;
+      enable = false;
+        #enable = true;
         inactiveOpacity = "0.9";
 #        opacityRules = [ "95:class_g = 'konsole'" ];
     };
