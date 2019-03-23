@@ -74,14 +74,6 @@
     '';
   };
 
-  # A failed attempt to enable scroll support for i3status-rust
-  #environment.etc."udev/rules.d/backlight.rules" = {
-  #  text = ''
-  #    ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="/bin/chgrp video /sys/class/backlight/%k/brightness"
-  #    ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="/bin/chmod g+w /sys/class/backlight/%k/brightness"
-  #  '';
-  #};
-
   ### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [
@@ -93,6 +85,7 @@
 
     ### Command line utilities #################################################
 
+    feh                                 # Image viewer
     fish                                # Friendly Interface SHell
 
     ## My Fish setup ####################################
@@ -105,6 +98,7 @@
 
     git                                 # Version control
     gnumake3                            # 'make' command to build executables
+    htop                                # A better 'top' command
     neofetch                            # screenfetch, but better
     p7zip                               # 7z zip manager
     ranger                              # Terminal file manager
@@ -126,6 +120,7 @@
     atom                                # Glorified text editor
     blueman                             # Bluetooth manager
     chromium                            # Opensource Chrome browser
+    firefox                             # Web browser
     deluge                              # Torrent client
     ghostwriter                         # Markdown editor
     gimp                                # Image editor
@@ -192,9 +187,18 @@
     zeroad                              # 0ad video game - like Age of Empires
 
     ### Other random stuff #####################################################
-
     cool-retro-term                     # A retro looking terminal for showing off
     elinks                              # Useless terminal based browser
+    #(pkgs.flashplayer.overrideAttrs (oldAttrs: {
+    #  debug = true;
+    #}))
+    ((pkgs.flashplayer).overrideAttrs (oldAttrs: {
+      src = fetchurl {
+        url = "https://fpdownload.macromedia.com/pub/flashplayer/updaters/32/flash_player_npapi_linux_debug.x86_64.tar.gz";
+        sha256 = "0h16vdar4p8zj6w57ihll71xjr9sy7hdiq4qwvvqndah5c4ym8xl";
+      };
+    }))
+    gnash                               # Flash player
     sl                                  # Display a steam locomotive in terminal
 
     ### Programming (Java) #####################################################
@@ -232,7 +236,7 @@
     # To install hie (Haskell IDE Engine):                                              #
     #   1) "cachix use hie-nix"                                                         #
     #   2) "nix-env -iA hies -f https://github.com/domenkozar/hie-nix/tarball/master"   #
-    #                                                                                   #
+    #                                                                                   #@sF
     # Optional: Install Hasklig font (I use Fira Code Medium)                           #
     #                                                                                   #
     # Install the following packages for atom (using the built in package manager):     #
@@ -503,6 +507,10 @@
       polybar = pkgs.polybar.override {
         i3Support = true;
       };
+
+    };
+    flashplayer = {
+     debug = true;
     };
   };
 
