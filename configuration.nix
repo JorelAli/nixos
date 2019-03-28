@@ -23,7 +23,7 @@
 
   ### Networking Settings ######################################################
 
-  networking.hostName = "nixos";
+  networking.hostName = "NixOS";
   networking.networkmanager.enable = true;
 
   # If stuck, use the 'nm-connection-editor' command
@@ -99,6 +99,7 @@
     git                                 # Version control
     gnumake3                            # 'make' command to build executables
     htop                                # A better 'top' command
+    lynx                                # Terminal web browser
     neofetch                            # screenfetch, but better
     p7zip                               # 7z zip manager
     ranger                              # Terminal file manager
