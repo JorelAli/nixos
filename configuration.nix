@@ -167,7 +167,15 @@
     gnome3.adwaita-icon-theme           # Adwaita theme icons
     hicolor_icon_theme                  # Hicolor theme icons
 
-    lxappearance                        # Program to theme GTK+
+    #lxappearance                        # Program to theme GTK+
+    (lxappearance.overrideAttrs(old: rec {
+        name = "lxappearance-0.6.2";
+        src = fetchurl {
+          url = "mirror://sourceforge/project/lxde/LXAppearance/${name}.tar.xz";
+          sha256 = "07r0xbi6504zjnbpan7zrn7gi4j0kbsqqfpj8v2x94gr05p16qj4";
+        };
+    }))
+
     qt5ct                               # Program to theme Qt5 (Fixes dolphin on i3)
 
     arc-theme                           # Arc theme for GTK+
@@ -202,6 +210,7 @@
     sl                                  # Display a steam locomotive in terminal
 
     ### Programming (Java) #####################################################
+    
     ant                                 # Java building thingy
     eclipses.eclipse-sdk                # Eclipse IDE for Java
     maven                               # Java dependency manager
@@ -210,6 +219,7 @@
     ### Programming (Other) ####################################################
 
     gcc                                 # C/C++ compiler
+    nodejs                              # Node.js
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
@@ -236,7 +246,7 @@
     # To install hie (Haskell IDE Engine):                                              #
     #   1) "cachix use hie-nix"                                                         #
     #   2) "nix-env -iA hies -f https://github.com/domenkozar/hie-nix/tarball/master"   #
-    #                                                                                   #@sF
+    #                                                                                   #
     # Optional: Install Hasklig font (I use Fira Code Medium)                           #
     #                                                                                   #
     # Install the following packages for atom (using the built in package manager):     #
@@ -263,10 +273,15 @@
 
     ### System tools ###########################################################
 
+    clipit                              # Clipboard manager 
+    kmail
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
 
+    udisks
+    udisks_glue
     universal-ctags                     # Tool for browsing source code quickly
+
 
     xorg.xbacklight                     # Enable screen backlight adjustments
     xorg.xev                            # Program to find xmodmap key-bindings
@@ -276,7 +291,8 @@
 
     cachix                              # Compiled binary hosting for Nix
 
-    ### Dictionaries ###
+    ### Dictionaries ###########################################################
+
     hunspell                            # Dictionary for GhostWriter
     hunspellDicts.en-gb-ise             # English (GB with '-ise' spellings)
     hunspellDicts.en-us                 # English (US)
@@ -369,6 +385,10 @@
   #    day = "redshift -x";
   #    night = "redshift -O 4500K";
   #};
+  programs.fish.shellAliases = {
+    neofetchnix = "neofetch --ascii_colors 68 110";
+    fonts = "fc-list : family | cut -f1 -d\",\" | sort";
+  };
 
   ### Fonts ####################################################################
 
@@ -379,10 +399,9 @@
     font-awesome_4                      # Fancy icons font
     siji                                # Iconic bitmap font
 
-    # *This means that -> will look like an actual arrow and
-    # >= and <= actually look like less than or equal and greater
-    # than or equal symbols, as opposed to what they look like on
-    # a computer
+    # *This means that -> will look like an actual arrow and >= and <= actually
+    # look like less than or equal and greater than or equal symbols, as opposed
+    # to what they look like on a computer
 
   ];
 
@@ -391,22 +410,21 @@
 
   ### Hardware Settings ########################################################
 
-  # Enable sound. Duh.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  sound.enable = true;                  # Enable sound
 
-  # Bluetooth
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
+  hardware = {
+    pulseaudio.enable = true;           # Sound system for linux
+    bluetooth.enable = true;            # Enable bluetooth 
+    bluetooth.powerOnBoot = true;       # Let bluetooth enable on startup
+    opengl.driSupport32Bit = true;      # Allow 32 bit support for OpenGL
+    pulseaudio.support32Bit = true;     # Allow 32 bit support for pulseaudio
+  };
 
-  # Support for 32 bit stuff (for Steam)
-  hardware.opengl.driSupport32Bit = true;
-  hardware.pulseaudio.support32Bit = true;
+  # Use fingerprint recognition on the login screen to log in. To add a 
+  # fingerprint, use the 'fprintd-enroll' command in the terminal, and scan your 
+  # fingerprint a few times. I disabled this because this can be a bit unreliable 
+  # sometimes.
 
-  # Use fingerprint recognition on the login screen to log
-  # in. To add a fingerprint, use the 'fprintd-enroll' command
-  # in the terminal, and scan your fingerprint a few times. I
-  # disabled this because this can be a bit unreliable sometimes.
   # security.pam.services.login.fprintAuth = true;
 
   security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without needing password
@@ -466,7 +484,7 @@
 
       # Despite the fact that I don't actually use this desktop manager
       # I keep it installed because it includes the lovely things that
-      # I like about KDE, such as Konsole
+      # I like about KDE, such as Konsole and Dolphin
       desktopManager.plasma5.enable = true;
 
     };
