@@ -13,7 +13,7 @@ My NixOS configuration
     - Java (With Eclipse) 
     - Rust (With Vim)
     - Python
-  - Fancy sddm lockscreen (courtesy of [eayus](200~https://github.com/eayus/sddm-theme-clairvoyance))
+  - Fancy sddm lockscreen (courtesy of [eayus](https://github.com/eayus/sddm-theme-clairvoyance))
   - Everyday programs
     - Web browsing (Choose your weapon: Chrome, Firefox, Qutebrowser, Elinks)
     - Document writing (Typora, Libreoffice)
