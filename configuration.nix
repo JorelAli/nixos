@@ -85,6 +85,7 @@
 
     ### Command line utilities #################################################
 
+    escrotum                            # Screenshot tool
     feh                                 # Image viewer
     fish                                # Friendly Interface SHell
 
