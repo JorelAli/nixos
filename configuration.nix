@@ -3,7 +3,12 @@
 
 { config, pkgs, ... }:
 
-{
+let
+  unstable = import <unstable> { config = {allowUnfree = true;}; };
+in {
+
+  ### NixOS important settings ################################################
+
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -36,7 +41,7 @@
 
   environment.variables = {
 
-    QT_QPA_PLATFORMTHEME = "qt5ct";
+   # QT_QPA_PLATFORMTHEME = "qt5ct";
 
     XCURSOR_PATH = [
       "${config.system.path}/share/icons"
@@ -81,7 +86,8 @@
     # Definitely. This. First.
     # By placing this first, I believe this installs the correct version of Qt
     # which prevents conflicts with other programs
-    qutebrowser                         # Lightweight minimal browser
+#    qutebrowser                         # Lightweight minimal browser
+    unstable.qutebrowser                # Lightweird minimal browser (v1.6.0)
 
     ### Command line utilities #################################################
 
@@ -98,6 +104,7 @@
     #####################################################
 
     git                                 # Version control
+    gnirehtet                           # Reverse tethering (PC -> Mobile)
     gnumake3                            # 'make' command to build executables
     htop                                # A better 'top' command
     lynx                                # Terminal web browser
@@ -137,12 +144,10 @@
     sqlitebrowser                       # SQLite .db file browser
     zathura                             # PDF viewer
 
-    # Typora - another markdown editor with fancy features
-    # (such as exporting to PDF). This overrides the build
-    # script for typora, in particular:
-    # --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
-    # Which fixes a bug where GTK+ doesn't interact with
-    # Typora properly.
+    # Typora - another markdown editor with fancy features (such as exporting to 
+    # PDF). This overrides the build script for typora, in particular:
+    #   --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
+    # Which fixes a bug where GTK+ doesn't interact with Typora properly.
     (pkgs.typora.overrideAttrs (oldAttrs: {
       installPhase = ''
         mkdir -p $out/bin $out/share/typora
@@ -169,7 +174,7 @@
     gnome3.adwaita-icon-theme           # Adwaita theme icons
     hicolor_icon_theme                  # Hicolor theme icons
 
-    #lxappearance                        # Program to theme GTK+
+    # Program to theme GTK+
     (lxappearance.overrideAttrs(old: rec {
         name = "lxappearance-0.6.2";
         src = fetchurl {
@@ -178,11 +183,10 @@
         };
     }))
 
-    qt5ct                               # Program to theme Qt5 (Fixes dolphin on i3)
-
     arc-theme                           # Arc theme for GTK+
-    adapta-gtk-theme
+    adapta-gtk-theme                    # Adapta theme for GTK
 
+    # Clairvoyance lockscreen theme for SDDM
     ((import ./clairvoyance.nix).overrideAttrs (oldAttrs: {
       autoFocusPassword = "true";
     }))
@@ -191,6 +195,7 @@
 
     minecraft                           # Minecraft video game
     pacvim                              # Game that teaches you vim
+    unstable.steam
     #steam
     #steam-run
     #steamcontroller
@@ -199,9 +204,8 @@
     ### Other random stuff #####################################################
     cool-retro-term                     # A retro looking terminal for showing off
     elinks                              # Useless terminal based browser
-    #(pkgs.flashplayer.overrideAttrs (oldAttrs: {
-    #  debug = true;
-    #}))
+
+    # Flash player for FireFox 
     ((pkgs.flashplayer).overrideAttrs (oldAttrs: {
       src = fetchurl {
         url = "https://fpdownload.macromedia.com/pub/flashplayer/updaters/32/flash_player_npapi_linux_debug.x86_64.tar.gz";
@@ -276,7 +280,8 @@
     ### System tools ###########################################################
 
     clipit                              # Clipboard manager 
-    kmail
+    dunst                               # Notification manager
+    libnotify
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
 
@@ -284,8 +289,8 @@
     udisks_glue
     universal-ctags                     # Tool for browsing source code quickly
 
-
     xorg.xbacklight                     # Enable screen backlight adjustments
+    xorg.xcompmgr
     xorg.xev                            # Program to find xmodmap key-bindings
     xorg.xmodmap                        # Keyboard key remapping
 
@@ -380,22 +385,38 @@
 
   ];
 
-  programs.fish.enable = true;          # Fish shell
+  ### Programs #################################################################
+
+  programs = {
+    less.enable = true;
+    less.commands = {
+      h = "quit";
+    };
+
+    qt5ct.enable = true;
+
+    fish.enable = true;
+    fish.shellAliases = {
+      neofetchnix = "neofetch --ascii_colors 68 110";
+      fonts = "fc-list : family | cut -f1 -d\",\" | sort";
+    };
+
+    adb.enable = true;
+
+    #vim.defaultEditor = true;
+  };
 
   # 'day' and 'night' aliases for redshift
   #programs.fish.shellAliases = {
   #    day = "redshift -x";
   #    night = "redshift -O 4500K";
   #};
-  programs.fish.shellAliases = {
-    neofetchnix = "neofetch --ascii_colors 68 110";
-    fonts = "fc-list : family | cut -f1 -d\",\" | sort";
-  };
 
   ### Fonts ####################################################################
 
   fonts.fonts = with pkgs; [
 
+    emojione
     fira-code-symbols                   # Fancy font with programming ligatures*
     fira-code                           # Fancy font with programming ligatures*
     font-awesome_4                      # Fancy icons font
@@ -423,13 +444,13 @@
   };
 
   # Use fingerprint recognition on the login screen to log in. To add a 
-  # fingerprint, use the 'fprintd-enroll' command in the terminal, and scan your 
-  # fingerprint a few times. I disabled this because this can be a bit unreliable 
-  # sometimes.
+  # fingerprint, use the 'fprintd-enroll' command in the terminal, and scan
+  # your fingerprint a few times. I disabled this because this can be a bit
+  # unreliable sometimes.
 
   # security.pam.services.login.fprintAuth = true;
 
-  security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without needing password
+  security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without a password
 
   ### Services #################################################################
 
@@ -444,9 +465,9 @@
     # Enable opacity for inactive programs
     compton = {
       enable = false;
-        #enable = true;
-        inactiveOpacity = "0.9";
-#        opacityRules = [ "95:class_g = 'konsole'" ];
+      #enable = true;
+      #inactiveOpacity = "0.9";
+      #opacityRules = [ "95:class_g = 'konsole'" ];
     };
 
     gnome3.gnome-disks.enable = true;   # Something something USBs
@@ -492,6 +513,24 @@
     };
   };
 
+  systemd.user.services."dunst" = {
+    enable = true;
+    description = "";
+    wantedBy = [ "default.target" ];
+    serviceConfig.Restart = "always";
+    serviceConfig.RestartSec = 2;
+    serviceConfig.ExecStart = "${pkgs.dunst}/bin/dunst";
+  };
+
+  systemd.user.services."xcompmgr" = {
+    enable = true;
+    description = "transparency compositing";
+    wantedBy = [ "default.target" ];
+    serviceConfig.Restart = "always";
+    serviceConfig.RestartSrc = 2;
+    serviceConfig.ExecStart = "${pkgs.xcompmgr}/bin/xcompmgr";
+  };
+
   ### User Accounts ############################################################
 
   users.users.jorel = {
@@ -523,12 +562,12 @@
 
   nixpkgs.config = {
     allowUnfree = true;                 # Allow unfree/proprietary packages
-    packageOverrides = pkgs: rec {
-      polybar = pkgs.polybar.override {
-        i3Support = true;
-      };
-
-    };
+    #packageOverrides = pkgs: rec {
+    #  polybar = pkgs.polybar.override {
+    #    i3Support = true;
+    #  };
+    #
+    #};
     flashplayer = {
      debug = true;
     };
