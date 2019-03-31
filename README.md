@@ -28,9 +28,8 @@ My NixOS configuration
   - GTK 3 and GTK 2 work as intended (Themes can be easily applied using `lxappearance`)
   - Qt themeing just works (Themes applied using `qt5ct`)
   - Eclipse isn't busted (Icons work normally due to GTK fixes)
-  - 
 
 ## Planned features:
   - [ ] HIE setup is all part of the configuration (don't have to manually run the command to install and setup HIE
   - [ ] i3status-rust is all part of the configuration
-  - [ ] Steam
+  - [x] Steam

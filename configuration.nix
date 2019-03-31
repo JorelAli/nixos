@@ -4,10 +4,22 @@
 { config, pkgs, ... }:
 
 let
-  unstable = import <unstable> { config = {allowUnfree = true;}; };
+
+  ### Nix channels #############################################################
+  # These are channels defined using the `sudo nix-channel --list` command.    #
+  # They are as follows:                                                       #
+  #   nixos https://nixos.org/channels/nixos-18.09                             #
+  #   unstable https://nixos.org/channels/nixos-unstable                       #
+  ##############################################################################
+
+  unstable = import <unstable> { 
+    config = {
+      allowUnfree = true;
+    }; 
+  };
 in {
 
-  ### NixOS important settings ################################################
+  ### NixOS important settings #################################################
 
   imports =
     [ # Include the results of the hardware scan.
@@ -41,8 +53,6 @@ in {
 
   environment.variables = {
 
-   # QT_QPA_PLATFORMTHEME = "qt5ct";
-
     XCURSOR_PATH = [
       "${config.system.path}/share/icons"
       "$HOME/.icons"
@@ -56,7 +66,6 @@ in {
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
-   #XDG_DATA_DIRS = "/nix/store/4nbisdmcv7max2h2xjviqg5gbbvpvqyh-gtk+3-3.22.30/share/gsettings-schemas/gtk+3-3.22.30/";
 
   };
 
