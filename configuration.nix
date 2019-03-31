@@ -66,6 +66,8 @@ in {
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
+    EDITOR = "vim";
+    _JAVA_OPTIONS= "-Dawt.useSystemAAFontSettings=lcd";
 
   };
 
@@ -202,10 +204,13 @@ in {
 
     ### Games ##################################################################
 
+    _2048-in-terminal                   # 2048 game in terminal
     minecraft                           # Minecraft video game
+    # https://nixos.wiki/wiki/Packaging/Binaries <-- See this, need to update
+    # minecraft to its new launcher which is available here:
+    #   https://launcher.mojang.com/download/Minecraft.deb
     pacvim                              # Game that teaches you vim
-    unstable.steam
-    #steam
+    unstable.steam                      # Game distribution platform
     #steam-run
     #steamcontroller
     zeroad                              # 0ad video game - like Age of Empires
