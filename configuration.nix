@@ -247,7 +247,9 @@ in {
     ### Programming (Rust) #####################################################
 
     cargo                               # Rust package manager
-    rustc                               # Rust compiler
+    ncurses                             # Library to create Text User Interfaces
+    unstable.rustc                      # Rust compiler (v 1.32.0)
+    rustup                              # Rust toolchain manager
 
     ### Programming (Haskell) ##################################################
 
@@ -376,8 +378,8 @@ in {
             vimrcConfig.vam.knownPlugins = pkgs.vimPlugins; 
             vimrcConfig.vam.pluginDictionaries = [
                 { names = [
-                        "Syntastic"                # Fancy syntax errors + status
-                        "ctrlp"                    # Fuzzy finder
+                        "Syntastic"               # Fancy syntax errors + status
+                        "ctrlp"                   # Fuzzy finder
                         "vim-airline"             # Fancy status bar
                         "vim-airline-themes"      # Fancy status bar themes
                         "nerdtree"                # File tree on the side of vim
@@ -402,29 +404,23 @@ in {
   ### Programs #################################################################
 
   programs = {
-    less.enable = true;
-    less.commands = {
-      h = "quit";
-    };
 
-    qt5ct.enable = true;
+    adb.enable = true;                  # Enables the Android Debug Bridge
 
-    fish.enable = true;
-    fish.shellAliases = {
+    fish.enable = true;                 # Holdup... why is this here?
+    fish.shellAliases = {               # Extra fish commands
       neofetchnix = "neofetch --ascii_colors 68 110";
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
     };
 
-    adb.enable = true;
+    less.enable = true;                 # Enables config for the `less` command
+    less.commands = {
+      h = "quit";                       # Rebind the `h` key to quit 
+    };
 
-    #vim.defaultEditor = true;
+    qt5ct.enable = true;                # Enable qt5ct (fixes Qt applications) 
+
   };
-
-  # 'day' and 'night' aliases for redshift
-  #programs.fish.shellAliases = {
-  #    day = "redshift -x";
-  #    night = "redshift -O 4500K";
-  #};
 
   ### Fonts ####################################################################
 
@@ -497,8 +493,10 @@ in {
       layout = "gb";                    # Use the GB English keyboard layout
 
       libinput.enable = true;           # Touchpad support
-      synaptics.twoFingerScroll = true; # Two finger scroll for touchpad
-      synaptics.horizTwoFingerScroll = true;
+      synaptics = {
+        twoFingerScroll = true;         # Two finger scroll for touchpad
+        horizTwoFingerScroll = true;    # Two finger horizontal scrolling
+      };
 
       displayManager = {
         sddm.enable = true;             # Login screen manager
@@ -576,15 +574,7 @@ in {
 
   nixpkgs.config = {
     allowUnfree = true;                 # Allow unfree/proprietary packages
-    #packageOverrides = pkgs: rec {
-    #  polybar = pkgs.polybar.override {
-    #    i3Support = true;
-    #  };
-    #
-    #};
-    flashplayer = {
-     debug = true;
-    };
+    flashplayer = { debug = true; };
   };
 
   ### NixOS System Version (Do not touch) ######################################
