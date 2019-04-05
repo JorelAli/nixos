@@ -119,6 +119,7 @@ in {
     gnumake3                            # 'make' command to build executables
     htop                                # A better 'top' command
     lynx                                # Terminal web browser
+    mdbook                              # A markdown to web "book" generator
     neofetch                            # screenfetch, but better
     p7zip                               # 7z zip manager
     ranger                              # Terminal file manager
@@ -411,6 +412,7 @@ in {
     fish.shellAliases = {               # Extra fish commands
       neofetchnix = "neofetch --ascii_colors 68 110";
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
+      prettify = "python -m json.tool"; # Prettify json!
     };
 
     less.enable = true;                 # Enables config for the `less` command
@@ -514,8 +516,15 @@ in {
 
       # Tiling manager to manage windows using keyboard
       # shortcuts instead of dragging and dropping
-      windowManager.i3.package = pkgs.i3-gaps;
-      windowManager.i3.enable = true;
+#      windowManager.i3.package = pkgs.i3-gaps;
+#      windowManager.i3.enable = true;
+      windowManager.i3 = {
+        package = pkgs.i3-gaps;
+        enable = true;
+        extraSessionCommands = ''
+          cp $(ls -d $HOME/Wallpapers/* | shuf -n 1) $HOME/.background-image
+        '';
+      };
 
       # Despite the fact that I don't actually use this desktop manager
       # I keep it installed because it includes the lovely things that
