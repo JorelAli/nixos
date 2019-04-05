@@ -10,6 +10,7 @@ stdenv.mkDerivation rec {
   };
 
   background = "Assets/Background.jpg";
+  backgroundURL = "";
   autoFocusPassword = "false";
   enableHDPI = "false";
 

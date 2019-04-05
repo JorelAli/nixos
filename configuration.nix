@@ -120,6 +120,7 @@ in {
     htop                                # A better 'top' command
     lynx                                # Terminal web browser
     mdbook                              # A markdown to web "book" generator
+    moc                                 # Music player in a terminal
     neofetch                            # screenfetch, but better
     p7zip                               # 7z zip manager
     ranger                              # Terminal file manager
@@ -474,12 +475,10 @@ in {
       ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
     '';
 
-    # Enable opacity for inactive programs
     compton = {
-      enable = false;
-      #enable = true;
-      #inactiveOpacity = "0.9";
-      #opacityRules = [ "95:class_g = 'konsole'" ];
+      enable = true;                    # Application transparency
+      opacityRules = [ "95:class_g = 'konsole'" ];
+      # inactiveOpacity = "0.99";
     };
 
     gnome3.gnome-disks.enable = true;   # Something something USBs
@@ -514,29 +513,29 @@ in {
         '';
       };
 
-      # Tiling manager to manage windows using keyboard
-      # shortcuts instead of dragging and dropping
-#      windowManager.i3.package = pkgs.i3-gaps;
-#      windowManager.i3.enable = true;
+      # Tiling manager to manage windows using keyboard shortcuts instead of 
+      # dragging and dropping windows with a mouse
       windowManager.i3 = {
-        package = pkgs.i3-gaps;
-        enable = true;
-        extraSessionCommands = ''
-          cp $(ls -d $HOME/Wallpapers/* | shuf -n 1) $HOME/.background-image
-        '';
+        enable = true;                  # Enable i3 tiling manager
+        package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
+#        extraSessionCommands = ''
+#          cp $(ls -d $HOME/Wallpapers/* | shuf -n 1) $HOME/.background-image
+#        '';
       };
 
       # Despite the fact that I don't actually use this desktop manager
       # I keep it installed because it includes the lovely things that
-      # I like about KDE, such as Konsole and Dolphin
+      # I like about KDE, such as Konsole, Dolphin and Kwallet
       desktopManager.plasma5.enable = true;
 
     };
   };
 
+  ### Systemd Services #########################################################
+
   systemd.user.services."dunst" = {
     enable = true;
-    description = "";
+    description = "Notification system daemon";
     wantedBy = [ "default.target" ];
     serviceConfig.Restart = "always";
     serviceConfig.RestartSec = 2;
@@ -545,7 +544,7 @@ in {
 
   systemd.user.services."xcompmgr" = {
     enable = true;
-    description = "transparency compositing";
+    description = "Transparency compositing";
     wantedBy = [ "default.target" ];
     serviceConfig.Restart = "always";
     serviceConfig.RestartSrc = 2;
@@ -575,15 +574,15 @@ in {
     ];
     trustedUsers = [ "root" "jorel" ];
 
-    # USE WITH CAUTION
-    readOnlyStore = false;              # Allows writing access to /nix/store
+    # Literally do NOT enable this setting, it's impure.
+    # readOnlyStore = false;            # Allows writing access to /nix/store
   };
 
   ### NixPkgs Configuration ####################################################
 
   nixpkgs.config = {
     allowUnfree = true;                 # Allow unfree/proprietary packages
-    flashplayer = { debug = true; };
+    flashplayer = { debug = true; };    # Flashplayer debug mode has new dl URL
   };
 
   ### NixOS System Version (Do not touch) ######################################
