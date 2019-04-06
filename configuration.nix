@@ -94,19 +94,24 @@ in {
 
   environment.systemPackages = with pkgs; [
 
-    # Definitely. This. First.
-    # By placing this first, I believe this installs the correct version of Qt
-    # which prevents conflicts with other programs
-#    qutebrowser                         # Lightweight minimal browser
-    unstable.qutebrowser                # Lightweird minimal browser (v1.6.0)
+    ### Qutebrowser ############################################################
+    # Definitely. This. First. By placing qutebrowser first, I feel like the   #
+    # right version of Qt is installed first, before other Qt applications.    #
+    # This may be entirely false, but I've had to reinstall the operating      #
+    # system after I screwed up nix channels and installed two separate        #
+    # versions of Qt. In order to not make that mistake again:                 #
+    #   Qutebrowser First.                                                     #
+    ############################################################################
+
+    unstable.qutebrowser                # Lightweight minimal browser (v1.6.1)
 
     ### Command line utilities #################################################
 
-    escrotum                            # Screenshot tool
+    escrotum                            # Screenshot tool (what a name...)
     feh                                 # Image viewer
     fish                                # Friendly Interface SHell
 
-    ## My Fish setup ####################################
+    ### My Fish setup ###################################
     # Color scheme:                                     #
     #   curl -L https://get.oh-my.fish | fish           #
     #   omf install agnoster                            #
@@ -157,10 +162,13 @@ in {
     sqlitebrowser                       # SQLite .db file browser
     zathura                             # PDF viewer
 
-    # Typora - another markdown editor with fancy features (such as exporting to 
-    # PDF). This overrides the build script for typora, in particular:
-    #   --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
-    # Which fixes a bug where GTK+ doesn't interact with Typora properly.
+    ### Typora Markdown Editor #################################################
+    # Typora - another markdown editor with fancy features (such as exporting  # 
+    # to PDF). This overrides the build script for typora, in particular:      #
+    #   --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \                   #
+    # Which fixes a bug where GTK+ doesn't interact with Typora properly.      #
+    ############################################################################
+
     (pkgs.typora.overrideAttrs (oldAttrs: {
       installPhase = ''
         mkdir -p $out/bin $out/share/typora
@@ -179,7 +187,7 @@ in {
         '';
     }))
 
-    vscode                              # Code editor
+    vscode                              # Code editor (think notepad++ or atom)
 
     ### System-wide theming ####################################################
 
@@ -187,7 +195,12 @@ in {
     gnome3.adwaita-icon-theme           # Adwaita theme icons
     hicolor_icon_theme                  # Hicolor theme icons
 
-    # Program to theme GTK+
+    ### LXAppearance - GTK Themer  ########################
+    # Version 0.6.2 has support for BOTH GTK2 and GTK3.   #
+    # The latest version on NixOS' stable channel doesn't #
+    # support both GTK2 and GTK3, it only supports GTK3.  #
+    #######################################################
+
     (lxappearance.overrideAttrs(old: rec {
         name = "lxappearance-0.6.2";
         src = fetchurl {
@@ -199,7 +212,11 @@ in {
     arc-theme                           # Arc theme for GTK+
     adapta-gtk-theme                    # Adapta theme for GTK
 
-    # Clairvoyance lockscreen theme for SDDM
+    ### Clairvoyance SDDM Theme #######################################
+    # Custom nix derivation for the Clairvoyance SDDM theme by eayus: #
+    #   https://github.com/eayus/sddm-theme-clairvoyance              #
+    ###################################################################
+
     ((import ./clairvoyance.nix).overrideAttrs (oldAttrs: {
       autoFocusPassword = "true";
     }))
@@ -208,33 +225,47 @@ in {
 
     _2048-in-terminal                   # 2048 game in terminal
     minecraft                           # Minecraft video game
-    # https://nixos.wiki/wiki/Packaging/Binaries <-- See this, need to update
-    # minecraft to its new launcher which is available here:
-    #   https://launcher.mojang.com/download/Minecraft.deb
-    pacvim                              # Game that teaches you vim
+
+    ### Minecraft Launcher #####################################################
+    # Minecraft's launcher has updated. The minecraft derivation in nixpkgs    #
+    # doesn't use the new launcher. By unpacking it from the .deb file which   #
+    # can be downloaded here:                                                  #
+    #   https://launcher.mojang.com/download/Minecraft.deb                     #
+    # it should be possible to package it into something that Nix can use by   #
+    # following the documentation for packaging binaries from here:            #
+    #   https://nixos.wiki/wiki/Packaging/Binaries                             #
+    ############################################################################
+    
+    pacvim                              # Pacman, but with vim controls
     unstable.steam                      # Game distribution platform
     #steam-run
     #steamcontroller
-    zeroad                              # 0ad video game - like Age of Empires
+    #zeroad                             # 0ad video game - like Age of Empires
 
     ### Other random stuff #####################################################
-    cool-retro-term                     # A retro looking terminal for showing off
+
+    cool-retro-term                     # A retro looking terminal
     elinks                              # Useless terminal based browser
 
-    # Flash player for FireFox 
+    ### Flash Player for Firefox ##################
+    # NPAPI flash player for the Firefox browser. #
+    # The nixpkgs version's links are dead.       #
+    ###############################################
+
     ((pkgs.flashplayer).overrideAttrs (oldAttrs: {
       src = fetchurl {
         url = "https://fpdownload.macromedia.com/pub/flashplayer/updaters/32/flash_player_npapi_linux_debug.x86_64.tar.gz";
         sha256 = "0h16vdar4p8zj6w57ihll71xjr9sy7hdiq4qwvvqndah5c4ym8xl";
       };
     }))
+
     gnash                               # Flash player
     sl                                  # Display a steam locomotive in terminal
 
     ### Programming (Java) #####################################################
     
     ant                                 # Java building thingy
-    eclipses.eclipse-sdk                # Eclipse IDE for Java
+    jetbrains.idea-community            # IntelliJ IDEA Java IDE
     maven                               # Java dependency manager
     openjdk10                           # Java Development Kit for Java 10
 
@@ -297,18 +328,15 @@ in {
 
     ### System tools ###########################################################
 
-    clipit                              # Clipboard manager 
     dunst                               # Notification manager
-    libnotify
+    libnotify                           # Notification library
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
-
-    udisks
-    udisks_glue
+    udisks                              # Storage device daemon
+    udisks_glue                         # Links udisks to custom actions
     universal-ctags                     # Tool for browsing source code quickly
-
     xorg.xbacklight                     # Enable screen backlight adjustments
-    xorg.xcompmgr
+    xorg.xcompmgr                       # Window compositing
     xorg.xev                            # Program to find xmodmap key-bindings
     xorg.xmodmap                        # Keyboard key remapping
 
@@ -417,9 +445,7 @@ in {
     };
 
     less.enable = true;                 # Enables config for the `less` command
-    less.commands = {
-      h = "quit";                       # Rebind the `h` key to quit 
-    };
+    less.commands = { h = "quit"; };    # Rebind the `h` key to quit 
 
     qt5ct.enable = true;                # Enable qt5ct (fixes Qt applications) 
 
@@ -429,19 +455,21 @@ in {
 
   fonts.fonts = with pkgs; [
 
-    emojione
-    fira-code-symbols                   # Fancy font with programming ligatures*
-    fira-code                           # Fancy font with programming ligatures*
+    emojione                            # Emoji font
+    fira-code-symbols                   # Fancy font with programming ligatures
+    fira-code                           # Fancy font with programming ligatures
     font-awesome_4                      # Fancy icons font
     siji                                # Iconic bitmap font
 
-    # *This means that -> will look like an actual arrow and >= and <= actually
-    # look like less than or equal and greater than or equal symbols, as opposed
-    # to what they look like on a computer
+    ### Programming ligatures ##################################################
+    # *This means that -> will look like an actual arrow and >= and <=         #
+    # actually look like less than or equal and greater than or equal symbols, #
+    # as opposed to what they look like on a computer                          #
+    ############################################################################
 
   ];
 
-  # Set default monospace font to the fancy ligatures font. Good for programming
+  # Set default monospace font to Fira Code
   fonts.fontconfig.defaultFonts.monospace = [ "Fira Code Medium" ];
 
   ### Hardware Settings ########################################################
@@ -518,6 +546,12 @@ in {
       windowManager.i3 = {
         enable = true;                  # Enable i3 tiling manager
         package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
+
+        # Command to copy wallpapers from ~/Wallpapers to .background-image on
+        # each restart of i3. Turns out, I actually like a certain wallpaper 
+        # more than all of the others, so I decided to just keep it as that 
+        # instead. https://wall.alphacoders.com/big.php?i=710132
+
 #        extraSessionCommands = ''
 #          cp $(ls -d $HOME/Wallpapers/* | shuf -n 1) $HOME/.background-image
 #        '';
