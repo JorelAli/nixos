@@ -157,6 +157,7 @@ in {
     inkscape                            # Vector artwork
     libreoffice-fresh                   # Documents/Spreadsheets/Presentations
     libsForQt5.vlc                      # Video player (VLC)
+    pavucontrol                         # Pulse Audio controller
     redshift                            # Screen temperature changer
     shutter                             # Screenshot tool
     sqlitebrowser                       # SQLite .db file browser
@@ -401,6 +402,8 @@ in {
                 au Syntax * RainbowParenthesesLoadRound
                 au Syntax * RainbowParenthesesLoadSquare
                 au Syntax * RainbowParenthesesLoadBraces
+
+                au BufReadPost *.als set syntax=java
             '';
 
             ### Vim plugins (installed via VAM) ################################
@@ -477,11 +480,14 @@ in {
   sound.enable = true;                  # Enable sound
 
   hardware = {
-    pulseaudio.enable = true;           # Sound system for linux
+    pulseaudio = {
+      enable = true;
+      package = pkgs.pulseaudioFull;
+      support32Bit = true;
+    };
     bluetooth.enable = true;            # Enable bluetooth 
     bluetooth.powerOnBoot = true;       # Let bluetooth enable on startup
     opengl.driSupport32Bit = true;      # Allow 32 bit support for OpenGL
-    pulseaudio.support32Bit = true;     # Allow 32 bit support for pulseaudio
   };
 
   # Use fingerprint recognition on the login screen to log in. To add a 
