@@ -154,6 +154,7 @@ in {
     gitkraken                           # Version control management software
     google-play-music-desktop-player    # Google Play Music for desktop
     gparted                             # Partition manager
+    graphviz                            # Diagram generation software
     inkscape                            # Vector artwork
     libreoffice-fresh                   # Documents/Spreadsheets/Presentations
     libsForQt5.vlc                      # Video player (VLC)
@@ -440,11 +441,15 @@ in {
 
     adb.enable = true;                  # Enables the Android Debug Bridge
 
+    bash.enableCompletion = true;       # Enable completion in bash shell
+
     fish.enable = true;                 # Holdup... why is this here?
     fish.shellAliases = {               # Extra fish commands
       neofetchnix = "neofetch --ascii_colors 68 110";
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
       prettify = "python -m json.tool"; # Prettify json!
+      dotp = "dot -Tpdf -o $1.pdf";
+      doti = "dot -Tpng -o $1.png";
     };
 
     less.enable = true;                 # Enables config for the `less` command
@@ -462,6 +467,7 @@ in {
     fira-code-symbols                   # Fancy font with programming ligatures
     fira-code                           # Fancy font with programming ligatures
     font-awesome_4                      # Fancy icons font
+    migmix                              # Font with Japanese support
     siji                                # Iconic bitmap font
 
     ### Programming ligatures ##################################################
@@ -470,14 +476,32 @@ in {
     # as opposed to what they look like on a computer                          #
     ############################################################################
 
+    ### Japanese Fonts #########################
+    ipafont
+    kochi-substitute
+
   ];
 
+  fonts.fontconfig.ultimate.enable = true;
+
   # Set default monospace font to Fira Code
-  fonts.fontconfig.defaultFonts.monospace = [ "Fira Code Medium" ];
+  fonts.fontconfig.defaultFonts.monospace = [ "Fira Code Medium" "IPAGothic" ];
+  fonts.fontconfig.defaultFonts.sansSerif = [ "DejaVu Sans" "IPAPGothic" ];
+  fonts.fontconfig.defaultFonts.serif = [ "DejaVu Serif" "IPAPMincho" ];
+
+  ### i18n (Internationalization and Localization) #############################
+
+  i18n = {
+#    consoleKeyMap = "gb";
+    defaultLocale = "en_GB.UTF-8";
+    inputMethod.enabled = "fcitx";
+    inputMethod.fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
+  };
 
   ### Hardware Settings ########################################################
 
   sound.enable = true;                  # Enable sound
+  sound.mediaKeys.enable = true;
 
   hardware = {
     pulseaudio = {
