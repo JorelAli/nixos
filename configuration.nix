@@ -162,7 +162,7 @@ in {
     redshift                            # Screen temperature changer
     shutter                             # Screenshot tool
     sqlitebrowser                       # SQLite .db file browser
-    zathura                             # PDF viewer
+    unstable.zathura                    # PDF viewer
 
     ### Typora Markdown Editor #################################################
     # Typora - another markdown editor with fancy features (such as exporting  # 

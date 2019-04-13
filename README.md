@@ -34,3 +34,4 @@ My NixOS configuration
   - [ ] i3status-rust is all part of the configuration
   - [x] Steam
   - [ ] Derivation for new Minecraft launcher
+  - [ ] Enable qutebrowser pdf viewer
