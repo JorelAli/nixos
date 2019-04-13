@@ -121,7 +121,7 @@ in {
 
     git                                 # Version control
     gnirehtet                           # Reverse tethering (PC -> Mobile)
-    gnumake3                            # 'make' command to build executables
+    gnumake                             # 'make' command to build executables
     htop                                # A better 'top' command
     lynx                                # Terminal web browser
     mdbook                              # A markdown to web "book" generator
@@ -269,7 +269,7 @@ in {
     ant                                 # Java building thingy
     jetbrains.idea-community            # IntelliJ IDEA Java IDE
     maven                               # Java dependency manager
-    openjdk10                           # Java Development Kit for Java 10
+    openjdk11                           # Java Development Kit for Java 11
 
     ### Programming (Other) ####################################################
 
@@ -335,7 +335,6 @@ in {
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
     udisks                              # Storage device daemon
-    udisks_glue                         # Links udisks to custom actions
     universal-ctags                     # Tool for browsing source code quickly
     xorg.xbacklight                     # Enable screen backlight adjustments
     xorg.xcompmgr                       # Window compositing
