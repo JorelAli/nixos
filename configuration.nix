@@ -20,15 +20,15 @@ let
     config.allowUnfree = true;
   };
 
- # customPlugins.vim-javacomplete2 = pkgs.vimUtils.buildVimPlugin {
- #   name = "vim-javacomplete2";
- #   src = pkgs.fetchFromGitHub {
- #     owner = "artur-shaik";
- #     repo = "vim-javacomplete2";
- #     rev = "29fee1cb4554eef3e5a30984ac7a389766ee4da4";
- #     sha256 = "1kzx80hz9n2bawrx9lgsfqmjkljbgc1lpl8abnhfzkyy9ax9svk3";
- #   };
- # };
+  customPlugins.vim-javacomplete2 = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-javacomplete2";
+    src = pkgs.fetchFromGitHub {
+      owner = "JorelAli";
+      repo = "vim-javacomplete2";
+      rev = "cc140af15dc850372655a45cca5b5d07e0d14344";
+      sha256 = "1kzx80hz9n2bawrx9lgsfqmjkljbgc1lpl8abnhfzkyy9ax9svk3";
+    };
+  };
 
   customPlugins.vim-devdocs = pkgs.vimUtils.buildVimPlugin {
     name = "vim-devdocs";
@@ -439,6 +439,32 @@ in {
                   \  }
 
                 nmap K <Plug>(devdocs-under-cursor)
+                
+                set statusline+=%#warningmsg#
+                set statusline+=%{SyntasticStatuslineFlag()}
+                set statusline+=%*
+
+                let g:syntastic_always_populate_loc_list = 1
+                let g:syntastic_auto_loc_list = 1
+                let g:syntastic_check_on_open = 1
+                let g:syntastic_check_on_wq = 0
+
+                let g:JavaComplete_JavaviLogDirectory = '/home/jorel/javavilogs'
+                let g:JavaComplete_Home = $HOME . '/.vim/bundle/vim-javacomplete2'
+                let $CLASSPATH .= '.:' . $HOME . '/.vim/bundle/vim-javacomplete2/lib/javavi/target/classes'
+
+                nmap <F4> <Plug>(JavaComplete-Imports-AddSmart)
+                imap <F4> <Plug>(JavaComplete-Imports-AddSmart)
+                nmap <F5> <Plug>(JavaComplete-Imports-Add)
+                imap <F5> <Plug>(JavaComplete-Imports-Add)
+                nmap <F6> <Plug>(JavaComplete-Imports-AddMissing)
+                imap <F6> <Plug>(JavaComplete-Imports-AddMissing)
+                nmap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
+                imap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
+
+                inoremap <C-@> <c-x><c-o>
+
+                autocmd FileType java setlocal omnifunc=javacomplete#Complete
             '';
 
             ### Vim plugins (installed via VAM) ################################
@@ -451,7 +477,7 @@ in {
                         "vim-airline"             # Fancy status bar
                         "vim-airline-themes"      # Fancy status bar themes
                         "nerdtree"                # File tree on the side of vim
-                        "youcompleteme"           # Code completer
+                       # "youcompleteme"
                         #TODO: This needs to be enabled using install.py!!
 
                         "solarized"               # Solarized theme
@@ -462,6 +488,10 @@ in {
                         "tagbar"                  # Class outline viewer
                         "easymotion"
                         "vim-devdocs"
+                        "vim-commentary"
+                        "supertab"
+                        "deoplete-rust"
+                        "vim-javacomplete2"
                 ]; }
             ];
         }
@@ -674,7 +704,7 @@ in {
     trustedUsers = [ "root" "jorel" ];
 
     # Literally do NOT enable this setting, it's impure.
-    # readOnlyStore = false;            # Allows writing access to /nix/store
+    readOnlyStore = false;            # Allows writing access to /nix/store
   };
 
   ### NixPkgs Configuration ####################################################
