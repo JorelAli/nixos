@@ -8,15 +8,38 @@ let
   ### Nix channels #############################################################
   # These are channels defined using the `sudo nix-channel --list` command.    #
   # They are as follows:                                                       #
-  #   nixos https://nixos.org/channels/nixos-18.09                             #
+  #   nixos https://nixos.org/channels/nixos-19.03                             #
+  #   nixos-old https://nixos.org/channels/nixos-18.09                         #
   #   unstable https://nixos.org/channels/nixos-unstable                       #
   ##############################################################################
 
   unstable = import <unstable> { 
-    config = {
-      allowUnfree = true;
-    }; 
+    config.allowUnfree = true;
   };
+  old = import <nixos-old> {
+    config.allowUnfree = true;
+  };
+
+ # customPlugins.vim-javacomplete2 = pkgs.vimUtils.buildVimPlugin {
+ #   name = "vim-javacomplete2";
+ #   src = pkgs.fetchFromGitHub {
+ #     owner = "artur-shaik";
+ #     repo = "vim-javacomplete2";
+ #     rev = "29fee1cb4554eef3e5a30984ac7a389766ee4da4";
+ #     sha256 = "1kzx80hz9n2bawrx9lgsfqmjkljbgc1lpl8abnhfzkyy9ax9svk3";
+ #   };
+ # };
+
+  customPlugins.vim-devdocs = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-devdocs";
+    src = pkgs.fetchFromGitHub {
+      owner = "rhysd";
+      repo = "devdocs.vim";
+      rev = "1c91c619874f11f2062f80e6ca4b49456f21ae91";
+      sha256 = "1nxww2mjabl2g2wchxc4h3a58j64acls24zb5jmfi71b8sai8a9b";
+    };
+  };
+
 in {
 
   ### NixOS important settings #################################################
@@ -404,11 +427,23 @@ in {
                 au Syntax * RainbowParenthesesLoadBraces
 
                 au BufReadPost *.als set syntax=java
+
+                set listchars=tab:\|\ 
+                set list
+
+                let g:devdocs_filetype_map = {
+                  \ 'java': 'java',
+                  \ 'javacc': 'java',
+                  \ 'haskell': 'haskell',
+                  \ 'rust': 'rust',
+                  \  }
+
+                nmap K <Plug>(devdocs-under-cursor)
             '';
 
             ### Vim plugins (installed via VAM) ################################
 
-            vimrcConfig.vam.knownPlugins = pkgs.vimPlugins; 
+            vimrcConfig.vam.knownPlugins = pkgs.vimPlugins // customPlugins; 
             vimrcConfig.vam.pluginDictionaries = [
                 { names = [
                         "Syntastic"               # Fancy syntax errors + status
@@ -426,6 +461,7 @@ in {
                         "gitgutter"               # Shows git changes in sidebar
                         "tagbar"                  # Class outline viewer
                         "easymotion"
+                        "vim-devdocs"
                 ]; }
             ];
         }
