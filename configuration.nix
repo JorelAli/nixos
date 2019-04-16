@@ -443,7 +443,7 @@ in {
                 let g:syntastic_check_on_open = 1
                 let g:syntastic_check_on_wq = 0
 
-                let g:JavaComplete_JavaviLogDirectory = '/home/jorel/javavilogs'
+                let g:JavaComplete_JavaviLogDirectory = $HOME . '/javavilogs'
                 let g:JavaComplete_Home = $HOME . '/.vim/bundle/vim-javacomplete2'
                 let $CLASSPATH .= '.:' . $HOME . '/.vim/bundle/vim-javacomplete2/lib/javavi/target/classes'
 
@@ -461,14 +461,29 @@ in {
                 autocmd FileType java setlocal omnifunc=javacomplete#Complete
                 autocmd FileType javacc setlocal omnifunc=javacomplete#Complete
 
+                let g:deoplete#enable_at_startup = 1 
+
               '';
 
               packages.myVimPackage = with pkgs.vimPlugins // customPlugins; {
                 
-                start = [ Syntastic ctrlp vim-airline vim-airline-themes nerdtree solarized rainbow_parentheses vim-nix
-                                  vim-toml gitgutter tagbar easymotion vim-devdocs vim-commentary supertab deoplete-rust vim-javacomplete2];    
-                opt = [];
+                start = [ 
+                  deoplete-nvim
+                  gitgutter             # Shows git changes in sidebar
+                  rainbow_parentheses   # Pairs parentheses with colors
+                  solarized             # Solarized theme (of course)
+                  supertab              # Tab key does suggestions
+                  Syntastic             # Syntax checking for languages
+                  tagbar                # Shows declared file methods etc.
 
+                  vim-airline           # Fancy bottom bar for vim
+                  vim-airline-themes    # Theme support for bottom bar 
+                  vim-commentary        # Easy comment using 'gcc' key shortcut
+                  vim-devdocs           # Easy file documentation using ':DevDocs'
+                  vim-javacomplete2     # Java IDE features (autocomplete)
+                  vim-nix               # Nix language syntax
+                  vim-toml              # Toml language syntax
+                ];    
               };
           };
       }
