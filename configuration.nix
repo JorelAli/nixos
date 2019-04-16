@@ -89,7 +89,7 @@ in {
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
-    EDITOR = "vim";
+    EDITOR = "nvim";
     _JAVA_OPTIONS= "-Dawt.useSystemAAFontSettings=lcd";
 
   };
@@ -374,20 +374,14 @@ in {
     hunspellDicts.en-gb-ise             # English (GB with '-ise' spellings)
     hunspellDicts.en-us                 # English (US)
 
-    ### Vim (with my chosen packages of choice) ################################
+    ### NeoVim #################################################################
 
     (
-        with import <nixpkgs> {};
-
-        vim_configurable.customize {
-            # Specifies the vim binary name.
-            # E.g. set this to "my-vim" and you need to type "my-vim" to open this vim
-            # This allows to have multiple vim packages installed (e.g. with a different set of plugins)
-            name = "vim";
-
-            # List of stuff that would go in ~/.vimrc
-
-            vimrcConfig.customRC = ''
+      with import <nixpkgs> {};
+      neovim.override {
+          vimAlias = true;
+          configure = {
+            customRC = ''
                 syntax enable
                 set tabstop=4
                 set background=dark
@@ -428,7 +422,7 @@ in {
 
                 au BufReadPost *.als set syntax=java
 
-                set listchars=tab:\|\ 
+                set listchars=tab:\¦\ 
                 set list
 
                 let g:devdocs_filetype_map = {
@@ -465,38 +459,20 @@ in {
                 inoremap <C-@> <c-x><c-o>
 
                 autocmd FileType java setlocal omnifunc=javacomplete#Complete
-            '';
+                autocmd FileType javacc setlocal omnifunc=javacomplete#Complete
 
-            ### Vim plugins (installed via VAM) ################################
+              '';
 
-            vimrcConfig.vam.knownPlugins = pkgs.vimPlugins // customPlugins; 
-            vimrcConfig.vam.pluginDictionaries = [
-                { names = [
-                        "Syntastic"               # Fancy syntax errors + status
-                        "ctrlp"                   # Fuzzy finder
-                        "vim-airline"             # Fancy status bar
-                        "vim-airline-themes"      # Fancy status bar themes
-                        "nerdtree"                # File tree on the side of vim
-                       # "youcompleteme"
-                        #TODO: This needs to be enabled using install.py!!
+              packages.myVimPackage = with pkgs.vimPlugins // customPlugins; {
+                
+                start = [ Syntastic ctrlp vim-airline vim-airline-themes nerdtree solarized rainbow_parentheses vim-nix
+                                  vim-toml gitgutter tagbar easymotion vim-devdocs vim-commentary supertab deoplete-rust vim-javacomplete2];    
+                opt = [];
 
-                        "solarized"               # Solarized theme
-                        "rainbow_parentheses"     # Rainbow brackets for easy brackets
-                        "vim-nix"                 # Syntax etc. for .nix files
-                        "vim-toml"                # Syntax etc. for .toml files
-                        "gitgutter"               # Shows git changes in sidebar
-                        "tagbar"                  # Class outline viewer
-                        "easymotion"
-                        "vim-devdocs"
-                        "vim-commentary"
-                        "supertab"
-                        "deoplete-rust"
-                        "vim-javacomplete2"
-                ]; }
-            ];
-        }
+              };
+          };
+      }
     )
-
 
   ];
 
