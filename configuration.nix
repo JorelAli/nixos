@@ -13,13 +13,13 @@ let
   #   unstable https://nixos.org/channels/nixos-unstable                       #
   ##############################################################################
 
-  unstable = import <unstable> { 
-    config.allowUnfree = true;
-  };
-  old = import <nixos-old> {
-    config.allowUnfree = true;
-  };
+  unstable = import <unstable>  { config.allowUnfree = true; };
+  old      = import <nixos-old> { config.allowUnfree = true; };
 
+  ### Custom Vim plugins #######################################################
+
+  # Java Complete 2, with pre-built packages (todo: extract into Nix expression
+  # for a more "pure" installation of Java Complete 2)
   customPlugins.vim-javacomplete2 = pkgs.vimUtils.buildVimPlugin {
     name = "vim-javacomplete2";
     src = pkgs.fetchFromGitHub {
@@ -159,6 +159,7 @@ in {
     speedtest-cli                       # Speed test in terminal
     tree                                # Print file tree in terminal
     unzip                               # Command to unzip files
+    urlview                             # View URLs in a document (for rtv)
     wget                                # Download web files
     youtube-dl                          # YouTube downloader
     zip                                 # Command to zip files
@@ -263,9 +264,6 @@ in {
     
     pacvim                              # Pacman, but with vim controls
     unstable.steam                      # Game distribution platform
-    #steam-run
-    #steamcontroller
-    #zeroad                             # 0ad video game - like Age of Empires
 
     ### Other random stuff #####################################################
 
@@ -290,7 +288,8 @@ in {
     ### Programming (Java) #####################################################
     
     ant                                 # Java building thingy
-    jetbrains.idea-community            # IntelliJ IDEA Java IDE
+    eclipses.eclipse-java               # Eclipse Java IDE (my favourite IDE)
+    jetbrains.idea-community            # IntelliJ IDEA Java IDE (eh)
     maven                               # Java dependency manager
     openjdk11                           # Java Development Kit for Java 11
 
@@ -376,12 +375,12 @@ in {
 
     ### NeoVim #################################################################
 
-    (
-      with import <nixpkgs> {};
+    ( with import <nixpkgs> {};
       neovim.override {
-          vimAlias = true;
+          vimAlias = true;              # Lets you use 'vim' as alias for 'nvim'
           configure = {
             customRC = ''
+                " Generic vim configuration here  
                 syntax enable
                 set tabstop=4
                 set background=dark
@@ -389,10 +388,12 @@ in {
                 set number
                 set mouse=a
                 let g:airline_powerline_fonts = 1
-                let g:NERDTreeWinSize=20
-                autocmd VimEnter *.rs TagbarOpen
                 set backspace=indent,eol,start
 
+                " Enable TagBar support for rust files
+                autocmd VimEnter *.rs TagbarOpen
+
+                " Configured color pairs for rainbow parentheses
                 let g:rbpt_colorpairs = [
                     \ ['brown',       'RoyalBlue3'],
                     \ ['Darkblue',    'SeaGreen3'],
@@ -420,11 +421,14 @@ in {
                 au Syntax * RainbowParenthesesLoadSquare
                 au Syntax * RainbowParenthesesLoadBraces
 
+                " Let Alloy Analyser java Java syntax highlighting
                 au BufReadPost *.als set syntax=java
 
+                " Show tabs as lines
                 set listchars=tab:\¦\ 
                 set list
 
+                " Enable file specific dev docs
                 let g:devdocs_filetype_map = {
                   \ 'java': 'java',
                   \ 'javacc': 'java',
@@ -433,7 +437,8 @@ in {
                   \  }
 
                 nmap K <Plug>(devdocs-under-cursor)
-                
+
+                " Syntastic configuration
                 set statusline+=%#warningmsg#
                 set statusline+=%{SyntasticStatuslineFlag()}
                 set statusline+=%*
@@ -443,6 +448,7 @@ in {
                 let g:syntastic_check_on_open = 1
                 let g:syntastic_check_on_wq = 0
 
+                " Some Java Complete 2 setup (might be unnecessary)
                 let g:JavaComplete_JavaviLogDirectory = $HOME . '/javavilogs'
                 let g:JavaComplete_Home = $HOME . '/.vim/bundle/vim-javacomplete2'
                 let $CLASSPATH .= '.:' . $HOME . '/.vim/bundle/vim-javacomplete2/lib/javavi/target/classes'
@@ -461,9 +467,12 @@ in {
                 autocmd FileType java setlocal omnifunc=javacomplete#Complete
                 autocmd FileType javacc setlocal omnifunc=javacomplete#Complete
 
+                " Enable quality autocompletion
                 let g:deoplete#enable_at_startup = 1 
 
               '';
+
+              ### Vim packages #################################################
 
               packages.myVimPackage = with pkgs.vimPlugins // customPlugins; {
                 
@@ -486,9 +495,8 @@ in {
                 ];    
               };
           };
-      }
-    )
-
+        }
+      )
   ];
 
   ### Programs #################################################################
@@ -517,38 +525,41 @@ in {
 
   ### Fonts ####################################################################
 
-  fonts.fonts = with pkgs; [
+  fonts = {
+    fonts = with pkgs; [
 
-    emojione                            # Emoji font
-    fira-code-symbols                   # Fancy font with programming ligatures
-    fira-code                           # Fancy font with programming ligatures
-    font-awesome_4                      # Fancy icons font
-    migmix                              # Font with Japanese support
-    siji                                # Iconic bitmap font
+      emojione                          # Emoji font
+      fira-code-symbols                 # Fancy font with programming ligatures
+      fira-code                         # Fancy font with programming ligatures
+      font-awesome_4                    # Fancy icons font
+      siji                              # Iconic bitmap font
 
-    ### Programming ligatures ##################################################
-    # *This means that -> will look like an actual arrow and >= and <=         #
-    # actually look like less than or equal and greater than or equal symbols, #
-    # as opposed to what they look like on a computer                          #
-    ############################################################################
+      ### Programming ligatures ################################################
+      # *This means that -> will look like an actual arrow and >= and <=       #
+      # actually look like less than or equal and greater than or equal        #
+      # symbols, as opposed to what they look like on a computer               #
+      ##########################################################################
+  
+      ### Japanese Fonts #######################################################
+      ipafont
+      kochi-substitute
+      migmix
+    ];
 
-    ### Japanese Fonts #########################
-    ipafont
-    kochi-substitute
+    fontconfig = {
+      ultimate.enable = true;
+      defaultFonts = {
+        monospace = [ "Fira Code Medium" "IPAGothic" ];
+        sansSerif = [ "DejaVu Sans" "IPAPGothic" ];
+        serif = [ "DejaVu Serif" "IPAPMincho" ];
+      };
+    };
 
-  ];
-
-  fonts.fontconfig.ultimate.enable = true;
-
-  # Set default monospace font to Fira Code
-  fonts.fontconfig.defaultFonts.monospace = [ "Fira Code Medium" "IPAGothic" ];
-  fonts.fontconfig.defaultFonts.sansSerif = [ "DejaVu Sans" "IPAPGothic" ];
-  fonts.fontconfig.defaultFonts.serif = [ "DejaVu Serif" "IPAPMincho" ];
+  };
 
   ### i18n (Internationalization and Localization) #############################
 
   i18n = {
-#    consoleKeyMap = "gb";
     defaultLocale = "en_GB.UTF-8";
     inputMethod.enabled = "fcitx";
     inputMethod.fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
