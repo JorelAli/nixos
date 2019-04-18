@@ -245,9 +245,9 @@ in {
 
     ((import ./clairvoyance.nix).overrideAttrs (oldAttrs: rec {
       autoFocusPassword = "true";
-      backgroundURL = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/wallpapers/nix-wallpaper-stripes-logo.png";
+      backgroundURL = "https://images7.alphacoders.com/700/700047.jpg";
       installPhase = oldAttrs.installPhase + "cp ${builtins.fetchurl backgroundURL} $out/share/sddm/themes/clairvoyance/$background";
-      background = "Assets/Background.png";
+      background = "Assets/Background.jpg";
     }))
 
     ### Games ##################################################################
@@ -272,19 +272,6 @@ in {
 
     cool-retro-term                     # A retro looking terminal
     elinks                              # Useless terminal based browser
-
-    ### Flash Player for Firefox ##################
-    # NPAPI flash player for the Firefox browser. #
-    # The nixpkgs version's links are dead.       #
-    ###############################################
-
-#    ((pkgs.flashplayer).overrideAttrs (oldAttrs: {
-#      src = fetchurl {
-#        url = "https://fpdownload.macromedia.com/pub/flashplayer/updaters/32/flash_player_npapi_linux_debug.x86_64.tar.gz";
-#        sha256 = "0h16vdar4p8zj6w57ihll71xjr9sy7hdiq4qwvvqndah5c4ym8xl";
-#      };
-#    }))
-
     gnash                               # Flash player
     sl                                  # Display a steam locomotive in terminal
 
@@ -691,7 +678,7 @@ in {
   users.users.jorel = {
     isNormalUser = true;
     home = "/home/jorel";
-    description = "C'Taz'M'Kazm";
+    description = " ";                  # The ultimate sddm aesthetics
     extraGroups = [ "wheel" "networkmanager" "disk" "audio" "video" ];
     uid = 1000;
     shell = pkgs.fish;                  # Use fish as the default shell
@@ -709,7 +696,14 @@ in {
     ];
     trustedUsers = [ "root" "jorel" ];
 
-    # Literally do NOT enable this setting, it's impure.
+    #####################################################################
+    # This setting, when enabled to true, allows writing access to the  #
+    # /nix/store/ directories. This isn't a good thing on NixOS, since  #
+    # new derivations can override these folders (or be deleted with    #
+    # nix's garbage collector) whenever the system does so. This should #
+    # only be toggled for development testing purposes ONLY.            #
+    #####################################################################
+    
     readOnlyStore = false;            # Allows writing access to /nix/store
   };
 
@@ -720,7 +714,7 @@ in {
     flashplayer = { debug = true; };    # Flashplayer debug mode has new dl URL
   };
 
-  ### NixOS System Version (Do not touch) ######################################
+  ### NixOS System Version (Do not touch. Ever.) ###############################
 
   system.stateVersion = "18.09";
 
