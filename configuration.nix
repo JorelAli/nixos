@@ -243,8 +243,11 @@ in {
     #   https://github.com/eayus/sddm-theme-clairvoyance              #
     ###################################################################
 
-    ((import ./clairvoyance.nix).overrideAttrs (oldAttrs: {
+    ((import ./clairvoyance.nix).overrideAttrs (oldAttrs: rec {
       autoFocusPassword = "true";
+      backgroundURL = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/wallpapers/nix-wallpaper-stripes-logo.png";
+      installPhase = oldAttrs.installPhase + "cp ${builtins.fetchurl backgroundURL} $out/share/sddm/themes/clairvoyance/$background";
+      background = "Assets/Background.png";
     }))
 
     ### Games ##################################################################
@@ -275,12 +278,12 @@ in {
     # The nixpkgs version's links are dead.       #
     ###############################################
 
-    ((pkgs.flashplayer).overrideAttrs (oldAttrs: {
-      src = fetchurl {
-        url = "https://fpdownload.macromedia.com/pub/flashplayer/updaters/32/flash_player_npapi_linux_debug.x86_64.tar.gz";
-        sha256 = "0h16vdar4p8zj6w57ihll71xjr9sy7hdiq4qwvvqndah5c4ym8xl";
-      };
-    }))
+#    ((pkgs.flashplayer).overrideAttrs (oldAttrs: {
+#      src = fetchurl {
+#        url = "https://fpdownload.macromedia.com/pub/flashplayer/updaters/32/flash_player_npapi_linux_debug.x86_64.tar.gz";
+#        sha256 = "0h16vdar4p8zj6w57ihll71xjr9sy7hdiq4qwvvqndah5c4ym8xl";
+#      };
+#    }))
 
     gnash                               # Flash player
     sl                                  # Display a steam locomotive in terminal
@@ -352,6 +355,7 @@ in {
 
     ### System tools ###########################################################
 
+    brightnessctl                       # Brightness change for NixOS 19.03
     dunst                               # Notification manager
     libnotify                           # Notification library
     networkmanagerapplet                # GUI for networking

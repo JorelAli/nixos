@@ -10,7 +10,6 @@ stdenv.mkDerivation rec {
   };
 
   background = "Assets/Background.jpg";
-  backgroundURL = "";
   autoFocusPassword = "false";
   enableHDPI = "false";
 
@@ -23,8 +22,9 @@ stdenv.mkDerivation rec {
     echo "autoFocusPassword=$autoFocusPassword" >> $out/share/sddm/themes/clairvoyance/theme.conf
     echo "enableHDPI=$enableHDPI" >> $out/share/sddm/themes/clairvoyance/theme.conf
  '';
+
   meta = with stdenv.lib; {
-    description = "Ellis' sddm theme";
+    description = "eayus' sddm theme";
     homepage = https://github.com/eayus/sddm-theme-clairvoyance;
     platforms = platforms.linux;
   };
