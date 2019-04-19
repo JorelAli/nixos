@@ -13,8 +13,9 @@ let
   #   unstable https://nixos.org/channels/nixos-unstable                       #
   ##############################################################################
 
-  unstable = import <unstable>  { config.allowUnfree = true; };
-  old      = import <nixos-old> { config.allowUnfree = true; };
+  unstable   = import <unstable>       { config.allowUnfree = true; };
+  unstablesm = import <unstable-small> { config.allowUnfree = true; };
+  old        = import <nixos-old>      { config.allowUnfree = true; };
 
   ### Custom Vim plugins #######################################################
 
@@ -60,6 +61,8 @@ in {
 
   # Search for other operating systems
   boot.loader.grub.useOSProber = true;
+
+  boot.extraTTYs = [ "tty8" "tty9" ];
 
   ### Networking Settings ######################################################
 
@@ -186,7 +189,7 @@ in {
     redshift                            # Screen temperature changer
     shutter                             # Screenshot tool
     sqlitebrowser                       # SQLite .db file browser
-    unstable.zathura                    # PDF viewer
+    zathura                    # PDF viewer
 
     ### Typora Markdown Editor #################################################
     # Typora - another markdown editor with fancy features (such as exporting  # 
@@ -266,7 +269,8 @@ in {
     ############################################################################
     
     pacvim                              # Pacman, but with vim controls
-    unstable.steam                      # Game distribution platform
+    unstablesm.steam                      # Game distribution platform
+    vitetris                            # Terminal based tetris game
 
     ### Other random stuff #####################################################
 
@@ -584,6 +588,11 @@ in {
   ### Services #################################################################
 
   services = {
+
+    teamviewer.enable = true;
+
+    nixosManual.ttyNumber = 8;
+    rogue.tty = "tty9";
 
     # Adds support for scrolling to change the brightness for i3status-rs
     udev.extraRules = ''  
