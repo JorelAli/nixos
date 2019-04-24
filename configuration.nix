@@ -188,8 +188,9 @@ in {
     pavucontrol                         # Pulse Audio controller
     redshift                            # Screen temperature changer
     shutter                             # Screenshot tool
+    skype                               # Messaging & Video calling platform
     sqlitebrowser                       # SQLite .db file browser
-    zathura                    # PDF viewer
+    zathura                             # PDF viewer
 
     ### Typora Markdown Editor #################################################
     # Typora - another markdown editor with fancy features (such as exporting  # 
@@ -269,7 +270,7 @@ in {
     ############################################################################
     
     pacvim                              # Pacman, but with vim controls
-    unstablesm.steam                      # Game distribution platform
+    steam                               # Game distribution platform
     vitetris                            # Terminal based tetris game
 
     ### Other random stuff #####################################################
@@ -351,7 +352,12 @@ in {
     libnotify                           # Notification library
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
-    udisks                              # Storage device daemon
+      #########################################################################
+      # If a USB pen is mounted and you can't access it, use                  #
+      # `chown <username> <usb mount point>` (or wherever the mount point is) #
+      # If the USB is not mounted, use `udisksctl mount -b /dev/<usb>`        #
+      #########################################################################
+    #udisks                              # Storage device daemon
     universal-ctags                     # Tool for browsing source code quickly
     xorg.xbacklight                     # Enable screen backlight adjustments
     xorg.xcompmgr                       # Window compositing
