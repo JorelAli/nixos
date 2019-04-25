@@ -116,6 +116,20 @@ in {
     '';
   };
 
+  environment.etc."X11/xorg.conf.d/20-intel.conf" = {
+    text = ''
+      Section "Device"
+ 
+        Identifier "Intel Graphics"
+ 
+        Driver "intel"
+ 
+        Option "TearFree" "true"
+ 
+      EndSection
+    '';
+  };
+
   ### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [
@@ -579,7 +593,16 @@ in {
     };
     bluetooth.enable = true;            # Enable bluetooth 
     bluetooth.powerOnBoot = true;       # Let bluetooth enable on startup
-    opengl.driSupport32Bit = true;      # Allow 32 bit support for OpenGL
+    opengl = {
+      enable = true;
+      driSupport32Bit = true;
+      extraPackages = with pkgs; [
+       vaapiIntel
+        vaapiVdpau
+        libvdpau-va-gl
+        intel-media-driver
+      ];
+    };
   };
 
   # Use fingerprint recognition on the login screen to log in. To add a 
@@ -609,6 +632,12 @@ in {
     compton = {
       enable = true;                    # Application transparency
       opacityRules = [ "95:class_g = 'konsole'" ];
+      vSync = "opengl-swc";
+      backend = "glx";
+      fade = true;
+      extraOptions = ''
+        unredir-if-possible = true;
+        '';
       # inactiveOpacity = "0.99";
     };
 
@@ -623,6 +652,8 @@ in {
     xserver = {
       enable = true;                    # GUI for the entire computer
       layout = "gb";                    # Use the GB English keyboard layout
+
+      exportConfiguration = true;
 
       libinput.enable = true;           # Touchpad support
       synaptics = {
@@ -727,6 +758,11 @@ in {
   nixpkgs.config = {
     allowUnfree = true;                 # Allow unfree/proprietary packages
     flashplayer = { debug = true; };    # Flashplayer debug mode has new dl URL
+
+    packageOverrides = pkgs: {
+      vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+    };
+
   };
 
   ### NixOS System Version (Do not touch. Ever.) ###############################
