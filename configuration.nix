@@ -147,6 +147,7 @@ in {
 
     ### Command line utilities #################################################
 
+    bundler
     escrotum                            # Screenshot tool (what a name...)
     feh                                 # Image viewer
     fish                                # Friendly Interface SHell
@@ -168,6 +169,7 @@ in {
     moc                                 # Music player in a terminal
     neofetch                            # screenfetch, but better
     p7zip                               # 7z zip manager
+    pdfgrep
     ranger                              # Terminal file manager
     rofi                                # Window switcher & App launcher
     rtv                                 # Reddit in terminal
@@ -398,6 +400,7 @@ in {
                 " Generic vim configuration here  
                 syntax enable
                 set tabstop=4
+                set shiftwidth=4
                 set background=dark
                 colorscheme solarized
                 set number
@@ -485,6 +488,12 @@ in {
                 " Enable quality autocompletion
                 let g:deoplete#enable_at_startup = 1 
 
+                let g:deoplete#sources#rust#racer_binary = $HOME . '/.cargo/bin/racer'
+                let g:deoplete#sources#rust#rust_source_path = $HOME . '/github/rust/src'
+
+                let g:markdown_enable_mappings = 0
+                let g:vim_markdown_folding_disabled = 1
+
               '';
 
               ### Vim packages #################################################
@@ -504,8 +513,11 @@ in {
                   vim-airline-themes    # Theme support for bottom bar 
                   vim-commentary        # Easy comment using 'gcc' key shortcut
                   vim-devdocs           # Easy file documentation using ':DevDocs'
-                  vim-javacomplete2     # Java IDE features (autocomplete)
+                  #vim-javacomplete2     # Java IDE features (autocomplete)
+                  vim-markdown          # Markdown syntax highlighting
                   vim-nix               # Nix language syntax
+                  rust-vim
+                  deoplete-rust
                   vim-toml              # Toml language syntax
                 ];    
               };
@@ -635,6 +647,7 @@ in {
       vSync = "opengl-swc";
       backend = "glx";
       fade = true;
+      fadeDelta = 5;
       extraOptions = ''
         unredir-if-possible = true;
         '';
