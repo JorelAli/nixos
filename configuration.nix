@@ -68,6 +68,11 @@ in {
 
   networking.hostName = "NixOS";
   networking.networkmanager.enable = true;
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 25565 ];
+    allowedUDPPorts = [ 25565 ];
+  };
 
   # If stuck, use the 'nm-connection-editor' command
 
@@ -161,6 +166,7 @@ in {
     #####################################################
 
     git                                 # Version control
+    git-lfs                             # Support for large files for git
     gnirehtet                           # Reverse tethering (PC -> Mobile)
     gnumake                             # 'make' command to build executables
     htop                                # A better 'top' command
@@ -307,16 +313,23 @@ in {
     ### Programming (Other) ####################################################
 
     gcc                                 # C/C++ compiler
-    nodejs                              # Node.js
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
 
+    ### Programming (Node.JS) ##################################################
+
+    ###############################################################
+    # To lookup packages for nix, use the following code:         #
+    #   nix-env -qaPA 'nixos.nodePackages' | grep -i <npm module> #
+    ###############################################################
+
+    nodejs                              # Node.JS
+    nodePackages.vue-cli                # Vue.JS package
+
     ### Programming (Rust) #####################################################
 
-    cargo                               # Rust package manager
     ncurses                             # Library to create Text User Interfaces
-    unstable.rustc                      # Rust compiler (v 1.32.0)
     rustup                              # Rust toolchain manager
 
     ### Programming (Haskell) ##################################################
@@ -441,6 +454,7 @@ in {
 
                 " Let Alloy Analyser java Java syntax highlighting
                 au BufReadPost *.als set syntax=java
+                au BufReadPost *.vue set syntax=html
 
                 " Show tabs as lines
                 set listchars=tab:\¦\ 
@@ -488,9 +502,12 @@ in {
                 " Enable quality autocompletion
                 let g:deoplete#enable_at_startup = 1 
 
+                " Rust stuff
                 let g:deoplete#sources#rust#racer_binary = $HOME . '/.cargo/bin/racer'
                 let g:deoplete#sources#rust#rust_source_path = $HOME . '/github/rust/src'
+                let g:syntastic_rust_checkers = ['cargo']
 
+                " Markdown
                 let g:markdown_enable_mappings = 0
                 let g:vim_markdown_folding_disabled = 1
 
@@ -501,7 +518,9 @@ in {
               packages.myVimPackage = with pkgs.vimPlugins // customPlugins; {
                 
                 start = [ 
-                  deoplete-nvim
+                  deoplete-nvim         # Dark powered autocompletion
+                  deoplete-rust         # Autocompletion for rust
+
                   gitgutter             # Shows git changes in sidebar
                   rainbow_parentheses   # Pairs parentheses with colors
                   solarized             # Solarized theme (of course)
@@ -513,12 +532,12 @@ in {
                   vim-airline-themes    # Theme support for bottom bar 
                   vim-commentary        # Easy comment using 'gcc' key shortcut
                   vim-devdocs           # Easy file documentation using ':DevDocs'
-                  #vim-javacomplete2     # Java IDE features (autocomplete)
+                  #vim-javacomplete2    # Java IDE features (autocomplete)
                   vim-markdown          # Markdown syntax highlighting
                   vim-nix               # Nix language syntax
-                  rust-vim
-                  deoplete-rust
                   vim-toml              # Toml language syntax
+                  ctrlp
+
                 ];    
               };
           };
