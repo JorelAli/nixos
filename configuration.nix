@@ -41,6 +41,16 @@ let
     };
   };
 
+  customPlugins.kronos = pkgs.vimUtils.buildVimPlugin {
+    name = "kronos.vim";
+    src = pkgs.fetchFromGitHub {
+      owner = "soywod";
+      repo = "kronos.vim";
+      rev = "038fd2aa33cb058aca0870fa8c1d80d17d1774de";
+      sha256 = "0f62yc46nw4qpb069amp6kkwg282s6wnvh3yzfhihxz5myc1vdh5";
+    };
+  };
+
 in {
 
   ### NixOS important settings #################################################
@@ -71,7 +81,9 @@ in {
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ 25565 ];
+    allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
     allowedUDPPorts = [ 25565 ];
+    allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
   };
 
   # If stuck, use the 'nm-connection-editor' command
@@ -152,7 +164,10 @@ in {
 
     ### Command line utilities #################################################
 
-    bundler
+    kdeconnect
+
+    bat                                 # cat command, but better
+    bundler                             # Ruby bundle thing
     escrotum                            # Screenshot tool (what a name...)
     feh                                 # Image viewer
     fish                                # Friendly Interface SHell
@@ -165,6 +180,7 @@ in {
     #   set fish_color_search_match --background=d33682 #
     #####################################################
 
+    fzf                                 # Find files easily
     git                                 # Version control
     git-lfs                             # Support for large files for git
     gnirehtet                           # Reverse tethering (PC -> Mobile)
@@ -175,8 +191,9 @@ in {
     moc                                 # Music player in a terminal
     neofetch                            # screenfetch, but better
     p7zip                               # 7z zip manager
-    pdfgrep
+    pdfgrep                             # Grep, but for PDF files
     ranger                              # Terminal file manager
+    ripgrep
     rofi                                # Window switcher & App launcher
     rtv                                 # Reddit in terminal
     ruby                                # Ruby (Programming language)
@@ -198,7 +215,6 @@ in {
     chromium                            # Opensource Chrome browser
     firefox                             # Web browser
     deluge                              # Torrent client
-    ghostwriter                         # Markdown editor
     gimp                                # Image editor
     gitkraken                           # Version control management software
     google-play-music-desktop-player    # Google Play Music for desktop
@@ -207,7 +223,9 @@ in {
     inkscape                            # Vector artwork
     libreoffice-fresh                   # Documents/Spreadsheets/Presentations
     libsForQt5.vlc                      # Video player (VLC)
+    mpv
     pavucontrol                         # Pulse Audio controller
+    pidgin-with-plugins                 # IM program           
     redshift                            # Screen temperature changer
     shutter                             # Screenshot tool
     skype                               # Messaging & Video calling platform
@@ -263,6 +281,7 @@ in {
 
     arc-theme                           # Arc theme for GTK+
     adapta-gtk-theme                    # Adapta theme for GTK
+    numix-solarized-gtk-theme
 
     ### Clairvoyance SDDM Theme #######################################
     # Custom nix derivation for the Clairvoyance SDDM theme by eayus: #
@@ -316,6 +335,7 @@ in {
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
+    unstable.swift                      # Swift programming language
 
     ### Programming (Node.JS) ##################################################
 
@@ -511,6 +531,8 @@ in {
                 let g:markdown_enable_mappings = 0
                 let g:vim_markdown_folding_disabled = 1
 
+                let g:kronos_database = $HOME . '.kronos.database'
+
               '';
 
               ### Vim packages #################################################
@@ -536,7 +558,8 @@ in {
                   vim-markdown          # Markdown syntax highlighting
                   vim-nix               # Nix language syntax
                   vim-toml              # Toml language syntax
-                  ctrlp
+
+                  ctrlp                 # Easy file opener using Ctrl+P
 
                 ];    
               };
@@ -751,6 +774,15 @@ in {
     serviceConfig.ExecStart = "${pkgs.xcompmgr}/bin/xcompmgr";
   };
 
+  systemd.user.services."kdeconnect" = {
+    enable = true;
+    description = "eh";
+    wantedBy = [ "graphical-session.target" "default.target" ];
+    serviceConfig.Restart = "always";
+    serviceConfig.RestartSec = 2;
+    serviceConfig.ExecStart = "${pkgs.kdeconnect}/lib/libexec/kdeconnectd";
+  };
+
   ### User Accounts ############################################################
 
   users.users.jorel = {
@@ -791,8 +823,12 @@ in {
     allowUnfree = true;                 # Allow unfree/proprietary packages
     flashplayer = { debug = true; };    # Flashplayer debug mode has new dl URL
 
-    packageOverrides = pkgs: {
+    packageOverrides = pkgs: with pkgs; {
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+      pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
+        ## Add whatever plugins are desired (see nixos.org package listing).
+        plugins = [ purple-facebook purple-discord purple-matrix ];
+      };
     };
 
   };
