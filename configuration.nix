@@ -41,24 +41,17 @@ let
     };
   };
 
-  customPlugins.kronos = pkgs.vimUtils.buildVimPlugin {
-    name = "kronos.vim";
-    src = pkgs.fetchFromGitHub {
-      owner = "soywod";
-      repo = "kronos.vim";
-      rev = "038fd2aa33cb058aca0870fa8c1d80d17d1774de";
-      sha256 = "0f62yc46nw4qpb069amp6kkwg282s6wnvh3yzfhihxz5myc1vdh5";
-    };
-  };
+  all-hies = import 
+    (fetchTarball "https://github.com/infinisil/all-hies/tarball/master") {};
 
 in {
 
   ### NixOS important settings #################################################
 
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [ # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./cachix.nix
+  ];
 
   ### Boot Settings ############################################################
 
@@ -72,21 +65,30 @@ in {
   # Search for other operating systems
   boot.loader.grub.useOSProber = true;
 
-  boot.extraTTYs = [ "tty8" "tty9" ];
+  boot.extraTTYs = [ "tty8" "tty9" "tty10" ];
 
   ### Networking Settings ######################################################
 
-  networking.hostName = "NixOS";
-  networking.networkmanager.enable = true;
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ 25565 ];
-    allowedTCPPortRanges = [ { from = 1714; to = 1764; } ];
-    allowedUDPPorts = [ 25565 ];
-    allowedUDPPortRanges = [ { from = 1714; to = 1764; } ];
-  };
+  networking = {
 
-  # If stuck, use the 'nm-connection-editor' command
+    hostName = "NixOS";
+    networkmanager.enable = true; # Use nm-connection-editor
+
+    firewall = {
+      enable = true;
+
+      allowedTCPPorts = [ 25565 ];
+      allowedTCPPortRanges = [ 
+        { from = 1714; to = 1764; } 
+      ];
+
+      allowedUDPPorts = [ 25565 ];
+      allowedUDPPortRanges = [ 
+        { from = 1714; to = 1764; } 
+      ];
+    };
+
+  };
 
   ### Regional Settings ########################################################
 
@@ -111,6 +113,7 @@ in {
     XDG_CACHE_HOME = "$HOME/.cache";
     EDITOR = "nvim";
     _JAVA_OPTIONS= "-Dawt.useSystemAAFontSettings=lcd";
+    QT_XCB_GL_INTEGRATION = "xcb_egl";
 
   };
 
@@ -160,11 +163,18 @@ in {
     #   Qutebrowser First.                                                     #
     ############################################################################
 
-    unstable.qutebrowser                # Lightweight minimal browser (v1.6.1)
+    unstable.qutebrowser                # Lightweight minimal browser (v1.6.2)
+
+    ### KDE Applications #######################################################
+
+    kdeApplications.kwalletmanager      # Manager for password manager
+    kdeApplications.konsole             # Terminal
+    kdeconnect                          # Connect linux with your phone
+    kinit
+    ksshaskpass                         # Password manager
+    libsForQt5.kwallet                  # Password manager
 
     ### Command line utilities #################################################
-
-    kdeconnect
 
     bat                                 # cat command, but better
     bundler                             # Ruby bundle thing
@@ -193,13 +203,14 @@ in {
     p7zip                               # 7z zip manager
     pdfgrep                             # Grep, but for PDF files
     ranger                              # Terminal file manager
-    ripgrep
+    ripgrep                             # Better grep (use rg command)
     rofi                                # Window switcher & App launcher
     rtv                                 # Reddit in terminal
     ruby                                # Ruby (Programming language)
     screenfetch                         # Display info about themes to console
     speedtest-cli                       # Speed test in terminal
     tree                                # Print file tree in terminal
+    unixtools.xxd                       # Some hex viewer
     unzip                               # Command to unzip files
     urlview                             # View URLs in a document (for rtv)
     wget                                # Download web files
@@ -213,6 +224,8 @@ in {
     atom                                # Glorified text editor
     blueman                             # Bluetooth manager
     chromium                            # Opensource Chrome browser
+    dolphin                             # File browser
+    kdeApplications.dolphin-plugins
     firefox                             # Web browser
     deluge                              # Torrent client
     gimp                                # Image editor
@@ -281,6 +294,7 @@ in {
 
     arc-theme                           # Arc theme for GTK+
     adapta-gtk-theme                    # Adapta theme for GTK
+    breeze-qt5                          # Breeze theme for qt5 (cursors!)
     numix-solarized-gtk-theme
 
     ### Clairvoyance SDDM Theme #######################################
@@ -299,17 +313,6 @@ in {
 
     _2048-in-terminal                   # 2048 game in terminal
     minecraft                           # Minecraft video game
-
-    ### Minecraft Launcher #####################################################
-    # Minecraft's launcher has updated. The minecraft derivation in nixpkgs    #
-    # doesn't use the new launcher. By unpacking it from the .deb file which   #
-    # can be downloaded here:                                                  #
-    #   https://launcher.mojang.com/download/Minecraft.deb                     #
-    # it should be possible to package it into something that Nix can use by   #
-    # following the documentation for packaging binaries from here:            #
-    #   https://nixos.wiki/wiki/Packaging/Binaries                             #
-    ############################################################################
-    
     pacvim                              # Pacman, but with vim controls
     steam                               # Game distribution platform
     vitetris                            # Terminal based tetris game
@@ -331,10 +334,14 @@ in {
 
     ### Programming (Other) ####################################################
 
+    bundler                             # Bundle command for Ruby
     gcc                                 # C/C++ compiler
+    gdb                                 # C code debugger
+    jekyll                              # Static site generator
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
+    valgrind                            # Executable debugging tool
     unstable.swift                      # Swift programming language
 
     ### Programming (Node.JS) ##################################################
@@ -362,6 +369,8 @@ in {
     haskellPackages.hoogle              # Haskell documentation database
     haskellPackages.container           # Represents Haskell containers (e.g. Monoid)
     haskellPackages.zlib                # Compression library for Haskell
+
+    all-hies.versions.ghc843
 
     ### How to get the best Haskell setup ###############################################
     # Install the following system packages: stack cabal-install ghc cachix atom zlib   #
@@ -416,6 +425,9 @@ in {
     ### Nix related stuff ######################################################
 
     cachix                              # Compiled binary hosting for Nix
+#    unstable.nixbox                     # Nix operations "in a box"
+    nix-index                           # Locate packages
+    patchelf
 
     ### Dictionaries ###########################################################
 
@@ -436,7 +448,7 @@ in {
                 set shiftwidth=4
                 set background=dark
                 colorscheme solarized
-                set number
+                set number relativenumber
                 set mouse=a
                 let g:airline_powerline_fonts = 1
                 set backspace=indent,eol,start
@@ -568,10 +580,12 @@ in {
       )
   ];
 
+
   ### Programs #################################################################
 
   programs = {
 
+    ssh.askPassword = "${pkgs.ksshaskpass}/bin/ksshaskpass";
     adb.enable = true;                  # Enables the Android Debug Bridge
 
     bash.enableCompletion = true;       # Enable completion in bash shell
@@ -583,6 +597,8 @@ in {
       prettify = "python -m json.tool"; # Prettify json!
       dotp = "dot -Tpdf -o $1.pdf";
       doti = "dot -Tpng -o $1.png";
+
+      "@executable" = "chmod a+x";      # Make a file executable
     };
 
     less.enable = true;                 # Enables config for the `less` command
@@ -613,16 +629,25 @@ in {
       ipafont
       kochi-substitute
       migmix
+
+      xorg.libXfont
+      xorg.fontutil
+      xorg.libXfont2
+      xorg.fontalias
+      xorg.fontbh100dpi
+      xorg.fontbh75dpi
+      xorg.fontbhttf
+      xorg.fontbhtype1
     ];
 
-    fontconfig = {
-      ultimate.enable = true;
-      defaultFonts = {
-        monospace = [ "Fira Code Medium" "IPAGothic" ];
-        sansSerif = [ "DejaVu Sans" "IPAPGothic" ];
-        serif = [ "DejaVu Serif" "IPAPMincho" ];
-      };
-    };
+#    fontconfig = {
+#      ultimate.enable = true;
+#      defaultFonts = {
+#        monospace = [ "Fira Code Medium" "IPAGothic" ];
+#        sansSerif = [ "DejaVu Sans" "IPAPGothic" ];
+#        serif = [ "DejaVu Serif" "IPAPMincho" ];
+#      };
+#    };
 
   };
 
@@ -667,14 +692,17 @@ in {
   # security.pam.services.login.fprintAuth = true;
 
   security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without a password
+  security.chromiumSuidSandbox.enable = true;
 
   ### Services #################################################################
 
   services = {
 
+
     teamviewer.enable = true;
 
     nixosManual.ttyNumber = 8;
+    rogue.enable = true;
     rogue.tty = "tty9";
 
     # Adds support for scrolling to change the brightness for i3status-rs
@@ -704,7 +732,7 @@ in {
     printing.enable = true;             # Printing (You know, to a printer...)
     upower.enable = true;               # Battery info
 
-    xserver = {
+    xserver = {gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
       enable = true;                    # GUI for the entire computer
       layout = "gb";                    # Use the GB English keyboard layout
 
@@ -749,7 +777,7 @@ in {
       # Despite the fact that I don't actually use this desktop manager
       # I keep it installed because it includes the lovely things that
       # I like about KDE, such as Konsole, Dolphin and Kwallet
-      desktopManager.plasma5.enable = true;
+  #    desktopManager.plasma5.enable = true;
 
     };
   };
@@ -805,6 +833,8 @@ in {
       "hie-nix.cachix.org-1:EjBSHzF6VmDnzqlldGXbi0RM3HdjfTU3yDRi9Pd0jTY="
     ];
     trustedUsers = [ "root" "jorel" ];
+    maxJobs = 4;
+    autoOptimiseStore = true;
 
     #####################################################################
     # This setting, when enabled to true, allows writing access to the  #
