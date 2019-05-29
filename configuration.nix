@@ -180,16 +180,8 @@ in {
     bundler                             # Ruby bundle thing
     escrotum                            # Screenshot tool (what a name...)
     feh                                 # Image viewer
-    fish                                # Friendly Interface SHell
 
-    ### My Fish setup ###################################
-    # Color scheme:                                     #
-    #   curl -L https://get.oh-my.fish | fish           #
-    #   omf install agnoster                            #
-    # Highlight Colors:                                 #
-    #   set fish_color_search_match --background=d33682 #
-    #####################################################
-
+    
     fzf                                 # Find files easily
     git                                 # Version control
     git-lfs                             # Support for large files for git
@@ -270,7 +262,28 @@ in {
         '';
     }))
 
-    vscode                              # Code editor (think notepad++ or atom)
+    (vscode-with-extensions.override {
+       # When the extension is already available in the default extensions set.
+        vscodeExtensions = with vscode-extensions; [
+         # bbenoist.Nix
+        ]
+        # Concise version from the vscode market place when not available in the default set.
+        ++ vscode-utils.extensionsFromVscodeMarketplace [
+          {
+#            name = "code-runner";
+#            publisher = "formulahendry";
+#            version = "0.6.33";
+#            sha256 = "166ia73vrcl5c9hm4q1a73qdn56m0jc7flfsk5p5q41na9f10lb0";
+            name = "vsliveshare";
+            publisher = "ms-vsliveshare";
+            version = "1.0.91";
+            sha256 = "1ndii2x46kkmcdxb3xdbkxrxdj0a1i9qnga12vilpw4bvpz31b1z";
+            #https://ms-vsliveshare.gallery.vsassets.io/_apis/public/gallery/publisher/MS-vsliveshare/extension/vsliveshare/0.3.423/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
+          }
+        ];
+    })
+
+#    vscode                              # Code editor (think notepad++ or atom)
 
     ### System-wide theming ####################################################
 
@@ -427,7 +440,9 @@ in {
     cachix                              # Compiled binary hosting for Nix
 #    unstable.nixbox                     # Nix operations "in a box"
     nix-index                           # Locate packages
+    nox                                 # Better nix searching
     patchelf
+
     (import (fetchGit "https://github.com/haslersn/fish-nix-shell"))
 
     ### Dictionaries ###########################################################
@@ -590,6 +605,16 @@ in {
     adb.enable = true;                  # Enables the Android Debug Bridge
 
     bash.enableCompletion = true;       # Enable completion in bash shell
+
+    ### My Fish setup ###################################
+    # Color scheme:                                     #
+    #   curl -L https://get.oh-my.fish | fish           #
+    #   omf install agnoster                            #
+    # Highlight Colors:                                 #
+    #   set fish_color_search_match --background=d33682 #
+    # Remove greeting:                                  #
+    #   set fish_greeting                               #
+    #####################################################
 
     fish.enable = true;                 # Holdup... why is this here?
     fish.shellAliases = {               # Extra fish commands
