@@ -428,6 +428,7 @@ in {
 #    unstable.nixbox                     # Nix operations "in a box"
     nix-index                           # Locate packages
     patchelf
+    (import (fetchGit "https://github.com/haslersn/fish-nix-shell"))
 
     ### Dictionaries ###########################################################
 
@@ -600,6 +601,9 @@ in {
 
       "@executable" = "chmod a+x";      # Make a file executable
     };
+    fish.promptInit = ''
+      fish-nix-shell --info-right | source
+    '';
 
     less.enable = true;                 # Enables config for the `less` command
     less.commands = { h = "quit"; };    # Rebind the `h` key to quit 
