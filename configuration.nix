@@ -187,6 +187,7 @@ in {
     git-lfs                             # Support for large files for git
     gnirehtet                           # Reverse tethering (PC -> Mobile)
     gnumake                             # 'make' command to build executables
+    gotop                               # Shows processes, CPU usage etc.
     htop                                # A better 'top' command
     lynx                                # Terminal web browser
     mdbook                              # A markdown to web "book" generator
@@ -290,6 +291,9 @@ in {
     breeze-icons                        # Breeze theme icons
     gnome3.adwaita-icon-theme           # Adwaita theme icons
     hicolor_icon_theme                  # Hicolor theme icons
+    paper-icon-theme 
+    papirus-icon-theme
+    maia-icon-theme
 
     ### LXAppearance - GTK Themer  ########################
     # Version 0.6.2 has support for BOTH GTK2 and GTK3.   #
@@ -623,12 +627,15 @@ in {
       prettify = "python -m json.tool"; # Prettify json!
       dotp = "dot -Tpdf -o $1.pdf";
       doti = "dot -Tpng -o $1.png";
-
+      dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
       "@executable" = "chmod a+x";      # Make a file executable
     };
     fish.promptInit = ''
       fish-nix-shell --info-right | source
     '';
+    bash.shellAliases = {
+      dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
+    };
 
     less.enable = true;                 # Enables config for the `less` command
     less.commands = { h = "quit"; };    # Rebind the `h` key to quit 
@@ -647,6 +654,7 @@ in {
       fira-code                         # Fancy font with programming ligatures
       font-awesome_4                    # Fancy icons font
       siji                              # Iconic bitmap font
+      symbola
 
       ### Programming ligatures ################################################
       # *This means that -> will look like an actual arrow and >= and <=       #
@@ -669,14 +677,14 @@ in {
       xorg.fontbhtype1
     ];
 
-#    fontconfig = {
-#      ultimate.enable = true;
-#      defaultFonts = {
-#        monospace = [ "Fira Code Medium" "IPAGothic" ];
+    fontconfig = {
+      ultimate.enable = true;
+      defaultFonts = {
+        monospace = [ "Fira Code Medium" "Symbola" "IPAGothic" ];
 #        sansSerif = [ "DejaVu Sans" "IPAPGothic" ];
 #        serif = [ "DejaVu Serif" "IPAPMincho" ];
-#      };
-#    };
+      };
+    };
 
   };
 
@@ -742,7 +750,7 @@ in {
 
     compton = {
       enable = true;                    # Application transparency
-      opacityRules = [ "95:class_g = 'konsole'" ];
+      opacityRules = [ "95:class_g = 'konsole'" "85: class_g = 'dolphin'" ];
       vSync = "opengl-swc";
       backend = "glx";
       fade = true;
