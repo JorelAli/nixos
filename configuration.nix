@@ -17,65 +17,49 @@ let
   unstablesm = import <unstable-small> { config.allowUnfree = true; };
   old        = import <nixos-old>      { config.allowUnfree = true; };
 
-  ### Custom Vim plugins #######################################################
+##### Other Nix expressions ####################################################
 
-  # Java Complete 2, with pre-built packages (todo: extract into Nix expression
-  # for a more "pure" installation of Java Complete 2)
-  customPlugins.vim-javacomplete2 = pkgs.vimUtils.buildVimPlugin {
-    name = "vim-javacomplete2";
-    src = pkgs.fetchFromGitHub {
-      owner = "JorelAli";
-      repo = "vim-javacomplete2";
-      rev = "cc140af15dc850372655a45cca5b5d07e0d14344";
-      sha256 = "1kzx80hz9n2bawrx9lgsfqmjkljbgc1lpl8abnhfzkyy9ax9svk3";
-    };
-  };
+  all-hies = 
+    import (fetchTarball "https://github.com/infinisil/all-hies/tarball/master") {};
 
-  customPlugins.vim-devdocs = pkgs.vimUtils.buildVimPlugin {
-    name = "vim-devdocs";
-    src = pkgs.fetchFromGitHub {
-      owner = "rhysd";
-      repo = "devdocs.vim";
-      rev = "1c91c619874f11f2062f80e6ca4b49456f21ae91";
-      sha256 = "1nxww2mjabl2g2wchxc4h3a58j64acls24zb5jmfi71b8sai8a9b";
-    };
-  };
-
-  all-hies = import 
-    (fetchTarball "https://github.com/infinisil/all-hies/tarball/master") {};
-
+  # Calculates the blur strength for compton windows with background blur 
+  calcBlur = (input: 
+    builtins.foldl' 
+      (x: y: x + y) 
+      (builtins.toString(input) + "," + builtins.toString(input)) 
+      (builtins.genList (x: ",1.000000") (input * input - 1))
+    );
 in {
 
-  ### NixOS important settings #################################################
+##### NixOS important settings #################################################
 
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./cachix.nix
+    ./vim.nix
   ];
 
-  ### Boot Settings ############################################################
+##### Boot Settings ############################################################
 
-  # Enable exFAT format for USB/External HDD
-  boot.extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+  boot = {
+    loader.systemd-boot.enable = true;        # Use systemd bootloader
+    loader.efi.canTouchEfiVariables = true;   # Allow EFI variable modifications
+    loader.grub.useOSProber = true;           # Search for other OSs
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+    extraTTYs = [ "tty8" "tty9" ];            # More terminals!
+    extraModulePackages = [ 
+      config.boot.kernelPackages.exfat-nofuse # exFAT format for USBs/HDDs
+    ];
+  };
 
-  # Search for other operating systems
-  boot.loader.grub.useOSProber = true;
-
-  boot.extraTTYs = [ "tty8" "tty9" "tty10" ];
-
-  ### Networking Settings ######################################################
+##### Networking Settings ######################################################
 
   networking = {
-
     hostName = "NixOS";
-    networkmanager.enable = true; # Use nm-connection-editor
+    networkmanager.enable = true;       # Use nm-connection-editor
 
     firewall = {
-      enable = true;
+      enable = true;                    # Enable firewall
 
       allowedTCPPorts = [ 25565 ];
       allowedTCPPortRanges = [ 
@@ -87,17 +71,15 @@ in {
         { from = 1714; to = 1764; } 
       ];
     };
-
   };
 
-  ### Regional Settings ########################################################
+##### Regional Settings ########################################################
 
   time.timeZone = "Europe/London";
 
-  ### Environment Variables ####################################################
+##### Environment Variables ####################################################
 
   environment.variables = {
-
     XCURSOR_PATH = [
       "${config.system.path}/share/icons"
       "$HOME/.icons"
@@ -111,13 +93,12 @@ in {
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
-    EDITOR = "nvim";
+
     _JAVA_OPTIONS= "-Dawt.useSystemAAFontSettings=lcd";
     QT_XCB_GL_INTEGRATION = "xcb_egl";
-
   };
 
-  ### /etc/ Files ##############################################################
+##### /etc/ Files ##############################################################
 
   # Settings file for GTK 3
   environment.etc."xdg/gtk-3.0/settings.ini" = {
@@ -136,6 +117,7 @@ in {
     '';
   };
 
+  # Remove screen tearing
   environment.etc."X11/xorg.conf.d/20-intel.conf" = {
     text = ''
       Section "Device"
@@ -150,17 +132,22 @@ in {
     '';
   };
 
-  ### System Packages ##########################################################
+##### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [
 
     ### Qutebrowser ############################################################
-    # Definitely. This. First. By placing qutebrowser first, I feel like the   #
-    # right version of Qt is installed first, before other Qt applications.    #
-    # This may be entirely false, but I've had to reinstall the operating      #
-    # system after I screwed up nix channels and installed two separate        #
-    # versions of Qt. In order to not make that mistake again:                 #
-    #   Qutebrowser First.                                                     #
+    # There's this annoying bug with NixOS where NixOS has issues with         #
+    # conflicting versions of Qt. This causes applications that use Qt to fail #
+    # to run with the following error message:                                 #
+    #   Cannot mix incompatible Qt library (ver.) with this library (ver.)     #
+    #                                                                          #
+    # The only way I managed to fix this error was to reinstall NixOS. To make #
+    # sure I never make the same mistake first, Qutebrowser comes first.       #
+    #                                                                          #
+    # See:                                                                     #
+    #   https://github.com/NixOS/nixpkgs/issues/30551                          #
+    #   https://github.com/NixOS/nixpkgs/issues/37864                          #
     ############################################################################
 
     unstable.qutebrowser                # Lightweight minimal browser (v1.6.2)
@@ -170,7 +157,7 @@ in {
     kdeApplications.kwalletmanager      # Manager for password manager
     kdeApplications.konsole             # Terminal
     kdeconnect                          # Connect linux with your phone
-    kinit
+    kdeFrameworks.kinit
     ksshaskpass                         # Password manager
     libsForQt5.kwallet                  # Password manager
 
@@ -180,8 +167,6 @@ in {
     bundler                             # Ruby bundle thing
     escrotum                            # Screenshot tool (what a name...)
     feh                                 # Image viewer
-
-    
     fzf                                 # Find files easily
     git                                 # Version control
     git-lfs                             # Support for large files for git
@@ -218,7 +203,7 @@ in {
     blueman                             # Bluetooth manager
     chromium                            # Opensource Chrome browser
     dolphin                             # File browser
-    kdeApplications.dolphin-plugins
+    kdeApplications.dolphin-plugins     # Plugin support for dolphin
     firefox                             # Web browser
     deluge                              # Torrent client
     gimp                                # Image editor
@@ -229,90 +214,23 @@ in {
     inkscape                            # Vector artwork
     libreoffice-fresh                   # Documents/Spreadsheets/Presentations
     libsForQt5.vlc                      # Video player (VLC)
-    mpv
+    mpv                                 # Video player
     pavucontrol                         # Pulse Audio controller
     pidgin-with-plugins                 # IM program           
     redshift                            # Screen temperature changer
     shutter                             # Screenshot tool
     skype                               # Messaging & Video calling platform
     sqlitebrowser                       # SQLite .db file browser
+    typora                              # Visual markdown editor
     zathura                             # PDF viewer
-
-    ### Typora Markdown Editor #################################################
-    # Typora - another markdown editor with fancy features (such as exporting  # 
-    # to PDF). This overrides the build script for typora, in particular:      #
-    #   --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \                   #
-    # Which fixes a bug where GTK+ doesn't interact with Typora properly.      #
-    ############################################################################
-
-    (pkgs.typora.overrideAttrs (oldAttrs: {
-      installPhase = ''
-        mkdir -p $out/bin $out/share/typora
-        {
-          cd usr
-          mv share/typora/resources/app/* $out/share/typora
-          mv share/applications $out/share
-          mv share/icons $out/share
-          mv share/doc $out/share
-        }
-        makeWrapper ${electron_3}/bin/electron $out/bin/typora \
-          --add-flags $out/share/typora \
-          "''${gappsWrapperArgs[@]}" \
-          --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
-          --prefix LD_LIBRARY_PATH : "${stdenv.lib.makeLibraryPath [ stdenv.cc.cc ]}"
-        '';
-    }))
-
-    (vscode-with-extensions.override {
-       # When the extension is already available in the default extensions set.
-        vscodeExtensions = with vscode-extensions; [
-         # bbenoist.Nix
-        ]
-        # Concise version from the vscode market place when not available in the default set.
-        ++ vscode-utils.extensionsFromVscodeMarketplace [
-          {
-#            name = "code-runner";
-#            publisher = "formulahendry";
-#            version = "0.6.33";
-#            sha256 = "166ia73vrcl5c9hm4q1a73qdn56m0jc7flfsk5p5q41na9f10lb0";
-            name = "vsliveshare";
-            publisher = "ms-vsliveshare";
-            version = "1.0.91";
-            sha256 = "1ndii2x46kkmcdxb3xdbkxrxdj0a1i9qnga12vilpw4bvpz31b1z";
-            #https://ms-vsliveshare.gallery.vsassets.io/_apis/public/gallery/publisher/MS-vsliveshare/extension/vsliveshare/0.3.423/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
-          }
-        ];
-    })
-
-#    vscode                              # Code editor (think notepad++ or atom)
 
     ### System-wide theming ####################################################
 
-    breeze-icons                        # Breeze theme icons
-    gnome3.adwaita-icon-theme           # Adwaita theme icons
-    hicolor_icon_theme                  # Hicolor theme icons
-    paper-icon-theme 
-    papirus-icon-theme
-    maia-icon-theme
-
-    ### LXAppearance - GTK Themer  ########################
-    # Version 0.6.2 has support for BOTH GTK2 and GTK3.   #
-    # The latest version on NixOS' stable channel doesn't #
-    # support both GTK2 and GTK3, it only supports GTK3.  #
-    #######################################################
-
-    (lxappearance.overrideAttrs(old: rec {
-        name = "lxappearance-0.6.2";
-        src = fetchurl {
-          url = "mirror://sourceforge/project/lxde/LXAppearance/${name}.tar.xz";
-          sha256 = "07r0xbi6504zjnbpan7zrn7gi4j0kbsqqfpj8v2x94gr05p16qj4";
-        };
-    }))
-
-    arc-theme                           # Arc theme for GTK+
-    adapta-gtk-theme                    # Adapta theme for GTK
-    breeze-qt5                          # Breeze theme for qt5 (cursors!)
-    numix-solarized-gtk-theme
+    papirus-icon-theme                  # Papirus theme icons
+    breeze-qt5                          # Breeze theme for qt5 (cursors!) <<- ----------------------- Fix this! 
+    numix-solarized-gtk-theme           # Numix solarized theme for GTK & Qt
+    
+    lxappearance-062                    # Program that manages themeing 
 
     ### Clairvoyance SDDM Theme #######################################
     # Custom nix derivation for the Clairvoyance SDDM theme by eayus: #
@@ -343,9 +261,8 @@ in {
 
     ### Programming (Java) #####################################################
     
-    ant                                 # Java building thingy
+    ant                                 # Java building tool
     eclipses.eclipse-java               # Eclipse Java IDE (my favourite IDE)
-    jetbrains.idea-community            # IntelliJ IDEA Java IDE (eh)
     maven                               # Java dependency manager
     openjdk11                           # Java Development Kit for Java 11
 
@@ -358,8 +275,7 @@ in {
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
-    valgrind                            # Executable debugging tool
-    unstable.swift                      # Swift programming language
+    valgrind                            # C/C++ memory debugging tool
 
     ### Programming (Node.JS) ##################################################
 
@@ -387,7 +303,7 @@ in {
     haskellPackages.container           # Represents Haskell containers (e.g. Monoid)
     haskellPackages.zlib                # Compression library for Haskell
 
-    all-hies.versions.ghc843
+    all-hies.versions.ghc843            # Haskell IDE Engine for GHC v8.4.3
 
     ### How to get the best Haskell setup ###############################################
     # Install the following system packages: stack cabal-install ghc cachix atom zlib   #
@@ -427,12 +343,13 @@ in {
     libnotify                           # Notification library
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
+
       #########################################################################
       # If a USB pen is mounted and you can't access it, use                  #
       # `chown <username> <usb mount point>` (or wherever the mount point is) #
       # If the USB is not mounted, use `udisksctl mount -b /dev/<usb>`        #
       #########################################################################
-    #udisks                              # Storage device daemon
+
     universal-ctags                     # Tool for browsing source code quickly
     xorg.xbacklight                     # Enable screen backlight adjustments
     xorg.xcompmgr                       # Window compositing
@@ -445,163 +362,20 @@ in {
 #    unstable.nixbox                     # Nix operations "in a box"
     nix-index                           # Locate packages
     nox                                 # Better nix searching
-    patchelf
+    patchelf                            # Patches binaries for Nix support
 
     (import (fetchGit "https://github.com/haslersn/fish-nix-shell"))
 
     ### Dictionaries ###########################################################
 
-    hunspell                            # Dictionary for GhostWriter
+    hunspell                            # Dictionary for document programs
     hunspellDicts.en-gb-ise             # English (GB with '-ise' spellings)
     hunspellDicts.en-us                 # English (US)
 
-    ### NeoVim #################################################################
-
-    ( with pkgs;
-      neovim.override {
-          vimAlias = true;              # Lets you use 'vim' as alias for 'nvim'
-          configure = {
-            customRC = ''
-                " Generic vim configuration here  
-                syntax enable
-                set tabstop=4
-                set shiftwidth=4
-                set background=dark
-                colorscheme solarized
-                set number relativenumber
-                set mouse=a
-                let g:airline_powerline_fonts = 1
-                set backspace=indent,eol,start
-
-                " Enable TagBar support for rust files
-                autocmd VimEnter *.rs TagbarOpen
-
-                " Configured color pairs for rainbow parentheses
-                let g:rbpt_colorpairs = [
-                    \ ['brown',       'RoyalBlue3'],
-                    \ ['Darkblue',    'SeaGreen3'],
-                    \ ['darkgray',    'DarkOrchid3'],
-                    \ ['darkgreen',   'firebrick3'],
-                    \ ['darkcyan',    'RoyalBlue3'],
-                    \ ['darkred',     'SeaGreen3'],
-                    \ ['darkmagenta', 'DarkOrchid3'],
-                    \ ['brown',       'firebrick3'],
-                    \ ['gray',        'RoyalBlue3'],
-                    \ ['black',       'SeaGreen3'],
-                    \ ['darkmagenta', 'DarkOrchid3'],
-                    \ ['Darkblue',    'firebrick3'],
-                    \ ['darkgreen',   'RoyalBlue3'],
-                    \ ['darkcyan',    'SeaGreen3'],
-                    \ ['darkred',     'DarkOrchid3'],
-                    \ ['red',         'firebrick3'],
-                    \ ]
-
-                let g:rbpt_max = 16
-                let g:rbpt_loadcmd_toggle = 0
-
-                au VimEnter * RainbowParenthesesToggle
-                au Syntax * RainbowParenthesesLoadRound
-                au Syntax * RainbowParenthesesLoadSquare
-                au Syntax * RainbowParenthesesLoadBraces
-
-                " Let Alloy Analyser java Java syntax highlighting
-                au BufReadPost *.als set syntax=java
-                au BufReadPost *.vue set syntax=html
-
-                " Show tabs as lines
-                set listchars=tab:\¦\ 
-                set list
-
-                " Enable file specific dev docs
-                let g:devdocs_filetype_map = {
-                  \ 'java': 'java',
-                  \ 'javacc': 'java',
-                  \ 'haskell': 'haskell',
-                  \ 'rust': 'rust',
-                  \  }
-
-                nmap K <Plug>(devdocs-under-cursor)
-
-                " Syntastic configuration
-                set statusline+=%#warningmsg#
-                set statusline+=%{SyntasticStatuslineFlag()}
-                set statusline+=%*
-
-                let g:syntastic_always_populate_loc_list = 1
-                let g:syntastic_auto_loc_list = 1
-                let g:syntastic_check_on_open = 1
-                let g:syntastic_check_on_wq = 0
-
-                " Some Java Complete 2 setup (might be unnecessary)
-                let g:JavaComplete_JavaviLogDirectory = $HOME . '/javavilogs'
-                let g:JavaComplete_Home = $HOME . '/.vim/bundle/vim-javacomplete2'
-                let $CLASSPATH .= '.:' . $HOME . '/.vim/bundle/vim-javacomplete2/lib/javavi/target/classes'
-
-                nmap <F4> <Plug>(JavaComplete-Imports-AddSmart)
-                imap <F4> <Plug>(JavaComplete-Imports-AddSmart)
-                nmap <F5> <Plug>(JavaComplete-Imports-Add)
-                imap <F5> <Plug>(JavaComplete-Imports-Add)
-                nmap <F6> <Plug>(JavaComplete-Imports-AddMissing)
-                imap <F6> <Plug>(JavaComplete-Imports-AddMissing)
-                nmap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
-                imap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
-
-                inoremap <C-@> <c-x><c-o>
-
-                autocmd FileType java setlocal omnifunc=javacomplete#Complete
-                autocmd FileType javacc setlocal omnifunc=javacomplete#Complete
-
-                " Enable quality autocompletion
-                let g:deoplete#enable_at_startup = 1 
-
-                " Rust stuff
-                let g:deoplete#sources#rust#racer_binary = $HOME . '/.cargo/bin/racer'
-                let g:deoplete#sources#rust#rust_source_path = $HOME . '/github/rust/src'
-                let g:syntastic_rust_checkers = ['cargo']
-
-                " Markdown
-                let g:markdown_enable_mappings = 0
-                let g:vim_markdown_folding_disabled = 1
-
-                let g:kronos_database = $HOME . '.kronos.database'
-
-              '';
-
-              ### Vim packages #################################################
-
-              packages.myVimPackage = with pkgs.vimPlugins // customPlugins; {
-                
-                start = [ 
-                  deoplete-nvim         # Dark powered autocompletion
-                  deoplete-rust         # Autocompletion for rust
-
-                  gitgutter             # Shows git changes in sidebar
-                  rainbow_parentheses   # Pairs parentheses with colors
-                  solarized             # Solarized theme (of course)
-                  supertab              # Tab key does suggestions
-                  Syntastic             # Syntax checking for languages
-                  tagbar                # Shows declared file methods etc.
-
-                  vim-airline           # Fancy bottom bar for vim
-                  vim-airline-themes    # Theme support for bottom bar 
-                  vim-commentary        # Easy comment using 'gcc' key shortcut
-                  vim-devdocs           # Easy file documentation using ':DevDocs'
-                  #vim-javacomplete2    # Java IDE features (autocomplete)
-                  vim-markdown          # Markdown syntax highlighting
-                  vim-nix               # Nix language syntax
-                  vim-toml              # Toml language syntax
-
-                  ctrlp                 # Easy file opener using Ctrl+P
-
-                ];    
-              };
-          };
-        }
-      )
   ];
 
 
-  ### Programs #################################################################
+##### Programs #################################################################
 
   programs = {
 
@@ -644,51 +418,39 @@ in {
 
   };
 
-  ### Fonts ####################################################################
+##### Fonts ####################################################################
 
   fonts = {
     fonts = with pkgs; [
-
       emojione                          # Emoji font
-      fira-code-symbols                 # Fancy font with programming ligatures
-      fira-code                         # Fancy font with programming ligatures
       font-awesome_4                    # Fancy icons font
+      ipafont                           # Japanese font
+      kochi-substitute                  # Japanese font
+      migmix                            # Japanese font
       siji                              # Iconic bitmap font
-      symbola
+      symbola                           # Braille support for gotop command
 
       ### Programming ligatures ################################################
       # *This means that -> will look like an actual arrow and >= and <=       #
       # actually look like less than or equal and greater than or equal        #
       # symbols, as opposed to what they look like on a computer               #
       ##########################################################################
+      
+      fira-code-symbols                 # Fancy font with programming ligatures
+      fira-code                         # Fancy font with programming ligatures
   
-      ### Japanese Fonts #######################################################
-      ipafont
-      kochi-substitute
-      migmix
-
-      xorg.libXfont
-      xorg.fontutil
-      xorg.libXfont2
-      xorg.fontalias
-      xorg.fontbh100dpi
-      xorg.fontbh75dpi
-      xorg.fontbhttf
-      xorg.fontbhtype1
+#      nerdfonts <<- Coming soon!!
     ];
 
-    fontconfig = {
-      ultimate.enable = true;
-      defaultFonts = {
-        monospace = [ "Fira Code Medium" "Symbola" "IPAGothic" ];
-#        sansSerif = [ "DejaVu Sans" "IPAPGothic" ];
-#        serif = [ "DejaVu Serif" "IPAPMincho" ];
-      };
+    fontconfig.defaultFonts = {
+      monospace = [ "Fira Code Medium" "Symbola" "IPAGothic" ];
+#     sansSerif = [ "DejaVu Sans" "IPAPGothic" ];
+#     serif = [ "DejaVu Serif" "IPAPMincho" ];
     };
 
   };
 
-  ### i18n (Internationalization and Localization) #############################
+##### i18n (Internationalization and Localization) #############################
 
   i18n = {
     defaultLocale = "en_GB.UTF-8";
@@ -696,24 +458,26 @@ in {
     inputMethod.fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
   };
 
-  ### Hardware Settings ########################################################
+##### Hardware Settings ########################################################
 
   sound.enable = true;                  # Enable sound
-  sound.mediaKeys.enable = true;
+  sound.mediaKeys.enable = true;        # Enable sound keys (play/pause)
 
   hardware = {
     pulseaudio = {
-      enable = true;
-      package = pkgs.pulseaudioFull;
-      support32Bit = true;
+      enable = true;                    # Enable pulseaudio sound manager
+      package = pkgs.pulseaudioFull;    # Use full version (bluetooth support)
+      support32Bit = true;             
     };
+
     bluetooth.enable = true;            # Enable bluetooth 
     bluetooth.powerOnBoot = true;       # Let bluetooth enable on startup
+
     opengl = {
-      enable = true;
+      enable = true;                    # Enable OpenGL
       driSupport32Bit = true;
       extraPackages = with pkgs; [
-       vaapiIntel
+        vaapiIntel
         vaapiVdpau
         libvdpau-va-gl
         intel-media-driver
@@ -721,26 +485,43 @@ in {
     };
   };
 
-  # Use fingerprint recognition on the login screen to log in. To add a 
-  # fingerprint, use the 'fprintd-enroll' command in the terminal, and scan
-  # your fingerprint a few times. I disabled this because this can be a bit
-  # unreliable sometimes.
-
-  # security.pam.services.login.fprintAuth = true;
+##### Security Settings ########################################################
 
   security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without a password
   security.chromiumSuidSandbox.enable = true;
 
-  ### Services #################################################################
+##### Services #################################################################
 
   services = {
-
-
-    teamviewer.enable = true;
-
-    nixosManual.ttyNumber = 8;
-    rogue.enable = true;
-    rogue.tty = "tty9";
+  
+    ### Compton ###########################################
+    # Compositing effects for windows (Blur backgrounds!) #
+    #######################################################
+    compton = {
+      enable = true;                    # Application transparency
+      opacityRules = [ 
+        "95: class_g = 'konsole'"       # Always blur for konsole
+        "85: class_g = 'dolphin'"       # Always blur for dolphin
+      ];
+      vSync = "opengl-swc";             # Remove screen tearing
+      backend = "glx";
+      inactiveOpacity = "0.85";         # Make programs blur on unfocus
+      extraOptions = ''
+        unredir-if-possible = true;
+        blur-background-exclude = "(class_g = 'escrotum')";
+        blur-background = true;
+        blur-background-fixed = true;
+        blur-kern = "${calcBlur 11}";
+        '';
+    };
+    
+    gnome3.gnome-disks.enable = true;   # Something something USBs
+    nixosManual.showManual = true;      # Enable the NixOS manual in tty 8
+    printing.enable = true;             # Printing (You know, to a printer...)
+    rogue.enable = true;                # Enable the rogue game in tty 9 
+    teamviewer.enable = true;           # Enable teamviewer
+    udisks2.enable = true;              # Something something USBs
+    upower.enable = true;               # Battery info
 
     # Adds support for scrolling to change the brightness for i3status-rs
     udev.extraRules = ''  
@@ -748,58 +529,44 @@ in {
       ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
     '';
 
-    compton = {
-      enable = true;                    # Application transparency
-      opacityRules = [ "95:class_g = 'konsole'" "85: class_g = 'dolphin'" ];
-      vSync = "opengl-swc";
-      backend = "glx";
-      fade = true;
-      fadeDelta = 2;
-      inactiveOpacity = "0.85";
-      extraOptions = ''
-        unredir-if-possible = true;
-        blur-background = true;
-        blur-background-fixed = true;
-        blur-kern = "11,11,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000,1.000000";
-        '';
-    };
+    ### X Server ###############################################################
 
-    gnome3.gnome-disks.enable = true;   # Something something USBs
-    udisks2.enable = true;              # Something something USBs
-
-    #fprintd.enable = true;             # Fingerprint reader (Disabled -> unreliable)
-
-    printing.enable = true;             # Printing (You know, to a printer...)
-    upower.enable = true;               # Battery info
-
-    xserver = {gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
+    xserver = {
       enable = true;                    # GUI for the entire computer
+      exportConfiguration = true;       # symlink the config to /etc/X11/xorg.conf
+      gdk-pixbuf.modulePackages = [ 
+        pkgs.librsvg 
+      ];
       layout = "gb";                    # Use the GB English keyboard layout
-
-      exportConfiguration = true;
-
       libinput.enable = true;           # Touchpad support
+
       synaptics = {
         twoFingerScroll = true;         # Two finger scroll for touchpad
         horizTwoFingerScroll = true;    # Two finger horizontal scrolling
       };
 
+      ### Display Manager ####################
+      # Think of it as a lock screen, except #
+      # it only shows when the computer is   # 
+      # turned on for the first time         #
+      ########################################
+
       displayManager = {
+        sessionCommands = ''xmodmap .Xmodmap'';
         sddm.enable = true;             # Login screen manager
-        sddm.theme = "clairvoyance";    # Ellis' clairvoyance theme for sddm
+        sddm.theme = "clairvoyance";    # Clairvoyance theme for sddm
         sddm.extraConfig = ''
           [General]
           InputMethod=
-          '';
-
-        # Remap keys on start
-        sessionCommands = ''
-          xmodmap .Xmodmap
         '';
       };
 
-      # Tiling manager to manage windows using keyboard shortcuts instead of 
-      # dragging and dropping windows with a mouse
+      ### Window Manager ##########################################
+      # Displays windows (applications). I'm using i3, the tiling #
+      # manager which uses keyboard shortcuts instead of dragging #
+      # windows with a mouse to move them around and change size  #
+      #############################################################
+      
       windowManager.i3 = {
         enable = true;                  # Enable i3 tiling manager
         package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
@@ -809,16 +576,10 @@ in {
         # more than all of the others, so I decided to just keep it as that 
         # instead. https://wall.alphacoders.com/big.php?i=710132
 
-#        extraSessionCommands = ''
-#          cp $(ls -d $HOME/Wallpapers/* | shuf -n 1) $HOME/.background-image
-#        '';
+        # extraSessionCommands = ''
+        #   cp $(ls -d $HOME/Wallpapers/* | shuf -n 1) $HOME/.background-image
+        # '';
       };
-
-      # Despite the fact that I don't actually use this desktop manager
-      # I keep it installed because it includes the lovely things that
-      # I like about KDE, such as Konsole, Dolphin and Kwallet
-  #    desktopManager.plasma5.enable = true;
-
     };
   };
 
@@ -835,7 +596,7 @@ in {
 
   systemd.user.services."xcompmgr" = {
     enable = true;
-    description = "Transparency compositing";
+    description = "Transparency compositing service";
     wantedBy = [ "default.target" ];
     serviceConfig.Restart = "always";
     serviceConfig.RestartSrc = 2;
@@ -844,14 +605,14 @@ in {
 
   systemd.user.services."kdeconnect" = {
     enable = true;
-    description = "eh";
+    description = "Connext phone with linux";
     wantedBy = [ "graphical-session.target" "default.target" ];
     serviceConfig.Restart = "always";
     serviceConfig.RestartSec = 2;
     serviceConfig.ExecStart = "${pkgs.kdeconnect}/lib/libexec/kdeconnectd";
   };
 
-  ### User Accounts ############################################################
+##### User Accounts ############################################################
 
   users.users.jorel = {
     isNormalUser = true;
@@ -862,7 +623,7 @@ in {
     shell = pkgs.fish;                  # Use fish as the default shell
   };
 
-  ### Nix Configuration (Honestly, I have no idea what this is) ################
+##### Nix Configuration (Honestly, I have no idea what this is) ################
 
   nix = {
     binaryCaches = [
@@ -887,24 +648,70 @@ in {
     readOnlyStore = false;            # Allows writing access to /nix/store
   };
 
-  ### NixPkgs Configuration ####################################################
+##### NixPkgs Configuration ####################################################
 
   nixpkgs.config = {
     allowUnfree = true;                 # Allow unfree/proprietary packages
     flashplayer = { debug = true; };    # Flashplayer debug mode has new dl URL
 
+    # This lets you override package derivations for the entire list of 
+    # packages for this configuration.nix file. For example, below, I redefine
+    # the derivation of the Typora application to have a different install
+    # script. This is then used in the Typora package in the system packages
+    # above.
     packageOverrides = pkgs: with pkgs; {
+
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+
       pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
         ## Add whatever plugins are desired (see nixos.org package listing).
         plugins = [ purple-facebook purple-discord purple-matrix ];
       };
-    };
 
+      ### Typora Markdown Editor #################################################
+      # Typora - another markdown editor with fancy features (such as exporting  # 
+      # to PDF). This overrides the build script for typora, in particular:      #
+      #   --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \                   #
+      # Which fixes a bug where GTK+ doesn't interact with Typora properly.      #
+      ############################################################################
+
+      typora = typora.overrideAttrs (oldAttrs: {
+        installPhase = ''
+          mkdir -p $out/bin $out/share/typora
+          {
+            cd usr
+            mv share/typora/resources/app/* $out/share/typora
+            mv share/applications $out/share
+            mv share/icons $out/share
+            mv share/doc $out/share
+          }
+          makeWrapper ${electron_3}/bin/electron $out/bin/typora \
+            --add-flags $out/share/typora \
+            "''${gappsWrapperArgs[@]}" \
+            --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
+            --prefix LD_LIBRARY_PATH : "${stdenv.lib.makeLibraryPath [ stdenv.cc.cc ]}"
+          '';
+      });
+
+      ### LXAppearance - GTK Themer  ########################
+      # Version 0.6.2 has support for BOTH GTK2 and GTK3.   #
+      # The latest version on NixOS' stable channel doesn't #
+      # support both GTK2 and GTK3, it only supports GTK3.  #
+      #######################################################
+  
+      lxappearance-062 = lxappearance.overrideAttrs(old: rec {
+          name = "lxappearance-0.6.2";
+          src = fetchurl {
+            url = "mirror://sourceforge/project/lxde/LXAppearance/${name}.tar.xz";
+            sha256 = "07r0xbi6504zjnbpan7zrn7gi4j0kbsqqfpj8v2x94gr05p16qj4";
+          };
+      });
+    };
   };
 
-  ### NixOS System Version (Do not touch. Ever.) ###############################
+##### NixOS System Version (Do not touch) ######################################
 
   system.stateVersion = "18.09";
 
+################################################################################
 }
