@@ -17,8 +17,9 @@ Bool         - A boolean (true or false)
 [ Type ]     - A list of Type
 
 {}           - A set
-{ a = b; }   - A set containing some a mapped to some b
-{ a = *; }   - A set containing some a mapped to some element of any type (types * need not be the same)
+Attr          - An attribute (Like a String, but no quotes)
+{ Attr = b; }   - A set containing some a mapped to some b
+{ Attr = *; }   - A set containing some a mapped to some element of any type (types * need not be the same)
 
 String       - A String
 Path         - A Path
@@ -49,6 +50,9 @@ Anything with ->> !! ->> Performs an impure operation. Read the documentation!
 
 ## Built in functions
 
+#### `builtins.abort :: String ->> !!`
+Evaluating this function at any point in time stops Nix from evaluating anything else
+
 ### Calculation (Maths)
 
 #### `builtins.add    :: Number -> Number ->> Number`
@@ -56,23 +60,24 @@ Anything with ->> !! ->> Performs an impure operation. Read the documentation!
 #### `builtins.bitOr  :: Int -> Int ->> Int`
 #### `builtins.bitXor :: Int -> Int ->> Int`
 #### `builtins.div    :: Number -> Number ->> Number`
+#### `builtins.lessThan :: Number -> Number ->> Bool`
 
-
+### Other
 
 #### `builtins.addErrorContext :: String -> a ->> a`
 
 #### `builtins.all :: (a ->> Bool) -> [ a ] ->> Bool`
 #### `builtins.any :: (a ->> Bool) -> [ a ] ->> Bool`
 
-#### `builtins.attrNames  :: { a = *; } ->> [ String ]`
-#### `builtins.attrValues :: { a = *; } ->> [ * ]`
+#### `builtins.attrNames  :: { Attr = *; } ->> [ String ]`
+#### `builtins.attrValues :: { Attr = *; } ->> [ * ]`
 
 baseNameOf
 
 
 builtins
 
-#### `builtins.catAttrs :: String -> [ { a = *; } ] ->> [ * ]`
+#### `builtins.catAttrs :: String -> [ { Attr = *; } ] ->> [ * ]`
 
 ```
 nix-repl> builtins.catAttrs "hi" [ {hi = 3;} {hi = 4;}]
@@ -104,6 +109,7 @@ nix-repl> builtins.concatMap (x: ["blah"] ++ x ++ ["text"]) [ [ "hi" "hello" ] [
 #### `builtins.currentSystem :: String`
 #### `builtins.currentTime :: Int`
 #### `builtins.false :: Bool`
+#### `builtins.langVersion :: Int`
 
 ### Compositions
 
@@ -111,7 +117,7 @@ nix-repl> builtins.concatMap (x: ["blah"] ++ x ++ ["text"]) [ [ "hi" "hello" ] [
 
 ### Derivations
 
-#### `builtins.derivation :: { a = *; } ->> <<derivation>>`
+#### `builtins.derivation :: { Attr = *; } ->> <<derivation>>`
 #### `builtins.derivationStrict :: ?? ->> <<derivation>>`
 
 #### `builtins.dirOf :: Path|String ->> Path|String`
@@ -122,7 +128,9 @@ Gets the parent directory of the input
 #### `builtins.elem :: * -> [ * ] ->> Bool`
 #### `builtins.elemAt :: [ * ] -> Int ->> *`
 #### `builtins.filter :: Eq a => (a ->> Bool) -> [ a ] -> [ a ]`
+#### `builtins.length :: [ * ] ->> Int`
 
+### Fetching data
 
 #### `builtins.fetchGit`
 #### `builtins.fetchMercurial`
@@ -144,70 +152,101 @@ String value in the function (Path -> String ->> Bool) must be:
 
 ### File parsers
 
-#### `builtins.fromJSON :: String -> { a = *; }`
-#### `builtins.fromTOML :: String -> { a = *; }`
+#### `builtins.fromJSON :: String -> { Attr = *; }`
+#### `builtins.fromTOML :: String -> { Attr = *; }`
 
-#### `builtins.functionArgs :: {*** ->> *} -> { * = Bool; }`
-#### builtins.genList
-#### builtins.genericClosure
-#### builtins.getAttr
-#### builtins.getEnv
-#### builtins.hasAttr
-#### builtins.hasContext
-#### builtins.hashString
-#### builtins.head
-#### builtins.import
-#### builtins.intersectAttrs
-#### builtins.isAttrs
-#### builtins.isBool
-#### builtins.isFloat
-#### builtins.isFunction
-#### builtins.isInt
-#### builtins.isList
-#### builtins.isNull
-#### builtins.isString
-#### builtins.langVersion
-#### builtins.length
-#### builtins.lessThan
-#### builtins.listToAttrs
-#### builtins.map
-#### builtins.mapAttrs
-#### builtins.match
-#### builtins.mul
-#### builtins.nixPath
-#### builtins.nixVersion
-#### builtins.null
-#### builtins.parseDrvName
-#### builtins.partition
-#### builtins.path
-#### builtins.pathExists
-#### builtins.placeholder
-#### builtins.readDir
-#### builtins.readFile
-#### builtins.removeAttrs
-#### builtins.replaceStrings
-#### builtins.scopedImport
-#### builtins.seq
-#### builtins.sort
-#### builtins.split
-#### builtins.splitVersion
-#### builtins.storeDir
-#### builtins.storePath
-#### builtins.stringLength
-#### builtins.sub
-#### builtins.substring
-#### builtins.tail
-#### builtins.throw
-#### builtins.toFile
-#### builtins.toJSON
-#### builtins.toPath
-#### builtins.toString
-#### builtins.toXML
-#### builtins.trace
-#### builtins.true
-#### builtins.tryEval
-#### builtins.typeOf
-#### builtins.unsafeDiscardOutputDependency
-#### builtins.unsafeDiscardStringContext
-#### builtins.unsafeGetAttrPos
-#### builtins.valueSize
+#### `builtins.functionArgs :: {a*** ->> *} -> { a = Bool; }`
+
+#### `builtins.genList :: (Int ->> Int) -> Int ->> [ Int ]`
+#### `builtins.genericClosure :: Eq a => { startSet = [ { key = a; } ]; operator = (* ->> [ { key = a; } ]) } ->> [ { key = a; } ]`
+
+"it takes a "startSet" (a list of initial graph nodes) and a "operator" function that must return nodes reachable from a node
+nodes are represented as attribute sets with a "key" attribute
+so "key" could be the package name in this case
+any other attributes are passed through"
+
+```
+nix-repl> builtins.genericClosure {startSet=[{key=2;}]; operator=(x: [{key=3;}]);} 
+[ { ... } { ... } ]
+
+nix-repl> z = builtins.genericClosure {startSet=[{key=2;}]; operator=(x: [{key=3;}]);}  
+
+nix-repl> builtins.head z
+{ key = 2; }
+
+nix-repl> builtins.head z
+{ key = 2; }
+
+nix-repl> builtins.head builtins.tail z
+error: value is the built-in function 'tail' while a list was expected, at (string):1:1
+
+nix-repl> builtins.head (builtins.tail z)
+{ key = 3; }
+```
+
+TODO: Check this function - I'm not sure if it should be `(* ->> [ ... ])`
+
+#### `builtins.getAttr :: String -> { Attr = *; } ->> *`
+#### `builtins.hasAttr :: String -> { Attr = *; } ->> Bool`
+#### `builtins.intersectAttrs :: { Attr = *; } -> { Attr = *; } ->> { Attr = *; }`
+
+#### `builtins.getEnv :: String ->> String`
+
+#### `builtins.hasContext :: String ->> Bool`
+No idea what this does
+
+#### `builtins.hashString :: String -> String ->> String
+#### `builtins.head :: [ a ] -> a
+#### `builtins.import :: ?? -> {} ->> ??
+
+#### `builtins.isAttrs    :: * ->> Bool`
+#### `builtins.isBool     :: * ->> Bool`
+#### `builtins.isFloat    :: * ->> Bool`
+#### `builtins.isFunction :: * ->> Bool`
+#### `builtins.isInt      :: * ->> Bool`
+#### `builtins.isList     :: * ->> Bool`
+#### `builtins.isNull     :: * ->> Bool`
+#### `builtins.isString   :: * ->> Bool`
+
+#### `builtins.listToAttrs :: [ { name = String; value = *; } ] -> { Attrs -> * }` 
+#### `builtins.map :: (a -> b) -> [ a ] ->> [ b ]`
+#### `builtins.mapAttrs`
+#### `builtins.match`
+#### `builtins.mul`
+#### `builtins.nixPath`
+#### `builtins.nixVersion`
+#### `builtins.null`
+#### `builtins.parseDrvName`
+#### `builtins.partition`
+#### `builtins.path`
+#### `builtins.pathExists`
+#### `builtins.placeholder`
+#### `builtins.readDir`
+#### `builtins.readFile`
+#### `builtins.removeAttrs`
+#### `builtins.replaceStrings`
+#### `builtins.scopedImport`
+#### `builtins.seq`
+#### `builtins.sort`
+#### `builtins.split`
+#### `builtins.splitVersion`
+#### `builtins.storeDir`
+#### `builtins.storePath`
+#### `builtins.stringLength`
+#### `builtins.sub`
+#### `builtins.substring`
+#### `builtins.tail`
+#### `builtins.throw`
+#### `builtins.toFile`
+#### `builtins.toJSON`
+#### `builtins.toPath`
+#### `builtins.toString`
+#### `builtins.toXML`
+#### `builtins.trace`
+#### `builtins.true`
+#### `builtins.tryEval`
+#### `builtins.typeOf`
+#### `builtins.unsafeDiscardOutputDependency`
+#### `builtins.unsafeDiscardStringContext`
+#### `builtins.unsafeGetAttrPos`
+#### `builtins.valueSize`
