@@ -425,6 +425,7 @@ in {
       doti = "dot -Tpng -o $1.png";
       dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
       "@executable" = "chmod a+x";      # Make a file executable
+      evalnix = "nix-instantiate --eval";
     };
     fish.promptInit = ''
       fish-nix-shell --info-right | source
