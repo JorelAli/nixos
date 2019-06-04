@@ -19,6 +19,25 @@ let
 
 ##### Other Nix expressions ####################################################
 
+ /* flutter = import (
+    builtins.fetchGit {
+      url = "https://github.com/jmackie/flutter-nix.git";
+      rev = "35ee8cb986523edb2b843a1f87cc82c9351b4c81";
+    }
+    ) {};
+    */
+
+  #flutter = import (fetchTarball "https://github.com/jmackie/flutter-nix/tarball/master") {}; 
+#pkgs.fetchFromGitHub {
+#    name = "flutter-nix";
+#    owner = "jmackie";
+#    repo = "flutter-nix";
+#    rev = "35ee8cb986523edb2b843a1f87cc82c9351b4c81";
+#    sha256 = "1ij485bhxlv4fh2z7h6jsshbdbarawiw8av34lh0iilv0idrhmv8";
+#  }; 
+
+  flutter = import ./flutter.nix {};
+
   all-hies = 
     import (fetchTarball "https://github.com/infinisil/all-hies/tarball/master") {};
 
@@ -152,6 +171,9 @@ in {
 
     unstable.qutebrowser                # Lightweight minimal browser (v1.6.2)
 
+#    flutter.engine
+#    flutter.flutter
+
     ### KDE Applications #######################################################
 
     kdeApplications.kwalletmanager      # Manager for password manager
@@ -164,7 +186,7 @@ in {
     ### Command line utilities #################################################
 
     bat                                 # cat command, but better
-    bundler                             # Ruby bundle thing
+#    bundler                             # Ruby bundle thing
     escrotum                            # Screenshot tool (what a name...)
     feh                                 # Image viewer
     fzf                                 # Find files easily
@@ -271,7 +293,7 @@ in {
     bundler                             # Bundle command for Ruby
     gcc                                 # C/C++ compiler
     gdb                                 # C code debugger
-    jekyll                              # Static site generator
+#    jekyll                              # Static site generator
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
@@ -439,7 +461,14 @@ in {
       fira-code-symbols                 # Fancy font with programming ligatures
       fira-code                         # Fancy font with programming ligatures
   
-#      nerdfonts <<- Coming soon!!
+      # https://github.com/NixOS/nixpkgs/issues/47921
+      # wget https://github.com/ryanoasis/nerd-fonts/archive/2.0.0.tar.gz
+      # nix-prefetch-url --type sha256 --unpack --name source file:///home/$USER/Downloads/nerd-fonts-2.0.0.tar.gz 09i467hyskvzj2wn5sj6shvc9pb0a0rx5iknjkkkbg1ng3bla7nm
+      # (Might wanna check the hash)
+      # sudo nixos-rebuild switch
+
+      nerdfonts
+      powerline-fonts
     ];
 
     fontconfig.defaultFonts = {
@@ -513,6 +542,12 @@ in {
         blur-background-fixed = true;
         blur-kern = "${calcBlur 11}";
         '';
+    };
+
+    logind = {
+      lidSwitch = "suspend";
+      lidSwitchDocked = "ignore";
+      lidSwitchExternalPower = "suspend";
     };
     
     gnome3.gnome-disks.enable = true;   # Something something USBs

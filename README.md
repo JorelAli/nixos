@@ -3,11 +3,11 @@ My NixOS configuration
 
 ## Configuration at a glance (what it gives you):
   - i3 window manager, with KDE programs installed
-  - Multiple markdown editors (Typora, Ghostwriter)
   - Vim-based interfaces:
     - Vim
     - Qutebrowser (vim shortcuts web browser)
     - RTV (reddit browser)
+    - Ranger (file browser)
   - Programming environments:
     - Haskell (With Atom + HIE)
     - Java (With Eclipse) 
@@ -33,5 +33,5 @@ My NixOS configuration
   - [ ] HIE setup is all part of the configuration (don't have to manually run the command to install and setup HIE
   - [ ] i3status-rust is all part of the configuration
   - [x] Steam
-  - [ ] Derivation for new Minecraft launcher
+  - [ ] ~~Derivation for new Minecraft launcher~~
   - [ ] Enable qutebrowser pdf viewer
