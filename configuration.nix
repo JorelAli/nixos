@@ -17,29 +17,7 @@ let
   unstablesm = import <unstable-small> { config.allowUnfree = true; };
   old        = import <nixos-old>      { config.allowUnfree = true; };
 
-##### Other Nix expressions ####################################################
-
- /* flutter = import (
-    builtins.fetchGit {
-      url = "https://github.com/jmackie/flutter-nix.git";
-      rev = "35ee8cb986523edb2b843a1f87cc82c9351b4c81";
-    }
-    ) {};
-    */
-
-  #flutter = import (fetchTarball "https://github.com/jmackie/flutter-nix/tarball/master") {}; 
-#pkgs.fetchFromGitHub {
-#    name = "flutter-nix";
-#    owner = "jmackie";
-#    repo = "flutter-nix";
-#    rev = "35ee8cb986523edb2b843a1f87cc82c9351b4c81";
-#    sha256 = "1ij485bhxlv4fh2z7h6jsshbdbarawiw8av34lh0iilv0idrhmv8";
-#  }; 
-
-  flutter = import ./flutter.nix {};
-
-  all-hies = 
-    import (fetchTarball "https://github.com/infinisil/all-hies/tarball/master") {};
+##### Nix expressions ##########################################################
 
   # Calculates the blur strength for compton windows with background blur 
   calcBlur = (input: 
@@ -118,7 +96,7 @@ in {
   };
 
 ##### /etc/ Files ##############################################################
-
+/*
   # Settings file for GTK 3
   environment.etc."xdg/gtk-3.0/settings.ini" = {
     text = ''
@@ -134,7 +112,7 @@ in {
       gtk-icon-theme-name = "breeze"
       gtk-theme-name = "Breeze-gtk"
     '';
-  };
+  };*/
 
   # Remove screen tearing
   environment.etc."X11/xorg.conf.d/20-intel.conf" = {
@@ -381,7 +359,7 @@ in {
     ### Nix related stuff ######################################################
 
     cachix                              # Compiled binary hosting for Nix
-#    unstable.nixbox                     # Nix operations "in a box"
+    nixbox                              # Nix operations "in a box"
     nix-index                           # Locate packages
     nox                                 # Better nix searching
     patchelf                            # Patches binaries for Nix support
@@ -742,6 +720,28 @@ in {
             sha256 = "07r0xbi6504zjnbpan7zrn7gi4j0kbsqqfpj8v2x94gr05p16qj4";
           };
       });
+
+      ### nixbox - NixOS operations in a box! #############
+      # Useful NixOS operations in one contained location #
+      #####################################################
+
+      nixbox = with pkgs; import (pkgs.fetchFromGitHub {
+        name = "nixbox";
+        owner = "LinArcX"; 
+        repo = "nixbox";
+        rev = "b78fba9a814857d72df9d2107efd0fb695ccc066";
+        sha256 = "0v9lxf6x8ym95m2ynms1imabgxvprxd7l3zwk7y61hgxkd7cn4fa";
+      }) {inherit fetchFromGitHub stdenv;};
+
+      ### HIEs #################
+      # The Haskell IDE Engine #
+      ##########################
+
+      all-hies = import (
+        fetchTarball "https://github.com/infinisil/all-hies/tarball/master"
+      ) {};
+
+      flutter = import ./flutter.nix {};
     };
   };
 
