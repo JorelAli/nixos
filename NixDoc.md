@@ -22,8 +22,8 @@ Attr          - An attribute (Like a String, but no quotes)
 { Attr = *; }   - A set containing some a mapped to some element of any type (types * need not be the same)
 
 String       - A String
-Path         - A Path
-Path|String  - A path or a String
+Path         - A Path, OR A STRING (Because all paths are also strings)
+Type|Type    - A type a or type b
 a            - A specific type which is carried through to execution
 ```
 
@@ -61,6 +61,7 @@ Evaluating this function at any point in time stops Nix from evaluating anything
 #### `builtins.bitXor :: Int -> Int ->> Int`
 #### `builtins.div    :: Number -> Number ->> Number`
 #### `builtins.lessThan :: Number -> Number ->> Bool`
+#### `builtins.mul    :: Number -> Number ->> Number`
 
 ### Other
 
@@ -110,6 +111,9 @@ nix-repl> builtins.concatMap (x: ["blah"] ++ x ++ ["text"]) [ [ "hi" "hello" ] [
 #### `builtins.currentTime :: Int`
 #### `builtins.false :: Bool`
 #### `builtins.langVersion :: Int`
+#### `builtins.nixPath :: [ { path = String; prefix = String; } ]`
+#### `builtins.nixVersion :: String`
+#### `builtins.null :: null`
 
 ### Compositions
 
@@ -120,7 +124,7 @@ nix-repl> builtins.concatMap (x: ["blah"] ++ x ++ ["text"]) [ [ "hi" "hello" ] [
 #### `builtins.derivation :: { Attr = *; } ->> <<derivation>>`
 #### `builtins.derivationStrict :: ?? ->> <<derivation>>`
 
-#### `builtins.dirOf :: Path|String ->> Path|String`
+#### `builtins.dirOf :: Path ->> Path`
 Gets the parent directory of the input
 
 ### Operations on lists
@@ -210,17 +214,19 @@ No idea what this does
 
 #### `builtins.listToAttrs :: [ { name = String; value = *; } ] -> { Attrs -> * }` 
 #### `builtins.map :: (a -> b) -> [ a ] ->> [ b ]`
-#### `builtins.mapAttrs`
-#### `builtins.match`
-#### `builtins.mul`
-#### `builtins.nixPath`
-#### `builtins.nixVersion`
-#### `builtins.null`
-#### `builtins.parseDrvName`
-#### `builtins.partition`
-#### `builtins.path`
-#### `builtins.pathExists`
-#### `builtins.placeholder`
+#### `builtins.mapAttrs :: (a -> b ->> *) -> { a = b; } ->> { a = *; }`
+```
+nix-repl> builtins.mapAttrs (x: y: "blah") { hello = 5;}
+{ hello = "blah"; }
+```
+
+#### `builtins.match :: String -> String ->> [ String ]|null`
+#### `builtins.parseDrvName :: String ->> { name = String; version = String; }`
+#### `builtins.partition :: (* ->> Bool) -> [ * ] ->> { right = [ * ]; wrong = [ * ]}`
+#### `builtins.path :: { path = Path; } ->> !! ->> String`
+Moves that directory specified by the path into the nix store
+#### `builtins.pathExists :: Path ->> Bool`
+#### `builtins.placeholder :: String ->> String`
 #### `builtins.readDir`
 #### `builtins.readFile`
 #### `builtins.removeAttrs`
