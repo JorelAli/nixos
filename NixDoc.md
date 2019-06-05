@@ -283,7 +283,7 @@ Moves that directory specified by the path into the nix store
 * `builtins.storePath :: Path -> String`
 Gives you the path of a thing in the nix store. The input path must be in the nix store
 * `builtins.stringLength :: String -> Int`
-* `builtins.substring :: Int -> Int -> String`
+* `builtins.substring :: Int -> Int -> String -> String`
 * `builtins.tail :: [ * ] -> [ * ] `
 * `builtins.throw :: String -> !!`
 

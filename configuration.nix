@@ -11,6 +11,7 @@ let
   #   nixos https://nixos.org/channels/nixos-19.03                             #
   #   nixos-old https://nixos.org/channels/nixos-18.09                         #
   #   unstable https://nixos.org/channels/nixos-unstable                       #
+  #   unstable-small https://nixos.org/channels/nixos-unstable-small           #
   ##############################################################################
 
   unstable   = import <unstable>       { config.allowUnfree = true; };
@@ -20,12 +21,15 @@ let
 ##### Nix expressions ##########################################################
 
   # Calculates the blur strength for compton windows with background blur 
-  calcBlur = (input: 
+  calcBlurStrength = (input: 
     builtins.foldl' 
       (x: y: x + y) 
       (builtins.toString(input) + "," + builtins.toString(input)) 
       (builtins.genList (x: ",1.000000") (input * input - 1))
     );
+
+##### NixOS configuration starts here ##########################################
+
 in {
 
 ##### NixOS important settings #################################################
@@ -96,24 +100,7 @@ in {
   };
 
 ##### /etc/ Files ##############################################################
-/*
-  # Settings file for GTK 3
-  environment.etc."xdg/gtk-3.0/settings.ini" = {
-    text = ''
-      [Settings]
-      gtk-icon-theme-name=breeze
-      gtk-theme-name=Breeze-gtk
-    '';
-  };
-
-  # Settings file for GTK 2
-  environment.etc."xdg/gtk-2.0/gtkrc" = {
-    text = ''
-      gtk-icon-theme-name = "breeze"
-      gtk-theme-name = "Breeze-gtk"
-    '';
-  };*/
-
+  
   # Remove screen tearing
   environment.etc."X11/xorg.conf.d/20-intel.conf" = {
     text = ''
@@ -147,7 +134,7 @@ in {
     #   https://github.com/NixOS/nixpkgs/issues/37864                          #
     ############################################################################
 
-    unstable.qutebrowser                # Lightweight minimal browser (v1.6.2)
+    qutebrowser                         # Lightweight minimal browser (v1.6.2)
 
 #    flutter.engine
 #    flutter.flutter
@@ -157,7 +144,6 @@ in {
     kdeApplications.kwalletmanager      # Manager for password manager
     kdeApplications.konsole             # Terminal
     kdeconnect                          # Connect linux with your phone
-    kdeFrameworks.kinit
     ksshaskpass                         # Password manager
     libsForQt5.kwallet                  # Password manager
 
@@ -201,13 +187,13 @@ in {
     ark                                 # Archive manager
     atom                                # Glorified text editor
     blueman                             # Bluetooth manager
-    chromium                            # Opensource Chrome browser
     dolphin                             # File browser
     kdeApplications.dolphin-plugins     # Plugin support for dolphin
     firefox                             # Web browser
     deluge                              # Torrent client
     gimp                                # Image editor
     gitkraken                           # Version control management software
+    google-chrome                       # Google Chrome browser (Has flash!)
     google-play-music-desktop-player    # Google Play Music for desktop
     gparted                             # Partition manager
     graphviz                            # Diagram generation software
@@ -394,7 +380,7 @@ in {
     #   set fish_greeting                               #
     #####################################################
 
-    fish.enable = true;                 # Holdup... why is this here?
+    fish.enable = true;                 # Fish shell (Better bash)
     fish.shellAliases = {               # Extra fish commands
       neofetchnix = "neofetch --ascii_colors 68 110";
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
@@ -496,7 +482,6 @@ in {
 ##### Security Settings ########################################################
 
   security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without a password
-  security.chromiumSuidSandbox.enable = true;
 
 ##### Services #################################################################
 
@@ -519,7 +504,7 @@ in {
         blur-background-exclude = "(class_g = 'escrotum')";
         blur-background = true;
         blur-background-fixed = true;
-        blur-kern = "${calcBlur 11}";
+        blur-kern = "${calcBlurStrength 11}";
         '';
     };
 
@@ -619,7 +604,7 @@ in {
 
   systemd.user.services."kdeconnect" = {
     enable = true;
-    description = "Connext phone with linux";
+    description = "Connect phone with linux";
     wantedBy = [ "graphical-session.target" "default.target" ];
     serviceConfig.Restart = "always";
     serviceConfig.RestartSec = 2;
@@ -666,7 +651,6 @@ in {
 
   nixpkgs.config = {
     allowUnfree = true;                 # Allow unfree/proprietary packages
-    flashplayer = { debug = true; };    # Flashplayer debug mode has new dl URL
 
     # This lets you override package derivations for the entire list of 
     # packages for this configuration.nix file. For example, below, I redefine
@@ -690,21 +674,9 @@ in {
       ############################################################################
 
       typora = typora.overrideAttrs (oldAttrs: {
-        installPhase = ''
-          mkdir -p $out/bin $out/share/typora
-          {
-            cd usr
-            mv share/typora/resources/app/* $out/share/typora
-            mv share/applications $out/share
-            mv share/icons $out/share
-            mv share/doc $out/share
-          }
-          makeWrapper ${electron_3}/bin/electron $out/bin/typora \
-            --add-flags $out/share/typora \
-            "''${gappsWrapperArgs[@]}" \
-            --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
-            --prefix LD_LIBRARY_PATH : "${stdenv.lib.makeLibraryPath [ stdenv.cc.cc ]}"
-          '';
+        postFixup = (builtins.substring 0 (builtins.stringLength oldAttrs.postFixup - 1)) 
+          oldAttrs.postFixup + 
+          " \\\n --prefix XDG_DATA_DIRS : \"$GSETTINGS_SCHEMAS_PATH\"\n";
       });
 
       ### LXAppearance - GTK Themer  ########################
