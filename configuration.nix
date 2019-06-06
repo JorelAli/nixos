@@ -62,14 +62,14 @@ in {
     firewall = {
       enable = true;                    # Enable firewall
 
-      allowedTCPPorts = [ 25565 ];
+      allowedTCPPorts = [ 25565 ];      # Minecraft
       allowedTCPPortRanges = [ 
-        { from = 1714; to = 1764; } 
+        { from = 1714; to = 1764; }     # KDE Connect
       ];
 
-      allowedUDPPorts = [ 25565 ];
+      allowedUDPPorts = [ 25565 ];      # Minecraft
       allowedUDPPortRanges = [ 
-        { from = 1714; to = 1764; } 
+        { from = 1714; to = 1764; }     # KDE Connect
       ];
     };
   };
@@ -101,6 +101,13 @@ in {
 
 ##### /etc/ Files ##############################################################
   
+  environment.etc."vconsole.conf" = {
+    text = ''
+      KEYMAP=uk
+      FONT=Lat2-Terminus16
+    '';
+  };
+
   # Remove screen tearing
   environment.etc."X11/xorg.conf.d/20-intel.conf" = {
     text = ''
@@ -135,6 +142,12 @@ in {
     ############################################################################
 
     qutebrowser                         # Lightweight minimal browser (v1.6.2)
+
+    xsel
+    wmctrl
+    taskwarrior
+    any-nix-shell
+   hyper 
 
 #    flutter.engine
 #    flutter.flutter
@@ -215,7 +228,7 @@ in {
     papirus-icon-theme                  # Papirus theme icons
     breeze-qt5                          # Breeze theme for qt5 (cursors!) <<- ----------------------- Fix this! 
     numix-solarized-gtk-theme           # Numix solarized theme for GTK & Qt
-    
+
     lxappearance-062                    # Program that manages themeing 
 
     ### Clairvoyance SDDM Theme #######################################
@@ -350,7 +363,7 @@ in {
     nox                                 # Better nix searching
     patchelf                            # Patches binaries for Nix support
 
-    (import (fetchGit "https://github.com/haslersn/fish-nix-shell"))
+   # (import (fetchGit "https://github.com/haslersn/fish-nix-shell"))
 
     ### Dictionaries ###########################################################
 
@@ -373,12 +386,15 @@ in {
     ### My Fish setup ###################################
     # Color scheme:                                     #
     #   curl -L https://get.oh-my.fish | fish           #
-    #   omf install agnoster                            #
+    #   omf install budspencer                          #
     # Highlight Colors:                                 #
     #   set fish_color_search_match --background=d33682 #
     # Remove greeting:                                  #
-    #   set fish_greeting                               #
-    #####################################################
+    #   set fish_greeting                               ##########################################################
+    # Solarized budspencer powerline colors:                                                                     #
+    #  set budspencer_colors ffffff 073642 6c71c4 ffffff b58900 000000 dc322f d33682 268bd2 839496 268bd2 00ff00 #
+    #                                                                                                            #
+    ##############################################################################################################
 
     fish.enable = true;                 # Fish shell (Better bash)
     fish.shellAliases = {               # Extra fish commands
@@ -388,12 +404,11 @@ in {
       dotp = "dot -Tpdf -o $1.pdf";
       doti = "dot -Tpng -o $1.png";
       dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
-      "@executable" = "chmod a+x";      # Make a file executable
       evalnix = "nix-instantiate --eval";
+      config = "sudo vim /etc/nixos/configuration.nix";
+      mocp = "mocp --theme solarized";
+      history = "history | bat";
     };
-    fish.promptInit = ''
-      fish-nix-shell --info-right | source
-    '';
     bash.shellAliases = {
       dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
     };
@@ -494,6 +509,7 @@ in {
       enable = true;                    # Application transparency
       opacityRules = [ 
         "95: class_g = 'konsole'"       # Always blur for konsole
+        "85: class_g = 'hyper'"
         "85: class_g = 'dolphin'"       # Always blur for dolphin
       ];
       vSync = "opengl-swc";             # Remove screen tearing
@@ -714,6 +730,10 @@ in {
       ) {};
 
       flutter = import ./flutter.nix {};
+
+      #hyper = hyper.overrideAttrs(oldAttrs: {
+      #    version = "3.0.2";
+      #});
     };
   };
 

@@ -42,6 +42,7 @@ in {
                 set tabstop=4
                 set shiftwidth=4
                 set background=dark
+                let g:solarized_termtrans = 1
                 colorscheme solarized
                 set number relativenumber
                 set mouse=a
