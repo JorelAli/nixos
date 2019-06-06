@@ -392,7 +392,7 @@ in {
     # Remove greeting:                                  #
     #   set fish_greeting                               ##########################################################
     # Solarized budspencer powerline colors:                                                                     #
-    #  set budspencer_colors ffffff 073642 6c71c4 ffffff b58900 000000 dc322f d33682 268bd2 839496 268bd2 00ff00 #
+    #  set budspencer_colors ffffff 073642 6c71c4 ffffff b58900 cb4b16 dc322f d33682 268bd2 073642 268bd2 00ff00 #
     #                                                                                                            #
     ##############################################################################################################
 
