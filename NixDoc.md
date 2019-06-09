@@ -128,7 +128,7 @@ Evaluating this function at any point in time stops Nix from evaluating anything
 * `builtins.elem :: * -> [ * ] -> Bool`
 * `builtins.elemAt :: [ * ] -> Int -> *`
 * `builtins.filter :: Eq a => (a -> Bool) -> [ a ] -> [ a ]`
-* `builtins.foldl' :: (a -> a -> a) -> a -> [ a ]`
+* `builtins.foldl' :: (a -> * -> *) -> * -> [ a ] -> *`
 * `builtins.length :: [ * ] -> Int`
 
 

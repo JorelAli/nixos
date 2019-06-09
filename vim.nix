@@ -141,6 +141,12 @@ in {
 
                 let g:kronos_database = $HOME . '.kronos.database'
 
+                " Don't indent .nix files!
+                autocmd FileType nix let b:did_indent = 1
+                autocmd FileType nix setlocal indentexpr=
+
+
+
               '';
 
               ### Vim packages #################################################

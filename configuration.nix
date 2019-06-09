@@ -3,6 +3,7 @@
 
 { config, pkgs, ... }:
 
+with builtins;
 let
 
   ### Nix channels #############################################################
@@ -19,13 +20,13 @@ let
   old        = import <nixos-old>      { config.allowUnfree = true; };
 
 ##### Nix expressions ##########################################################
-
+  
   # Calculates the blur strength for compton windows with background blur 
   calcBlurStrength = (input: 
-    builtins.foldl' 
+    foldl' 
       (x: y: x + y) 
-      (builtins.toString(input) + "," + builtins.toString(input)) 
-      (builtins.genList (x: ",1.000000") (input * input - 1))
+      (toString(input) + "," + toString(input)) 
+      (genList (x: ",1.000000") (input * input - 1))
     );
 
 ##### NixOS configuration starts here ##########################################
@@ -97,6 +98,8 @@ in {
 
     _JAVA_OPTIONS= "-Dawt.useSystemAAFontSettings=lcd";
     QT_XCB_GL_INTEGRATION = "xcb_egl";
+
+    BAT_PAGER = "less -RF";
   };
 
 ##### /etc/ Files ##############################################################
@@ -112,13 +115,11 @@ in {
   environment.etc."X11/xorg.conf.d/20-intel.conf" = {
     text = ''
       Section "Device"
- 
         Identifier "Intel Graphics"
- 
         Driver "intel"
- 
         Option "TearFree" "true"
- 
+        Option "AccelMethod" "sna"
+        Option "SwapbuffersWait" "false"
       EndSection
     '';
   };
@@ -147,8 +148,8 @@ in {
     wmctrl
     taskwarrior
     any-nix-shell
-   hyper 
-
+    filelight # Like windirstat
+    idris
 #    flutter.engine
 #    flutter.flutter
 
@@ -163,7 +164,6 @@ in {
     ### Command line utilities #################################################
 
     bat                                 # cat command, but better
-#    bundler                             # Ruby bundle thing
     escrotum                            # Screenshot tool (what a name...)
     feh                                 # Image viewer
     fzf                                 # Find files easily
@@ -209,7 +209,6 @@ in {
     google-chrome                       # Google Chrome browser (Has flash!)
     google-play-music-desktop-player    # Google Play Music for desktop
     gparted                             # Partition manager
-    graphviz                            # Diagram generation software
     inkscape                            # Vector artwork
     libreoffice-fresh                   # Documents/Spreadsheets/Presentations
     libsForQt5.vlc                      # Video player (VLC)
@@ -270,7 +269,6 @@ in {
     bundler                             # Bundle command for Ruby
     gcc                                 # C/C++ compiler
     gdb                                 # C code debugger
-#    jekyll                              # Static site generator
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
@@ -398,19 +396,18 @@ in {
 
     fish.enable = true;                 # Fish shell (Better bash)
     fish.shellAliases = {               # Extra fish commands
-      neofetchnix = "neofetch --ascii_colors 68 110";
-      fonts = "fc-list : family | cut -f1 -d\",\" | sort";
-      prettify = "python -m json.tool"; # Prettify json!
-      dotp = "dot -Tpdf -o $1.pdf";
-      doti = "dot -Tpng -o $1.png";
+      config = "sudo vim /etc/nixos/configuration.nix";
+      dirsize = "du -sh";
       dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
       evalnix = "nix-instantiate --eval";
-      config = "sudo vim /etc/nixos/configuration.nix";
-      mocp = "mocp --theme solarized";
+      fonts = "fc-list : family | cut -f1 -d\",\" | sort";
       history = "history | bat";
-    };
-    bash.shellAliases = {
-      dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
+      mocp = "mocp --theme solarized";
+      neofetchnix = "neofetch --ascii_colors 68 110";
+      nix-repl = "nix repl";
+      prettify = "python -m json.tool"; # Prettify json!
+      rebuild = "sudo nixos-rebuild --switch";
+      vimf = "vim (fzf)";
     };
 
     less.enable = true;                 # Enables config for the `less` command
@@ -509,15 +506,16 @@ in {
       enable = true;                    # Application transparency
       opacityRules = [ 
         "95: class_g = 'konsole'"       # Always blur for konsole
-        "85: class_g = 'hyper'"
         "85: class_g = 'dolphin'"       # Always blur for dolphin
       ];
       vSync = "opengl-swc";             # Remove screen tearing
       backend = "glx";
       inactiveOpacity = "0.85";         # Make programs blur on unfocus
       extraOptions = ''
+        paint-on-overlay = true; 
+        glx-no-stencil = true;
         unredir-if-possible = true;
-        blur-background-exclude = "(class_g = 'escrotum')";
+        blur-background-exclude = [ "class_g = 'escrotum'" ];
         blur-background = true;
         blur-background-fixed = true;
         blur-kern = "${calcBlurStrength 11}";
@@ -731,9 +729,6 @@ in {
 
       flutter = import ./flutter.nix {};
 
-      #hyper = hyper.overrideAttrs(oldAttrs: {
-      #    version = "3.0.2";
-      #});
     };
   };
 
