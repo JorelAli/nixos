@@ -145,6 +145,8 @@ in {
                 autocmd FileType nix let b:did_indent = 1
                 autocmd FileType nix setlocal indentexpr=
 
+                autocmd VimEnter *.md Goyo
+                autocmd VimEnter *.md SoftPencil
 
 
               '';
@@ -174,6 +176,8 @@ in {
                   vim-toml              # Toml language syntax
 
                   ctrlp                 # Easy file opener using Ctrl+P
+                  goyo
+                  vim-pencil
 
                 ];    
               };

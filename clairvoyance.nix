@@ -1,6 +1,23 @@
-with import <nixpkgs> {};
+{ 
+  stdenv, fetchFromGitHub,
+  autoFocusPassword ? false, 
+  backgroundURL ? null, 
+  enableHDPI ? false,
+  fileType ? "jpg"
+}:
 
-stdenv.mkDerivation rec {
+let boolToStr = b: if b then "true" else "false";
+    autoFocusPassword' = boolToStr autoFocusPassword;
+    enableHDPI' = boolToStr enableHDPI;
+    background = "Assets/Background." + fileType;
+    themeConfig = builtins.toFile "theme.conf" ''
+      [General]
+      background=${background}
+      autoFocusPassword=${autoFocusPassword'}
+      enableHDPI=${enableHDPI'}
+    '';
+
+in stdenv.mkDerivation rec {
   name = "sddm-clairvoyance";
   src = fetchFromGitHub {
     owner = "eayus"; 
@@ -9,18 +26,11 @@ stdenv.mkDerivation rec {
     sha256 = "17hwh0ixnn5d9dbl1gaygbhb1zv4aamqkqf70pcgq1h9124mjshj"; 
   };
 
-  background = "Assets/Background.jpg";
-  autoFocusPassword = "false";
-  enableHDPI = "false";
-
   installPhase = ''
     mkdir -p $out/share/sddm/themes/clairvoyance
     cp -r * $out/share/sddm/themes/clairvoyance
-    rm $out/share/sddm/themes/clairvoyance/theme.conf
-    echo "[General]" >> $out/share/sddm/themes/clairvoyance/theme.conf
-    echo "background=$background" >> $out/share/sddm/themes/clairvoyance/theme.conf
-    echo "autoFocusPassword=$autoFocusPassword" >> $out/share/sddm/themes/clairvoyance/theme.conf
-    echo "enableHDPI=$enableHDPI" >> $out/share/sddm/themes/clairvoyance/theme.conf
+    cp ${themeConfig} $out/share/sddm/themes/clairvoyance/theme.conf
+    ${if backgroundURL == null then "" else "cp ${builtins.fetchurl backgroundURL} $out/share/sddm/themes/clairvoyance/${background}"}
  '';
 
   meta = with stdenv.lib; {

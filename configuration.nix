@@ -225,22 +225,11 @@ in {
     ### System-wide theming ####################################################
 
     papirus-icon-theme                  # Papirus theme icons
-    breeze-qt5                          # Breeze theme for qt5 (cursors!) <<- ----------------------- Fix this! 
+    breeze-qt5                          # Breeze theme for qt5 (cursors!)
     numix-solarized-gtk-theme           # Numix solarized theme for GTK & Qt
 
     lxappearance-062                    # Program that manages themeing 
-
-    ### Clairvoyance SDDM Theme #######################################
-    # Custom nix derivation for the Clairvoyance SDDM theme by eayus: #
-    #   https://github.com/eayus/sddm-theme-clairvoyance              #
-    ###################################################################
-
-    ((import ./clairvoyance.nix).overrideAttrs (oldAttrs: rec {
-      autoFocusPassword = "true";
-      backgroundURL = "https://images7.alphacoders.com/700/700047.jpg";
-      installPhase = oldAttrs.installPhase + "cp ${builtins.fetchurl backgroundURL} $out/share/sddm/themes/clairvoyance/$background";
-      background = "Assets/Background.jpg";
-    }))
+    clairvoyance                        # SDDM greeter theme
 
     ### Games ##################################################################
 
@@ -406,7 +395,7 @@ in {
       neofetchnix = "neofetch --ascii_colors 68 110";
       nix-repl = "nix repl";
       prettify = "python -m json.tool"; # Prettify json!
-      rebuild = "sudo nixos-rebuild --switch";
+      rebuild = "sudo nixos-rebuild switch";
       vimf = "vim (fzf)";
     };
 
@@ -711,7 +700,7 @@ in {
       # Useful NixOS operations in one contained location #
       #####################################################
 
-      nixbox = with pkgs; import (pkgs.fetchFromGitHub {
+      nixbox = import (pkgs.fetchFromGitHub {
         name = "nixbox";
         owner = "LinArcX"; 
         repo = "nixbox";
@@ -728,6 +717,17 @@ in {
       ) {};
 
       flutter = import ./flutter.nix {};
+
+      ### Clairvoyance SDDM Theme #######################################
+      # Custom nix derivation for the Clairvoyance SDDM theme by eayus: #
+      #   https://github.com/eayus/sddm-theme-clairvoyance              #
+      ###################################################################
+
+      clairvoyance = (import ./clairvoyance.nix {
+        autoFocusPassword = true;
+        backgroundURL = "https://images7.alphacoders.com/700/700047.jpg";
+        inherit stdenv fetchFromGitHub;
+      });
 
     };
   };
