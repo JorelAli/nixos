@@ -19,6 +19,11 @@ let
   unstablesm = import <unstable-small> { config.allowUnfree = true; };
   old        = import <nixos-old>      { config.allowUnfree = true; };
 
+##### Optional installation ####################################################
+
+  # Includes: Haskell, GHC, Stack, Atom IDE, Cabal, HIE (GHC v8.4.3)
+  haskellSetup = false;
+
 ##### Nix expressions ##########################################################
   
   # Calculates the blur strength for compton windows with background blur 
@@ -111,6 +116,10 @@ in {
     '';
   };
 
+  environment.etc."systemd/journald.conf" = {
+    text = "SystemMaxUse=50M";
+  };
+
   # Remove screen tearing
   environment.etc."X11/xorg.conf.d/20-intel.conf" = {
     text = ''
@@ -165,6 +174,7 @@ in {
 
     bat                                 # cat command, but better
     escrotum                            # Screenshot tool (what a name...)
+    exa                                 # Better ls command
     feh                                 # Image viewer
     fzf                                 # Find files easily
     git                                 # Version control
@@ -198,7 +208,6 @@ in {
 
     arandr                              # Multiple display manager
     ark                                 # Archive manager
-    atom                                # Glorified text editor
     blueman                             # Bluetooth manager
     dolphin                             # File browser
     kdeApplications.dolphin-plugins     # Plugin support for dolphin
@@ -278,45 +287,6 @@ in {
     ncurses                             # Library to create Text User Interfaces
     rustup                              # Rust toolchain manager
 
-    ### Programming (Haskell) ##################################################
-
-    cabal-install                       # CLI for Cabal + Hackage (for Haskell)
-    ghc                                 # Haskell compiler
-    stack                               # Haskell compiler + package manager
-    zlib                                # Some zipping library for C?
-
-    haskellPackages.hoogle              # Haskell documentation database
-    haskellPackages.container           # Represents Haskell containers (e.g. Monoid)
-    haskellPackages.zlib                # Compression library for Haskell
-
-    all-hies.versions.ghc843            # Haskell IDE Engine for GHC v8.4.3
-
-    ### How to get the best Haskell setup ###############################################
-    # Install the following system packages: stack cabal-install ghc cachix atom zlib   #
-    #                                                                                   #
-    # To install hie (Haskell IDE Engine):                                              #
-    #   1) "cachix use hie-nix"                                                         #
-    #   2) "nix-env -iA hies -f https://github.com/domenkozar/hie-nix/tarball/master"   #
-    #                                                                                   #
-    # Optional: Install Hasklig font (I use Fira Code Medium)                           #
-    #                                                                                   #
-    # Install the following packages for atom (using the built in package manager):     #
-    #   atom-ide-ui                                                                     #
-    #   ide-haskell-hie                                                                 #
-    #   language-haskell                                                                #
-    #                                                                                   #
-    # In atom, Ctrl + , ide-haskell-hie package:                                        #
-    #   Settings -> Absolute path to hie executable                                     #
-    #   => hie-wrapper                                                                  #
-    #                                                                                   #
-    # Optional: git clone hie-nix and run the ./update.sh file                          #
-    #                                                                                   #
-    # In ~/.stack/config.yaml:                                                          #
-    #   nix:                                                                            #
-    #     enable: true                                                                  #
-    #     packages: [zlib.dev, zlib.out]                                                #
-    #####################################################################################
-
     ### GUI/Window Manager #####################################################
 
     # i3status-rust        coming soon: https://github.com/JorelAli/i3status-rust
@@ -358,7 +328,50 @@ in {
     hunspellDicts.en-gb-ise             # English (GB with '-ise' spellings)
     hunspellDicts.en-us                 # English (US)
 
-  ];
+  ] ++ ( if haskellSetup then [
+
+    ### Programming (Haskell) ##################################################
+
+    atom                                # Glorified text editor (for Haskell w/ HIE)
+
+    cabal-install                       # CLI for Cabal + Hackage (for Haskell)
+    ghc                                 # Haskell compiler
+    stack                               # Haskell compiler + package manager
+    zlib                                # Some zipping library for C?
+
+    haskellPackages.hoogle              # Haskell documentation database
+    haskellPackages.container           # Represents Haskell containers (e.g. Monoid)
+    haskellPackages.zlib                # Compression library for Haskell
+
+    all-hies.versions.ghc843            # Haskell IDE Engine for GHC v8.4.3
+
+    ### How to get the best Haskell setup ###############################################
+    # Install the following system packages: stack cabal-install ghc cachix atom zlib   #
+    #                                                                                   #
+    # To install hie (Haskell IDE Engine):                                              #
+    #   1) "cachix use hie-nix"                                                         #
+    #   2) "nix-env -iA hies -f https://github.com/domenkozar/hie-nix/tarball/master"   #
+    #                                                                                   #
+    # Optional: Install Hasklig font (I use Fira Code Medium)                           #
+    #                                                                                   #
+    # Install the following packages for atom (using the built in package manager):     #
+    #   atom-ide-ui                                                                     #
+    #   ide-haskell-hie                                                                 #
+    #   language-haskell                                                                #
+    #                                                                                   #
+    # In atom, Ctrl + , ide-haskell-hie package:                                        #
+    #   Settings -> Absolute path to hie executable                                     #
+    #   => hie-wrapper                                                                  #
+    #                                                                                   #
+    # Optional: git clone hie-nix and run the ./update.sh file                          #
+    #                                                                                   #
+    # In ~/.stack/config.yaml:                                                          #
+    #   nix:                                                                            #
+    #     enable: true                                                                  #
+    #     packages: [zlib.dev, zlib.out]                                                #
+    #####################################################################################
+
+  ] else [] );
 
 
 ##### Programs #################################################################
@@ -385,17 +398,20 @@ in {
 
     fish.enable = true;                 # Fish shell (Better bash)
     fish.shellAliases = {               # Extra fish commands
+      arc = "ark";
       config = "sudo vim /etc/nixos/configuration.nix";
       dirsize = "du -sh";
       dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
       evalnix = "nix-instantiate --eval";
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
       history = "history | bat";
+      ls = "exa";
       mocp = "mocp --theme solarized";
       neofetchnix = "neofetch --ascii_colors 68 110";
       nix-repl = "nix repl";
       prettify = "python -m json.tool"; # Prettify json!
       rebuild = "sudo nixos-rebuild switch";
+      rebuilt = "sudo nixos-rebuild switch";
       vimf = "vim (fzf)";
     };
 
@@ -413,8 +429,6 @@ in {
       emojione                          # Emoji font
       font-awesome_4                    # Fancy icons font
       ipafont                           # Japanese font
-      kochi-substitute                  # Japanese font
-      migmix                            # Japanese font
       siji                              # Iconic bitmap font
       symbola                           # Braille support for gotop command
 
@@ -449,8 +463,6 @@ in {
 
   i18n = {
     defaultLocale = "en_GB.UTF-8";
-    inputMethod.enabled = "fcitx";
-    inputMethod.fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
   };
 
 ##### Hardware Settings ########################################################
