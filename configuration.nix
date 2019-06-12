@@ -67,16 +67,8 @@ in {
 
     firewall = {
       enable = true;                    # Enable firewall
-
       allowedTCPPorts = [ 25565 ];      # Minecraft
-      allowedTCPPortRanges = [ 
-        { from = 1714; to = 1764; }     # KDE Connect
-      ];
-
       allowedUDPPorts = [ 25565 ];      # Minecraft
-      allowedUDPPortRanges = [ 
-        { from = 1714; to = 1764; }     # KDE Connect
-      ];
     };
   };
 
