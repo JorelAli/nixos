@@ -157,7 +157,6 @@ in {
     wmctrl
     taskwarrior
     any-nix-shell
-    filelight # Like windirstat
     idris
 #    flutter.engine
 #    flutter.flutter
@@ -210,26 +209,28 @@ in {
     ark                                 # Archive manager
     blueman                             # Bluetooth manager
     dolphin                             # File browser
-    kdeApplications.dolphin-plugins     # Plugin support for dolphin
-    firefox                             # Web browser
-    deluge                              # Torrent client
+    filelight                           # View disk usage
     gimp                                # Image editor
-    gitkraken                           # Version control management software
     google-chrome                       # Google Chrome browser (Has flash!)
     google-play-music-desktop-player    # Google Play Music for desktop
     gparted                             # Partition manager
     inkscape                            # Vector artwork
-    libreoffice-fresh                   # Documents/Spreadsheets/Presentations
     libsForQt5.vlc                      # Video player (VLC)
     mpv                                 # Video player
-    pavucontrol                         # Pulse Audio controller
-    pidgin-with-plugins                 # IM program           
     redshift                            # Screen temperature changer
     shutter                             # Screenshot tool
-    skype                               # Messaging & Video calling platform
-    sqlitebrowser                       # SQLite .db file browser
     typora                              # Visual markdown editor
     zathura                             # PDF viewer
+
+    ### Backup Applications (You never know when you might need them...) #######
+
+    abiword                             # Word processing
+    deluge                              # Torrent client
+    firefox                             # Backup browser
+    gitkraken                           # Advanced git management
+    gnumeric                            # Spreadsheets
+    pavucontrol                         # Pulse Audio controller
+    sqlitebrowser                       # SQLite .db file browser
 
     ### System-wide theming ####################################################
 
@@ -252,13 +253,12 @@ in {
 
     cool-retro-term                     # A retro looking terminal
     elinks                              # Useless terminal based browser
-    gnash                               # Flash player
     sl                                  # Display a steam locomotive in terminal
 
     ### Programming (Java) #####################################################
     
     ant                                 # Java building tool
-    eclipses.eclipse-java               # Eclipse Java IDE (my favourite IDE)
+    eclipses.eclipse-java               # Eclipse Java IDE
     maven                               # Java dependency manager
     openjdk11                           # Java Development Kit for Java 11
 
@@ -274,10 +274,10 @@ in {
 
     ### Programming (Node.JS) ##################################################
 
-    ###############################################################
-    # To lookup packages for nix, use the following code:         #
-    #   nix-env -qaPA 'nixos.nodePackages' | grep -i <npm module> #
-    ###############################################################
+      ###############################################################
+      # To lookup packages for nix, use the following code:         #
+      #   nix-env -qaPA 'nixos.nodePackages' | grep -i <npm module> #
+      ###############################################################
 
     nodejs                              # Node.JS
     nodePackages.vue-cli                # Vue.JS package
@@ -320,8 +320,6 @@ in {
     nox                                 # Better nix searching
     patchelf                            # Patches binaries for Nix support
 
-   # (import (fetchGit "https://github.com/haslersn/fish-nix-shell"))
-
     ### Dictionaries ###########################################################
 
     hunspell                            # Dictionary for document programs
@@ -345,31 +343,34 @@ in {
 
     all-hies.versions.ghc843            # Haskell IDE Engine for GHC v8.4.3
 
-    ### How to get the best Haskell setup ###############################################
-    # Install the following system packages: stack cabal-install ghc cachix atom zlib   #
-    #                                                                                   #
-    # To install hie (Haskell IDE Engine):                                              #
-    #   1) "cachix use hie-nix"                                                         #
-    #   2) "nix-env -iA hies -f https://github.com/domenkozar/hie-nix/tarball/master"   #
-    #                                                                                   #
-    # Optional: Install Hasklig font (I use Fira Code Medium)                           #
-    #                                                                                   #
-    # Install the following packages for atom (using the built in package manager):     #
-    #   atom-ide-ui                                                                     #
-    #   ide-haskell-hie                                                                 #
-    #   language-haskell                                                                #
-    #                                                                                   #
-    # In atom, Ctrl + , ide-haskell-hie package:                                        #
-    #   Settings -> Absolute path to hie executable                                     #
-    #   => hie-wrapper                                                                  #
-    #                                                                                   #
-    # Optional: git clone hie-nix and run the ./update.sh file                          #
-    #                                                                                   #
-    # In ~/.stack/config.yaml:                                                          #
-    #   nix:                                                                            #
-    #     enable: true                                                                  #
-    #     packages: [zlib.dev, zlib.out]                                                #
-    #####################################################################################
+      ### How to get the best Haskell setup ##########################
+      # Install the following system packages:                       #
+      #   stack cabal-install ghc cachix atom zlib                   #
+      #                                                              #
+      # To install hie (Haskell IDE Engine):                         #
+      #   1) "cachix use hie-nix"                                    #
+      #   2) "nix-env -iA hies -f \                                  #
+      #        https://github.com/domenkozar/hie-nix/tarball/master" #
+      #                                                              #
+      # Optional: Install Hasklig font (I use Fira Code Medium)      #
+      #                                                              #
+      # Install the following packages for atom                      #
+      #   (using the built in package manager):                      #
+      #   atom-ide-ui                                                #
+      #   ide-haskell-hie                                            #
+      #   language-haskell                                           #
+      #                                                              #
+      # In atom, Ctrl + , ide-haskell-hie package:                   #
+      #   Settings -> Absolute path to hie executable                #
+      #   => hie-wrapper                                             #
+      #                                                              #
+      # Optional: git clone hie-nix and run the ./update.sh file     #
+      #                                                              #
+      # In ~/.stack/config.yaml:                                     #
+      #   nix:                                                       #
+      #     enable: true                                             #
+      #     packages: [zlib.dev, zlib.out]                           #
+      ################################################################
 
   ] else [] );
 
@@ -441,13 +442,6 @@ in {
       fira-code-symbols                 # Fancy font with programming ligatures
       fira-code                         # Fancy font with programming ligatures
   
-      # https://github.com/NixOS/nixpkgs/issues/47921
-      # wget https://github.com/ryanoasis/nerd-fonts/archive/2.0.0.tar.gz
-      # nix-prefetch-url --type sha256 --unpack --name source file:///home/$USER/Downloads/nerd-fonts-2.0.0.tar.gz 09i467hyskvzj2wn5sj6shvc9pb0a0rx5iknjkkkbg1ng3bla7nm
-      # (Might wanna check the hash)
-      # sudo nixos-rebuild switch
-
-      nerdfonts
       powerline-fonts
     ];
 
