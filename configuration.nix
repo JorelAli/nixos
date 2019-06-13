@@ -164,6 +164,7 @@ in {
     ### Command line utilities #################################################
 
     bat                                 # cat command, but better
+    cht-sh                              # Everything cheat sheet
     escrotum                            # Screenshot tool (what a name...)
     exa                                 # Better ls command
     feh                                 # Image viewer
@@ -183,6 +184,7 @@ in {
     ranger                              # Terminal file manager
     ripgrep                             # Better grep (use rg command)
     rofi                                # Window switcher & App launcher
+    rsync                               # Better cp command
     rtv                                 # Reddit in terminal
     ruby                                # Ruby (Programming language)
     screenfetch                         # Display info about themes to console
@@ -210,7 +212,7 @@ in {
     libsForQt5.vlc                      # Video player (VLC)
     mpv                                 # Video player
     redshift                            # Screen temperature changer
-    shutter                             # Screenshot tool
+    simplescreenrecorder                # ... A simple screen recorder (duh)
     typora                              # Visual markdown editor
     zathura                             # PDF viewer
 
@@ -393,10 +395,12 @@ in {
     fish.shellAliases = {               # Extra fish commands
       arc = "ark";
       config = "sudo vim /etc/nixos/configuration.nix";
+      cp = "rsync -ahv --progress";
       dirsize = "du -sh";
       dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
       evalnix = "nix-instantiate --eval";
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
+      gparted = "sudo fish -c gparted";
       history = "history | bat";
       ls = "exa";
       mocp = "mocp --theme solarized";
@@ -406,6 +410,7 @@ in {
       rebuild = "sudo nixos-rebuild switch";
       rebuilt = "sudo nixos-rebuild switch";
       vimf = "vim (fzf)";
+      batf = "bat (fzf)";
     };
 
     less.enable = true;                 # Enables config for the `less` command
@@ -618,7 +623,17 @@ in {
     isNormalUser = true;
     home = "/home/jorel";
     description = " ";                  # The ultimate sddm aesthetics
-    extraGroups = [ "wheel" "networkmanager" "disk" "audio" "video" ];
+    # Sets vm password to "test". Use `nixos-rebuild build-vm` and `./result/bin/run-*-vm`
+#    initialHashedPassword = "$6$0z67w00YMNumxeCY$GfFK.qW/cyV1aHfnRWWSwxByoX.VbikO7EvFjhWG8vj9LfU99wgcLT5wov8iwKfCsSTGXgmV8NDD3D6iBYATG.";
+    extraGroups = [ 
+      "audio"                           # Access sound hardware
+      "disk"                            # Access /dev/sda /dev/sdb etc.
+      "kvm"                             # Access virtual machines
+      "networkmanager"                  # Access network manager
+      "storage"                         # Access storage devices 
+      "video"                           # 2D/3D hardware acceleration & camera
+      "wheel"                           # Access sudo command
+    ];
     uid = 1000;
     shell = pkgs.fish;                  # Use fish as the default shell
   };
