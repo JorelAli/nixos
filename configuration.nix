@@ -27,7 +27,7 @@ let
 ##### Nix expressions ##########################################################
   
   # Calculates the blur strength for compton windows with background blur 
-  calcBlurStrength = (input: 
+  calcBlurStrength = (input: assert (builtins.bitAnd input 1) == 1; 
     foldl' 
       (x: y: x + y) 
       (toString(input) + "," + toString(input)) 
@@ -509,7 +509,7 @@ in {
         blur-background-exclude = [ "class_g = 'escrotum'" ];
         blur-background = true;
         blur-background-fixed = true;
-        blur-kern = "${calcBlurStrength 11}";
+        blur-kern = "${calcBlurStrength 13}";
         '';
     };
 
@@ -533,7 +533,7 @@ in {
       ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
     '';
 
-    ### X Server ###############################################################
+    ### X ######################################################################
 
     xserver = {
       enable = true;                    # GUI for the entire computer
@@ -593,6 +593,7 @@ in {
     enable = true;
     description = "Notification system daemon";
     wantedBy = [ "default.target" ];
+    postStart = "pkill dunst";
     serviceConfig.Restart = "always";
     serviceConfig.RestartSec = 2;
     serviceConfig.ExecStart = "${pkgs.dunst}/bin/dunst";
@@ -675,11 +676,6 @@ in {
     packageOverrides = pkgs: with pkgs; {
 
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
-
-      pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
-        ## Add whatever plugins are desired (see nixos.org package listing).
-        plugins = [ purple-facebook purple-discord purple-matrix ];
-      };
 
       ### Typora Markdown Editor #################################################
       # Typora - another markdown editor with fancy features (such as exporting  # 
