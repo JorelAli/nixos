@@ -309,7 +309,6 @@ in {
     ### Nix related stuff ######################################################
 
     cachix                              # Compiled binary hosting for Nix
-    nixbox                              # Nix operations "in a box"
     nix-index                           # Locate packages
     nox                                 # Better nix searching
     patchelf                            # Patches binaries for Nix support
@@ -708,18 +707,6 @@ in {
             sha256 = "07r0xbi6504zjnbpan7zrn7gi4j0kbsqqfpj8v2x94gr05p16qj4";
           };
       });
-
-      ### nixbox - NixOS operations in a box! #############
-      # Useful NixOS operations in one contained location #
-      #####################################################
-
-      nixbox = import (pkgs.fetchFromGitHub {
-        name = "nixbox";
-        owner = "LinArcX"; 
-        repo = "nixbox";
-        rev = "b78fba9a814857d72df9d2107efd0fb695ccc066";
-        sha256 = "0v9lxf6x8ym95m2ynms1imabgxvprxd7l3zwk7y61hgxkd7cn4fa";
-      }) {inherit fetchFromGitHub stdenv;};
 
       ### HIEs #################
       # The Haskell IDE Engine #
