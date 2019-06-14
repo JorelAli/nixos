@@ -27,7 +27,7 @@ let
 ##### Nix expressions ##########################################################
   
   # Calculates the blur strength for compton windows with background blur 
-  calcBlurStrength = (input: assert (builtins.bitAnd input 1) == 1; 
+  calcBlurStrength = (input: assert (bitAnd input 1) == 1; 
     foldl' 
       (x: y: x + y) 
       (toString(input) + "," + toString(input)) 
@@ -188,6 +188,7 @@ in {
     rtv                                 # Reddit in terminal
     ruby                                # Ruby (Programming language)
     screenfetch                         # Display info about themes to console
+    sl                                  # For when you mistype 'ls'
     speedtest-cli                       # Speed test in terminal
     tree                                # Print file tree in terminal
     unixtools.xxd                       # Some hex viewer
@@ -220,7 +221,6 @@ in {
 
     abiword                             # Word processing
     deluge                              # Torrent client
-    firefox                             # Backup browser
     gitkraken                           # Advanced git management
     gnumeric                            # Spreadsheets
     pavucontrol                         # Pulse Audio controller
@@ -242,12 +242,6 @@ in {
     pacvim                              # Pacman, but with vim controls
     steam                               # Game distribution platform
     vitetris                            # Terminal based tetris game
-
-    ### Other random stuff #####################################################
-
-    cool-retro-term                     # A retro looking terminal
-    elinks                              # Useless terminal based browser
-    sl                                  # Display a steam locomotive in terminal
 
     ### Programming (Java) #####################################################
     
@@ -293,13 +287,6 @@ in {
     libnotify                           # Notification library
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
-
-      #########################################################################
-      # If a USB pen is mounted and you can't access it, use                  #
-      # `chown <username> <usb mount point>` (or wherever the mount point is) #
-      # If the USB is not mounted, use `udisksctl mount -b /dev/<usb>`        #
-      #########################################################################
-
     universal-ctags                     # Tool for browsing source code quickly
     xorg.xbacklight                     # Enable screen backlight adjustments
     xorg.xcompmgr                       # Window compositing
@@ -371,10 +358,7 @@ in {
 ##### Programs #################################################################
 
   programs = {
-
-    ssh.askPassword = "${pkgs.ksshaskpass}/bin/ksshaskpass";
     adb.enable = true;                  # Enables the Android Debug Bridge
-
     bash.enableCompletion = true;       # Enable completion in bash shell
 
     ### My Fish setup ###################################
@@ -391,7 +375,7 @@ in {
     ##############################################################################################################
 
     fish.enable = true;                 # Fish shell (Better bash)
-    fish.shellAliases = {               # Extra fish commands
+    fish.shellAliases = {               
       arc = "ark";
       config = "sudo vim /etc/nixos/configuration.nix";
       cp = "rsync -ahv --progress";
@@ -414,8 +398,8 @@ in {
 
     less.enable = true;                 # Enables config for the `less` command
     less.commands = { h = "quit"; };    # Rebind the `h` key to quit 
-
     qt5ct.enable = true;                # Enable qt5ct (fixes Qt applications) 
+    ssh.askPassword = "${pkgs.ksshaskpass}/bin/ksshaskpass";
 
   };
 
@@ -437,8 +421,7 @@ in {
       
       fira-code-symbols                 # Fancy font with programming ligatures
       fira-code                         # Fancy font with programming ligatures
-  
-      powerline-fonts
+      powerline-fonts                   # Fonts for powerlines (Used in my tty)
     ];
 
     fontconfig.defaultFonts = {
@@ -453,6 +436,9 @@ in {
 
   i18n = {
     defaultLocale = "en_GB.UTF-8";
+    consoleFont = with pkgs; "${powerline-fonts}/share/fonts/psf/ter-powerline-v28b.psf.gz";
+    consoleKeyMap = "uk";
+    consoleColors = [ "002b36" "dc322f" "859900" "b58900" "268bd2" "d33682" "2aa198" "eee8d5" "002b36" "cb4b16" "586e75" "657b83" "839496" "6c71c4" "93a1a1" "fdf6e3" ];
   };
 
 ##### Hardware Settings ########################################################
