@@ -59,6 +59,31 @@ in {
     ];
   };
 
+##### Containers ###############################################################
+
+  containers.test = {
+    autoStart = true;
+    privateNetwork = true;
+    hostAddress = "192.168.101.10";
+    localAddress = "192.168.101.11";
+    
+    config = { config, pkgs, ... }: { 
+      environment.systemPackages = with pkgs; [
+        hello
+      ];
+      
+      users.users.testusr = {
+        isNormalUser = true;
+        home = "/home/testusr";
+        description = "test";
+        # mkpasswd -m sha-512 <NEW_PASSWORD>
+        initialHashedPassword = "$6$0z67w00YMNumxeCY$GfFK.qW/cyV1aHfnRWWSwxByoX.VbikO7EvFjhWG8vj9LfU99wgcLT5wov8iwKfCsSTGXgmV8NDD3D6iBYATG.";
+        extraGroups = [ "wheel" ];
+        uid = 2000;
+      };
+    };
+  };
+
 ##### Networking Settings ######################################################
 
   networking = {
@@ -148,10 +173,13 @@ in {
     xsel
     wmctrl
     taskwarrior
+
     any-nix-shell
     idris
 #    flutter.engine
 #    flutter.flutter
+
+    (import ./breezeAdaptaCursor.nix {inherit stdenv fetchFromGitHub;})
 
     ### KDE Applications #######################################################
 
@@ -610,7 +638,8 @@ in {
     home = "/home/jorel";
     description = " ";                  # The ultimate sddm aesthetics
     # Sets vm password to "test". Use `nixos-rebuild build-vm` and `./result/bin/run-*-vm`
-#    initialHashedPassword = "$6$0z67w00YMNumxeCY$GfFK.qW/cyV1aHfnRWWSwxByoX.VbikO7EvFjhWG8vj9LfU99wgcLT5wov8iwKfCsSTGXgmV8NDD3D6iBYATG.";
+    # mkpasswd -m sha-512 <NEW_PASSWORD>
+    # initialHashedPassword = "$6$0z67w00YMNumxeCY$GfFK.qW/cyV1aHfnRWWSwxByoX.VbikO7EvFjhWG8vj9LfU99wgcLT5wov8iwKfCsSTGXgmV8NDD3D6iBYATG.";
     extraGroups = [ 
       "audio"                           # Access sound hardware
       "disk"                            # Access /dev/sda /dev/sdb etc.
