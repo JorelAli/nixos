@@ -65,11 +65,13 @@ in {
     autoStart = true;
     privateNetwork = true;
     hostAddress = "192.168.101.10";
-    localAddress = "192.168.101.11";
+    localAddress = "192.168.101.11"; #ssh -X testusr@192.168.101.11
     
     config = { config, pkgs, ... }: { 
       environment.systemPackages = with pkgs; [
         hello
+        gparted
+        ark 
       ];
       
       users.users.testusr = {
@@ -81,6 +83,18 @@ in {
         extraGroups = [ "wheel" ];
         uid = 2000;
       };
+      
+      services.xserver = {
+        enable = true;
+        windowManager.i3.enable = true;
+      };
+
+      services.openssh = {
+        enable = true;
+        forwardX11 = true;
+      };
+
+      programs.ssh.setXAuthLocation = true;
     };
   };
 
@@ -126,12 +140,12 @@ in {
 
 ##### /etc/ Files ##############################################################
   
-  environment.etc."vconsole.conf" = {
+  /*environment.etc."vconsole.conf" = {
     text = ''
       KEYMAP=uk
       FONT=Lat2-Terminus16
     '';
-  };
+  };*/
 
   environment.etc."systemd/journald.conf" = {
     text = "SystemMaxUse=50M";
@@ -177,6 +191,7 @@ in {
     any-nix-shell
     idris
 #    flutter.engine
+    imlib2
 #    flutter.flutter
 
     (import ./breezeAdaptaCursor.nix {inherit stdenv fetchFromGitHub;})
@@ -428,6 +443,8 @@ in {
     less.commands = { h = "quit"; };    # Rebind the `h` key to quit 
     qt5ct.enable = true;                # Enable qt5ct (fixes Qt applications) 
     ssh.askPassword = "${pkgs.ksshaskpass}/bin/ksshaskpass";
+    ssh.setXAuthLocation = true;
+    ssh.forwardX11 = true;
 
   };
 
@@ -546,6 +563,13 @@ in {
       ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
       ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
     '';
+
+    openssh = {
+      enable = true;
+      forwardX11 = true;
+    };
+
+
 
     ### X ######################################################################
 

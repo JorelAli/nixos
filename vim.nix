@@ -49,6 +49,7 @@ in {
                 let g:airline_powerline_fonts = 1
                 set backspace=indent,eol,start
                 set ignorecase
+                set spell spelllang=en_gb
 
                 " Enable TagBar support for rust files
                 autocmd VimEnter *.rs TagbarOpen
@@ -146,7 +147,7 @@ in {
                 autocmd FileType nix let b:did_indent = 1
                 autocmd FileType nix setlocal indentexpr=
 
-                autocmd VimEnter *.md Goyo
+                " autocmd VimEnter *.md Goyo
                 autocmd VimEnter *.md SoftPencil
 
 
