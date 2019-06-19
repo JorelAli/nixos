@@ -61,8 +61,22 @@ in {
 
 ##### Containers ###############################################################
 
-  containers.test = {
+  containers.jshell = {
     autoStart = true;
+    config = { config, pkgs, ...}: {
+      environment.systemPackages = with pkgs; [
+        openjdk11
+      ];
+      services.mingetty.autologinUser = "root";
+      environment.shellInit = ''
+        clear
+        jshell
+      '';
+    };
+  };
+
+  containers.test = {
+    autoStart = false;
     privateNetwork = true;
     hostAddress = "192.168.101.10";
     localAddress = "192.168.101.11"; #ssh -X testusr@192.168.101.11
@@ -134,6 +148,8 @@ in {
 
     _JAVA_OPTIONS= "-Dawt.useSystemAAFontSettings=lcd";
     QT_XCB_GL_INTEGRATION = "xcb_egl";
+    QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase.bin}/lib/qt-${pkgs.qt5.qtbase.qtCompatVersion}/plugins/platforms";
+    #QT_QPA_PLATFORM_PLUGIN_PATH=$(nix-build '<nixpkgs>' -A qt5.qtbase)/lib/qt-5.10/plugins/platforms
 
     BAT_PAGER = "less -RF";
   };
@@ -291,7 +307,7 @@ in {
     ant                                 # Java building tool
     eclipses.eclipse-java               # Eclipse Java IDE
     maven                               # Java dependency manager
-    openjdk11                           # Java Development Kit for Java 11
+    openjdk                             # Java Development Kit for Java 
 
     ### Programming (Other) ####################################################
 
