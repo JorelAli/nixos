@@ -70,7 +70,7 @@ in {
       services.mingetty.autologinUser = "root";
       environment.shellInit = ''
         clear
-        jshell
+        jshell /root/init.java
       '';
     };
   };
@@ -127,7 +127,7 @@ in {
 
 ##### Regional Settings ########################################################
 
-  time.timeZone = "Europe/London";
+  time.timeZone = "Asia/Nicosia";#"Europe/London";
 
 ##### Environment Variables ####################################################
 
@@ -148,21 +148,12 @@ in {
 
     _JAVA_OPTIONS= "-Dawt.useSystemAAFontSettings=lcd";
     QT_XCB_GL_INTEGRATION = "xcb_egl";
-    QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase.bin}/lib/qt-${pkgs.qt5.qtbase.qtCompatVersion}/plugins/platforms";
-    #QT_QPA_PLATFORM_PLUGIN_PATH=$(nix-build '<nixpkgs>' -A qt5.qtbase)/lib/qt-5.10/plugins/platforms
-
+    
     BAT_PAGER = "less -RF";
   };
 
 ##### /etc/ Files ##############################################################
   
-  /*environment.etc."vconsole.conf" = {
-    text = ''
-      KEYMAP=uk
-      FONT=Lat2-Terminus16
-    '';
-  };*/
-
   environment.etc."systemd/journald.conf" = {
     text = "SystemMaxUse=50M";
   };
@@ -419,6 +410,7 @@ in {
   programs = {
     adb.enable = true;                  # Enables the Android Debug Bridge
     bash.enableCompletion = true;       # Enable completion in bash shell
+    dconf.enable = true;                # Gnome configuration tool
 
     ### My Fish setup ###################################
     # Color scheme:                                     #
@@ -585,8 +577,6 @@ in {
       forwardX11 = true;
     };
 
-
-
     ### X ######################################################################
 
     xserver = {
@@ -731,6 +721,14 @@ in {
     packageOverrides = pkgs: with pkgs; {
 
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+
+      qutebrowser = qutebrowser.overrideAttrs (oldAttrs: {
+        version = "1.6.3";
+        src = fetchurl {
+          url = "https://github.com/qutebrowser/qutebrowser/releases/download/v1.6.3/qutebrowser-1.6.3.tar.gz";
+          sha256 = "0z9an14vlv0r48x7fk0mk7465gnhh19dx1w63lyhsgnfqy5pzlhy";
+         };
+      });
 
       ### Typora Markdown Editor #################################################
       # Typora - another markdown editor with fancy features (such as exporting  # 
