@@ -146,8 +146,10 @@ in {
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
 
-    _JAVA_OPTIONS= "-Dawt.useSystemAAFontSettings=lcd";
+    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
     QT_XCB_GL_INTEGRATION = "xcb_egl";
+
+    ANDROID_HOME = "$HOME/Android/Sdk";
     
     BAT_PAGER = "less -RF";
   };
@@ -166,7 +168,7 @@ in {
         Driver "intel"
         Option "TearFree" "true"
         Option "AccelMethod" "sna"
-        Option "SwapbuffersWait" "false"
+        Option "SwapbuffersWait" "true"
       EndSection
     '';
   };
@@ -191,7 +193,41 @@ in {
 
     qutebrowser                         # Lightweight minimal browser (v1.6.2)
 
-    xsel
+    (buildFHSUserEnv {
+      name = "enter-fhs";
+      targetPkgs = pkgs: with pkgs; [
+        alsaLib atk cairo cups dbus expat file fontconfig freetype gdb git glib 
+        gnome3.gdk_pixbuf gnome3.gtk libnotify libxml2 libxslt
+        netcat nspr nss  strace udev watch wget which xorg.libX11
+        xorg.libXScrnSaver xorg.libXcomposite xorg.libXcursor xorg.libXdamage
+        xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
+        xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
+        /*libcef*/ curlFull /*glibc*/ openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
+        # export LC_ALL=C; unset LANGUAGE # <-- You'll need this for minecraft-launcher
+      ];
+      runScript = "bash";
+    })
+  
+    (buildFHSUserEnv {
+      name = "flutterenv";
+      targetPkgs = pkgs: with pkgs; [
+        alsaLib atk cairo cups dbus expat file fontconfig freetype gdb git glib 
+        gnome3.gdk_pixbuf gnome3.gtk libnotify libxml2 libxslt
+        netcat nspr nss  strace udev watch wget which xorg.libX11
+        xorg.libXScrnSaver xorg.libXcomposite xorg.libXcursor xorg.libXdamage
+        xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
+        xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
+        /*libcef*/ curlFull /*glibc*/ openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
+        # export PATH="$PATH:/home/jorel/flutterFHS/flutter/bin"
+        # DART_VM_OPTIONS=--root-certs-file=/home/jorel/flutterFHS/ca-certificates.crt flutter create myapp
+      ];
+      runScript = "bash";
+    })
+
+
+    android-studio
+   
+   xsel
     wmctrl
     taskwarrior
 
@@ -288,6 +324,7 @@ in {
     ### Games ##################################################################
 
     _2048-in-terminal                   # 2048 game in terminal
+    gnome3.gnome-mahjongg               # Mahjong game
     minecraft                           # Minecraft video game
     pacvim                              # Pacman, but with vim controls
     steam                               # Game distribution platform

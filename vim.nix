@@ -26,6 +26,16 @@ let
     };
   };
 
+  customPlugins.vim-dart = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-dart";
+    src = pkgs.fetchFromGitHub {
+      owner = "dart-lang";
+      repo = "dart-vim-plugin";
+      rev = "8ffc3e208c282f19afa237d343fa1533146bd2b4";
+      sha256 = "1ypcn3212d7gzfgvarrsma0pvaial692f3m2c0blyr1q83al1pm8";
+    };
+  };
+
 in {
 
   environment.variables = { EDITOR = "nvim"; };
@@ -49,7 +59,6 @@ in {
                 let g:airline_powerline_fonts = 1
                 set backspace=indent,eol,start
                 set ignorecase
-                set spell spelllang=en_gb
 
                 " Enable TagBar support for rust files
                 autocmd VimEnter *.rs TagbarOpen
@@ -149,6 +158,7 @@ in {
 
                 " autocmd VimEnter *.md Goyo
                 autocmd VimEnter *.md SoftPencil
+                autocmd VimEnter *.md set spell spelllang=en_gb
 
 
               '';
@@ -180,6 +190,7 @@ in {
                   ctrlp                 # Easy file opener using Ctrl+P
                   goyo
                   vim-pencil
+                  vim-dart
 
                 ];    
               };
