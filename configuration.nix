@@ -278,6 +278,7 @@ in {
     speedtest-cli                       # Speed test in terminal
     tree                                # Print file tree in terminal
     unixtools.xxd                       # Some hex viewer
+    unrar                               # Command to unzip .rar files
     unzip                               # Command to unzip files
     urlview                             # View URLs in a document (for rtv)
     wget                                # Download web files
@@ -296,6 +297,7 @@ in {
     google-play-music-desktop-player    # Google Play Music for desktop
     gparted                             # Partition manager
     inkscape                            # Vector artwork
+    unstable.kitty
     libsForQt5.vlc                      # Video player (VLC)
     mpv                                 # Video player
     redshift                            # Screen temperature changer
@@ -486,6 +488,7 @@ in {
 
     less.enable = true;                 # Enables config for the `less` command
     less.commands = { h = "quit"; };    # Rebind the `h` key to quit 
+    less.envVariables = { LESS = "-RF"; };
     qt5ct.enable = true;                # Enable qt5ct (fixes Qt applications) 
     ssh.askPassword = "${pkgs.ksshaskpass}/bin/ksshaskpass";
     ssh.setXAuthLocation = true;
