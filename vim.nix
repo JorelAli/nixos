@@ -181,16 +181,17 @@ in {
                   vim-airline           # Fancy bottom bar for vim
                   vim-airline-themes    # Theme support for bottom bar 
                   vim-commentary        # Easy comment using 'gcc' key shortcut
+                  vim-dart              # Dart language support
                   vim-devdocs           # Easy file documentation using ':DevDocs'
+                  vim-fugitive          # Git for vim
                   #vim-javacomplete2    # Java IDE features (autocomplete)
                   vim-markdown          # Markdown syntax highlighting
                   vim-nix               # Nix language syntax
+                  vim-pencil            # Word wrapping for markdown documents
                   vim-toml              # Toml language syntax
 
                   ctrlp                 # Easy file opener using Ctrl+P
                   goyo
-                  vim-pencil
-                  vim-dart
 
                 ];    
               };
