@@ -53,6 +53,8 @@ in {
     loader.efi.canTouchEfiVariables = true;   # Allow EFI variable modifications
     loader.grub.useOSProber = true;           # Search for other OSs
 
+    kernelModules = [ "pcspkr" ];
+
     extraTTYs = [ "tty8" "tty9" ];            # More terminals!
     extraModulePackages = [ 
       config.boot.kernelPackages.exfat-nofuse # exFAT format for USBs/HDDs
@@ -242,8 +244,6 @@ in {
     ### KDE Applications #######################################################
 
     kdeApplications.kwalletmanager      # Manager for password manager
-    kdeApplications.konsole             # Terminal
-    kdeconnect                          # Connect linux with your phone
     ksshaskpass                         # Password manager
     libsForQt5.kwallet                  # Password manager
 
@@ -381,6 +381,7 @@ in {
     xorg.xcompmgr                       # Window compositing
     xorg.xev                            # Program to find xmodmap key-bindings
     xorg.xmodmap                        # Keyboard key remapping
+    xdotool
 
     ### Nix related stuff ######################################################
 
@@ -467,6 +468,7 @@ in {
     fish.enable = true;                 # Fish shell (Better bash)
     fish.shellAliases = {               
       arc = "ark";
+      batf = "bat (fzf)";
       config = "sudo vim /etc/nixos/configuration.nix";
       cp = "rsync -ahv --progress";
       dirsize = "du -sh";
@@ -475,6 +477,7 @@ in {
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
       gparted = "sudo fish -c gparted";
       history = "history | bat";
+      icat = "kitty +kitten icat";
       ls = "exa";
       mocp = "mocp --theme solarized";
       neofetchnix = "neofetch --ascii_colors 68 110";
@@ -483,7 +486,6 @@ in {
       rebuild = "sudo nixos-rebuild switch";
       rebuilt = "sudo nixos-rebuild switch";
       vimf = "vim (fzf)";
-      batf = "bat (fzf)";
     };
 
     less.enable = true;                 # Enables config for the `less` command
@@ -575,7 +577,8 @@ in {
     compton = {
       enable = true;                    # Application transparency
       opacityRules = [ 
-        "95: class_g = 'konsole'"       # Always blur for konsole
+        "100: class_g = 'kitty' && !focused"
+        "100: class_g = 'kitty' && focused"
         "85: class_g = 'dolphin'"       # Always blur for dolphin
       ];
       vSync = "opengl-swc";             # Remove screen tearing
@@ -690,15 +693,6 @@ in {
     serviceConfig.Restart = "always";
     serviceConfig.RestartSrc = 2;
     serviceConfig.ExecStart = "${pkgs.xcompmgr}/bin/xcompmgr";
-  };
-
-  systemd.user.services."kdeconnect" = {
-    enable = true;
-    description = "Connect phone with linux";
-    wantedBy = [ "graphical-session.target" "default.target" ];
-    serviceConfig.Restart = "always";
-    serviceConfig.RestartSec = 2;
-    serviceConfig.ExecStart = "${pkgs.kdeconnect}/lib/libexec/kdeconnectd";
   };
 
 ##### User Accounts ############################################################
