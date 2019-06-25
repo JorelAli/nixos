@@ -30,6 +30,7 @@ let
 ##### Optional installation ####################################################
 
   haskellSetup = false;                 # Haskell, GHC, Stack, Atom ...
+  unfreePermitted = true;               # Install unfree packages
 
 ##### Nix expressions ##########################################################
   
@@ -168,6 +169,7 @@ in {
     ANDROID_HOME = "$HOME/Android/Sdk";       # Set the home of the android SDK
     
     BAT_PAGER = "less -RF";                   # Use less -RF as the pager for bat
+
   };
 
 ##### /etc/ Files ##############################################################
@@ -265,7 +267,6 @@ in {
     taskwarrior                         # Task management in the terminal
     tree                                # Print file tree in terminal
     unixtools.xxd                       # Some hex viewer
-    unrar                               # Command to unzip .rar files
     unzip                               # Command to unzip files
     urlview                             # View URLs in a document (for rtv)
     wget                                # Download web files
@@ -280,7 +281,6 @@ in {
     dolphin                             # File browser
     filelight                           # View disk usage
     gimp                                # Image editor
-    google-chrome                       # Google Chrome browser (Has flash!)
     google-play-music-desktop-player    # Google Play Music for desktop
     gparted                             # Partition manager
     inkscape                            # Vector artwork
@@ -289,7 +289,6 @@ in {
     mpv                                 # Video player
     redshift                            # Screen temperature changer
     simplescreenrecorder                # ... A simple screen recorder (duh)
-    typora                              # Visual markdown editor
     zathura                             # PDF viewer
 
     ### Backup Applications (You never know when you might need them...) #######
@@ -297,7 +296,6 @@ in {
     abiword                             # Word processing
     android-studio                      # Android development environment
     deluge                              # Torrent client
-    gitkraken                           # Advanced git management
     gnumeric                            # Spreadsheets
     pavucontrol                         # Pulse Audio controller
     sqlitebrowser                       # SQLite .db file browser
@@ -322,9 +320,7 @@ in {
 
     _2048-in-terminal                   # 2048 game in terminal
     gnome3.gnome-mahjongg               # Mahjong game
-    minecraft                           # Minecraft video game
     pacvim                              # Pacman, but with vim controls
-    steam                               # Game distribution platform
     vitetris                            # Terminal based tetris game
 
     ### Programming (Java) #####################################################
@@ -369,7 +365,7 @@ in {
     brightnessctl                       # Brightness change for NixOS 19.03
     dunst                               # Notification manager
     libnotify                           # Notification library
-    imlib2                              # Image manipulation library
+    imlib2                              # Image manipulation library (for feh)
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
     system-config-printer               # Add/manage printers
@@ -393,7 +389,16 @@ in {
     hunspellDicts.en-gb-ise             # English (GB with '-ise' spellings)
     hunspellDicts.en-us                 # English (US)
 
-  ] ++ ( if haskellSetup then [
+  ] ++ ( if unfreePermitted then [
+    
+    gitkraken                           # Advanced git management
+    google-chrome                       # Google Chrome browser (Has flash!)
+    minecraft                           # Minecraft video game
+    steam                               # Game distribution platform
+    typora                              # Visual markdown editor
+    unrar                               # Command to unzip .rar files
+
+  ] else [] ) ++ ( if haskellSetup then [
 
     ### Programming (Haskell) ##################################################
 
@@ -611,9 +616,10 @@ in {
     nixosManual.showManual = true;      # Enable the NixOS manual in tty 8
     printing.enable = true;             # Printing (You know, to a printer...)
     rogue.enable = true;                # Enable the rogue game in tty 9 
-    teamviewer.enable = true;           # Enable teamviewer
     udisks2.enable = true;              # Something something USBs
     upower.enable = true;               # Battery info
+
+    teamviewer.enable = unfreePermitted;
 
     # Adds support for scrolling to change the brightness for i3status-rs
     udev.extraRules = ''  
@@ -742,7 +748,7 @@ in {
 ##### NixPkgs Configuration ####################################################
 
   nixpkgs.config = {
-    allowUnfree = true;                 # Allow unfree/proprietary packages
+    allowUnfree = unfreePermitted;    # Allow unfree/proprietary packages
 
     # This lets you override package derivations for the entire list of 
     # packages for this configuration.nix file. For example, below, I redefine
