@@ -679,6 +679,7 @@ in {
       windowManager.i3 = {
         enable = true;                  # Enable i3 tiling manager
         package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
+        configFile = import ./i3config.nix {};
       };
     };
   };
@@ -812,8 +813,6 @@ in {
         fetchTarball "https://github.com/infinisil/all-hies/tarball/master"
       ) {};
 
-      flutter = import ./flutter.nix {};
-
       ### Clairvoyance SDDM Theme #######################################
       # Custom nix derivation for the Clairvoyance SDDM theme by eayus: #
       #   https://github.com/eayus/sddm-theme-clairvoyance              #
@@ -821,7 +820,7 @@ in {
 
       clairvoyance = (import ./clairvoyance.nix {
         autoFocusPassword = true;
-        backgroundURL = "https://i.imgur.com/PEpi6PN.png";
+        backgroundURL = "https://wallpapercave.com/wp/wp1860715.jpg";
         inherit stdenv fetchFromGitHub;
       });
 
