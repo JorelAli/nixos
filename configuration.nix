@@ -29,8 +29,7 @@ let
 
 ##### Optional installation ####################################################
 
-  # Includes: Haskell, GHC, Stack, Atom IDE, Cabal, HIE (GHC v8.4.3)
-  haskellSetup = false;
+  haskellSetup = false;                 # Haskell, GHC, Stack, Atom ...
 
 ##### Nix expressions ##########################################################
   
@@ -48,10 +47,10 @@ in {
 
 ##### NixOS important settings #################################################
 
-  imports = [ # Include the results of the hardware scan.
-    ./hardware-configuration.nix
-    ./cachix.nix
-    ./vim.nix
+  imports = [
+    ./hardware-configuration.nix        # Import hardware configuration
+    ./cachix.nix                        # Import cached nixpkg locations
+    ./vim.nix                           # Import neovim setup
   ];
 
 ##### Boot Settings ############################################################
@@ -61,15 +60,20 @@ in {
     loader.efi.canTouchEfiVariables = true;   # Allow EFI variable modifications
     loader.grub.useOSProber = true;           # Search for other OSs
 
-    kernelModules = [ "pcspkr" ];
-
-    extraTTYs = [ "tty8" "tty9" ];            # More terminals!
+    extraTTYs = [ "tty8" "tty9" ];            # More ttys!
     extraModulePackages = [ 
       config.boot.kernelPackages.exfat-nofuse # exFAT format for USBs/HDDs
     ];
   };
 
 ##### Containers ###############################################################
+
+  ### JShell #################################
+  # The JShell program is basically a Java   #
+  # based REPL. Unfortunately, it's only     #
+  # available in Java 9 and above and I want #
+  # to use Java 8 on my main machine         #
+  ############################################
 
   containers.jshell = {
     autoStart = true;
@@ -82,6 +86,10 @@ in {
       '';
     };
   };
+
+  ### Test container ##############
+  # I was just testing containers #
+  #################################
 
   containers.test = {
     autoStart = false;
@@ -123,7 +131,7 @@ in {
 ##### Networking Settings ######################################################
 
   networking = {
-    hostName = "NixOS";
+    hostName = "NixOS";                 # Set computer's hostname
     networkmanager.enable = true;       # Use nm-connection-editor
 
     firewall = {
@@ -154,16 +162,17 @@ in {
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
 
-    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
+    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd"; # Java font antialiasing
     QT_XCB_GL_INTEGRATION = "xcb_egl";
 
-    ANDROID_HOME = "$HOME/Android/Sdk";
+    ANDROID_HOME = "$HOME/Android/Sdk";       # Set the home of the android SDK
     
-    BAT_PAGER = "less -RF";
+    BAT_PAGER = "less -RF";                   # Use less -RF as the pager for bat
   };
 
 ##### /etc/ Files ##############################################################
   
+  # Sets a max size of 50MB for systemd journal logs
   environment.etc."systemd/journald.conf" = {
     text = "SystemMaxUse=50M";
   };
@@ -210,43 +219,13 @@ in {
         xorg.libXScrnSaver xorg.libXcomposite xorg.libXcursor xorg.libXdamage
         xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
-        /*libcef*/ curlFull /*glibc*/ openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
+        curlFull openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
         xdg_utils
         # export LC_ALL=C; unset LANGUAGE # <-- You'll need this for minecraft-launcher
       ];
       runScript = "bash";
     })
   
-    (buildFHSUserEnv {
-      name = "flutterenv";
-      targetPkgs = pkgs: with pkgs; [
-        alsaLib atk cairo cups dbus expat file fontconfig freetype gdb git glib 
-        gnome3.gdk_pixbuf gnome3.gtk libnotify libxml2 libxslt
-        netcat nspr nss  strace udev watch wget which xorg.libX11
-        xorg.libXScrnSaver xorg.libXcomposite xorg.libXcursor xorg.libXdamage
-        xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
-        xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
-        /*libcef*/ curlFull /*glibc*/ openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
-        # export PATH="$PATH:/home/jorel/flutterFHS/flutter/bin"
-        # DART_VM_OPTIONS=--root-certs-file=/home/jorel/flutterFHS/ca-certificates.crt flutter create myapp
-      ];
-      runScript = "bash";
-    })
-
-
-    android-studio
-   
-   xsel
-    wmctrl
-    taskwarrior
-
-    any-nix-shell
-    idris
-#    flutter.engine
-    imlib2
-#    flutter.flutter
-
-    (import ./breezeAdaptaCursor.nix {inherit stdenv fetchFromGitHub;})
 
     ### KDE Applications #######################################################
 
@@ -283,6 +262,7 @@ in {
     screenfetch                         # Display info about themes to console
     sl                                  # For when you mistype 'ls'
     speedtest-cli                       # Speed test in terminal
+    taskwarrior                         # Task management in the terminal
     tree                                # Print file tree in terminal
     unixtools.xxd                       # Some hex viewer
     unrar                               # Command to unzip .rar files
@@ -304,7 +284,7 @@ in {
     google-play-music-desktop-player    # Google Play Music for desktop
     gparted                             # Partition manager
     inkscape                            # Vector artwork
-    unstable.kitty
+    unstable.kitty                      # Terminal
     libsForQt5.vlc                      # Video player (VLC)
     mpv                                 # Video player
     redshift                            # Screen temperature changer
@@ -315,6 +295,7 @@ in {
     ### Backup Applications (You never know when you might need them...) #######
 
     abiword                             # Word processing
+    android-studio                      # Android development environment
     deluge                              # Torrent client
     gitkraken                           # Advanced git management
     gnumeric                            # Spreadsheets
@@ -326,9 +307,16 @@ in {
     papirus-icon-theme                  # Papirus theme icons
     breeze-qt5                          # Breeze theme for qt5 (cursors!)
     numix-solarized-gtk-theme           # Numix solarized theme for GTK & Qt
+    
+    (import ./breezeAdaptaCursor.nix    # Breeze Adapta cursors
+      {inherit stdenv fetchFromGitHub;}
+    )
 
     lxappearance-062                    # Program that manages themeing 
     clairvoyance                        # SDDM greeter theme
+
+    wmctrl                              # Budspencer requirement for fish shell
+    xsel                                # Budspencer requirement for fish shell
 
     ### Games ##################################################################
 
@@ -351,6 +339,7 @@ in {
     bundler                             # Bundle command for Ruby
     gcc                                 # C/C++ compiler
     gdb                                 # C code debugger
+    idris                               # Idris programming language
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
@@ -358,10 +347,10 @@ in {
 
     ### Programming (Node.JS) ##################################################
 
-      ###############################################################
-      # To lookup packages for nix, use the following code:         #
-      #   nix-env -qaPA 'nixos.nodePackages' | grep -i <npm module> #
-      ###############################################################
+    ###############################################################
+    # To lookup packages for nix, use the following code:         #
+    #   nix-env -qaPA 'nixos.nodePackages' | grep -i <npm module> #
+    ###############################################################
 
     nodejs                              # Node.JS
     nodePackages.vue-cli                # Vue.JS package
@@ -374,13 +363,13 @@ in {
     ### GUI/Window Manager #####################################################
 
     # i3status-rust        coming soon: https://github.com/JorelAli/i3status-rust
-    # i3status-rust                     # Better i3 status bar
 
     ### System tools ###########################################################
 
     brightnessctl                       # Brightness change for NixOS 19.03
     dunst                               # Notification manager
     libnotify                           # Notification library
+    imlib2                              # Image manipulation library
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
     system-config-printer               # Add/manage printers
@@ -389,7 +378,7 @@ in {
     xorg.xcompmgr                       # Window compositing
     xorg.xev                            # Program to find xmodmap key-bindings
     xorg.xmodmap                        # Keyboard key remapping
-    xdotool
+    xdotool                             # Used to get current window ID
     
     ### Nix related stuff ######################################################
 
@@ -500,13 +489,13 @@ in {
 
     less.enable = true;                 # Enables config for the `less` command
     less.commands = { h = "quit"; };    # Rebind the `h` key to quit 
-    less.envVariables = { LESS = "-RF"; };
+    less.envVariables = { LESS = "-RF"; }; # Use less -RF
 
     qt5ct.enable = true;                # Enable qt5ct (fixes Qt applications) 
 
-    ssh.askPassword = "${pkgs.ksshaskpass}/bin/ksshaskpass";
-    ssh.setXAuthLocation = true;
-    ssh.forwardX11 = true;
+    ssh.askPassword = "${pkgs.ksshaskpass}/bin/ksshaskpass"; # use kwallet
+    ssh.setXAuthLocation = true;        # Authenticated X ssh connections
+    ssh.forwardX11 = true;              # Allow X server forwarding over ssh
 
   };
 
@@ -531,21 +520,26 @@ in {
       powerline-fonts                   # Fonts for powerlines (Used in my tty)
     ];
 
-    fontconfig.defaultFonts = {
-      monospace = [ "Fira Code Medium" "Symbola" "IPAGothic" ];
-#     sansSerif = [ "DejaVu Sans" "IPAPGothic" ];
-#     serif = [ "DejaVu Serif" "IPAPMincho" ];
-    };
-
+    fontconfig.defaultFonts.monospace = [
+      "Fira Code Medium"                # Set default font as Fira Code Medium
+      "Symbola"                         # Use Symbola as fallback font
+      "IPAGothic"                       # Use IPAGothic as fallback font
+    ];
   };
 
 ##### i18n (Internationalization and Localization) #############################
 
   i18n = {
-    defaultLocale = "en_GB.UTF-8";
-    consoleFont = with pkgs; "${powerline-fonts}/share/fonts/psf/ter-powerline-v28b.psf.gz";
-    consoleKeyMap = "uk";
-    consoleColors = [ "002b36" "dc322f" "859900" "b58900" "268bd2" "d33682" "2aa198" "eee8d5" "002b36" "cb4b16" "586e75" "657b83" "839496" "6c71c4" "93a1a1" "fdf6e3" ];
+    defaultLocale = "en_GB.UTF-8";      # Set default TTY locale as English
+    consoleFont = with pkgs;            # Set default TTY font as powerline
+      "${powerline-fonts}/share/fonts/psf/ter-powerline-v28b.psf.gz";
+    consoleKeyMap = "uk";               # TTY keyboard layout = UK layout
+    consoleColors = [                   # The 16 terminal colors 
+      "002b36" "dc322f" "859900" "b58900" 
+      "268bd2" "d33682" "2aa198" "eee8d5" 
+      "002b36" "cb4b16" "586e75" "657b83" 
+      "839496" "6c71c4" "93a1a1" "fdf6e3"
+    ];
   };
 
 ##### Hardware Settings ########################################################
@@ -557,7 +551,7 @@ in {
     pulseaudio = {
       enable = true;                    # Enable pulseaudio sound manager
       package = pkgs.pulseaudioFull;    # Use full version (bluetooth support)
-      support32Bit = true;             
+      support32Bit = true;              # Sound support for Steam
     };
 
     bluetooth.enable = true;            # Enable bluetooth 
@@ -565,12 +559,12 @@ in {
 
     opengl = {
       enable = true;                    # Enable OpenGL
-      driSupport32Bit = true;
+      driSupport32Bit = true;           # Video support for Steam
       extraPackages = with pkgs; [
-        vaapiIntel
-        vaapiVdpau
-        libvdpau-va-gl
-        intel-media-driver
+        vaapiIntel                      # Intel drivers
+        vaapiVdpau                      # Intel Drivers
+        libvdpau-va-gl                  # Intel Drivers
+        intel-media-driver              # Intel Drivers
       ];
     };
   };
@@ -628,8 +622,8 @@ in {
     '';
 
     openssh = {
-      enable = true;
-      forwardX11 = true;
+      enable = true;                    # Enable ssh
+      forwardX11 = true;                # Enable forwarding X session over ssh
     };
 
     ### X ######################################################################
@@ -673,15 +667,6 @@ in {
       windowManager.i3 = {
         enable = true;                  # Enable i3 tiling manager
         package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
-
-        # Command to copy wallpapers from ~/Wallpapers to .background-image on
-        # each restart of i3. Turns out, I actually like a certain wallpaper 
-        # more than all of the others, so I decided to just keep it as that 
-        # instead. https://wall.alphacoders.com/big.php?i=710132
-
-        # extraSessionCommands = ''
-        #   cp $(ls -d $HOME/Wallpapers/* | shuf -n 1) $HOME/.background-image
-        # '';
       };
     };
   };
@@ -767,6 +752,10 @@ in {
     packageOverrides = pkgs: with pkgs; {
 
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+
+      ### Qutebrowser #############
+      # Bleeding-edge qutebrowser #
+      #############################
 
       qutebrowser = qutebrowser.overrideAttrs (oldAttrs: {
         version = "1.6.3";
