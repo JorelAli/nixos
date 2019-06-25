@@ -3,8 +3,14 @@
 
 { config, pkgs, ... }:
 
-with builtins;
-let
+with builtins; let 
+
+##### Important settings #######################################################
+
+  haskellSetup = false;                 # Haskell, GHC, Stack, Atom ...
+  unfreePermitted = true;               # Allow installing unfree packages
+
+in let
 
   ### Nix channels #############################################################
   # These are channels defined using the `sudo nix-channel --list` command.    #
@@ -12,12 +18,10 @@ let
   #   nixos https://nixos.org/channels/nixos-19.03                             #
   #   nixos-old https://nixos.org/channels/nixos-18.09                         #
   #   unstable https://nixos.org/channels/nixos-unstable                       #
-  #   unstable-small https://nixos.org/channels/nixos-unstable-small           #
   ##############################################################################
 
-  unstable   = import <unstable>       { config.allowUnfree = true; };
-  unstablesm = import <unstable-small> { config.allowUnfree = true; };
-  old        = import <nixos-old>      { config.allowUnfree = true; };
+  unstable   = import <unstable>       { config.allowUnfree = unfreePermitted; };
+  old        = import <nixos-old>      { config.allowUnfree = unfreePermitted; };
 
   /* I thought it's good to include this code, might be useful later:
   pkgs_at_8669561 = import (pkgs.fetchFromGitHub {
@@ -26,11 +30,6 @@ let
     rev = "8669561bde00b4039cda2b662f9f726db8385069";
     sha256 = "157a5h1vcfj892b20c90n7i6rfr5k61242ylgz6i21m8sbcxfry6";
   }) {};*/
-
-##### Optional installation ####################################################
-
-  haskellSetup = false;                 # Haskell, GHC, Stack, Atom ...
-  unfreePermitted = true;               # Install unfree packages
 
 ##### Nix expressions ##########################################################
   
