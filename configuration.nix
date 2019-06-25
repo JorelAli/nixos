@@ -42,6 +42,11 @@ let
       (genList (x: ",1.000000") (input * input - 1))
     );
 
+  nixSnowflake = fetchurl { 
+    url = https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nix-snowflake.svg; 
+    sha256 = "14mbpw8jv1w2c5wvfvj8clmjw0fi956bq5xf9s2q3my14far0as8";
+  };
+
 ##### NixOS configuration starts here ##########################################
 
 in {
@@ -469,6 +474,7 @@ in {
     #####################################################
 
     fish.enable = true;                 # Fish shell (Better bash)
+
     fish.shellAliases = {               
       arc = "ark";
       batf = "bat (fzf)";
@@ -479,12 +485,13 @@ in {
       evalnix = "nix-instantiate --eval";
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
       gparted = "sudo fish -c gparted";
+      hash = "nix-hash --type sha256 --flat --base32";
       history = "history | bat";
       i3config = "vim ~/.config/i3/config";
       icat = "kitty +kitten icat";
       ls = "exa";
       mocp = "mocp --theme solarized";
-      neofetchnix = "neofetch --ascii_colors 68 110 --kitty /etc/nixos/nixos.svg";
+      neofetchnix = "neofetch --ascii_colors 68 110 --kitty ${nixSnowflake}";
       nix-repl = "nix repl";
       prettify = "python -m json.tool"; # Prettify json!
       rebuild = "sudo nixos-rebuild switch";
@@ -749,7 +756,7 @@ in {
 
   nixpkgs.config = {
     allowUnfree = unfreePermitted;    # Allow unfree/proprietary packages
-
+    
     # This lets you override package derivations for the entire list of 
     # packages for this configuration.nix file. For example, below, I redefine
     # the derivation of the Typora application to have a different install
