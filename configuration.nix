@@ -19,6 +19,14 @@ let
   unstablesm = import <unstable-small> { config.allowUnfree = true; };
   old        = import <nixos-old>      { config.allowUnfree = true; };
 
+  /* I thought it's good to include this code, might be useful later:
+  pkgs_at_8669561 = import (pkgs.fetchFromGitHub {
+    owner = "NixOS";
+    repo = "nixpkgs";
+    rev = "8669561bde00b4039cda2b662f9f726db8385069";
+    sha256 = "157a5h1vcfj892b20c90n7i6rfr5k61242ylgz6i21m8sbcxfry6";
+  }) {};*/
+
 ##### Optional installation ####################################################
 
   # Includes: Haskell, GHC, Stack, Atom IDE, Cabal, HIE (GHC v8.4.3)
@@ -66,9 +74,7 @@ in {
   containers.jshell = {
     autoStart = true;
     config = { config, pkgs, ...}: {
-      environment.systemPackages = with pkgs; [
-        openjdk11
-      ];
+      environment.systemPackages = with pkgs; [ openjdk11 ];
       services.mingetty.autologinUser = "root";
       environment.shellInit = ''
         clear
@@ -205,6 +211,7 @@ in {
         xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
         /*libcef*/ curlFull /*glibc*/ openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
+        xdg_utils
         # export LC_ALL=C; unset LANGUAGE # <-- You'll need this for minecraft-launcher
       ];
       runScript = "bash";
@@ -376,13 +383,14 @@ in {
     libnotify                           # Notification library
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
+    system-config-printer               # Add/manage printers
     universal-ctags                     # Tool for browsing source code quickly
     xorg.xbacklight                     # Enable screen backlight adjustments
     xorg.xcompmgr                       # Window compositing
     xorg.xev                            # Program to find xmodmap key-bindings
     xorg.xmodmap                        # Keyboard key remapping
     xdotool
-
+    
     ### Nix related stuff ######################################################
 
     cachix                              # Compiled binary hosting for Nix
@@ -459,11 +467,12 @@ in {
     # Highlight Colors:                                 #
     #   set fish_color_search_match --background=d33682 #
     # Remove greeting:                                  #
-    #   set fish_greeting                               ##########################################################
-    # Solarized budspencer powerline colors:                                                                     #
-    #  set budspencer_colors ffffff 073642 6c71c4 ffffff b58900 cb4b16 dc322f d33682 268bd2 073642 268bd2 00ff00 #
-    #                                                                                                            #
-    ##############################################################################################################
+    #   set fish_greeting                               #
+    # Solarized budspencer powerline colors:            #
+    #  set budspencer_colors ffffff 073642              #
+    #    6c71c4 ffffff b58900 cb4b16 dc322f             #
+    #    d33682 268bd2 073642 268bd2 00ff00             #
+    #####################################################
 
     fish.enable = true;                 # Fish shell (Better bash)
     fish.shellAliases = {               
@@ -477,10 +486,11 @@ in {
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
       gparted = "sudo fish -c gparted";
       history = "history | bat";
+      i3config = "vim ~/.config/i3/config";
       icat = "kitty +kitten icat";
       ls = "exa";
       mocp = "mocp --theme solarized";
-      neofetchnix = "neofetch --ascii_colors 68 110";
+      neofetchnix = "neofetch --ascii_colors 68 110 --kitty /etc/nixos/nixos.svg";
       nix-repl = "nix repl";
       prettify = "python -m json.tool"; # Prettify json!
       rebuild = "sudo nixos-rebuild switch";
@@ -491,7 +501,9 @@ in {
     less.enable = true;                 # Enables config for the `less` command
     less.commands = { h = "quit"; };    # Rebind the `h` key to quit 
     less.envVariables = { LESS = "-RF"; };
+
     qt5ct.enable = true;                # Enable qt5ct (fixes Qt applications) 
+
     ssh.askPassword = "${pkgs.ksshaskpass}/bin/ksshaskpass";
     ssh.setXAuthLocation = true;
     ssh.forwardX11 = true;
@@ -808,7 +820,7 @@ in {
 
       clairvoyance = (import ./clairvoyance.nix {
         autoFocusPassword = true;
-        backgroundURL = "https://images7.alphacoders.com/700/700047.jpg";
+        backgroundURL = "https://i.imgur.com/PEpi6PN.png";
         inherit stdenv fetchFromGitHub;
       });
 

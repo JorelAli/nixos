@@ -36,6 +36,16 @@ let
     };
   };
 
+  customPlugins.vim-illuminate = pkgs.vimUtils.buildVimPlugin {
+    name = "vim-illuminate";
+    src = pkgs.fetchFromGitHub {
+      owner = "RRethy";
+      repo = "vim-illuminate";
+      rev = "d2b547c69df09cfc16c965f6289d06eba3685d0c";
+      sha256 = "1xwy89qhcp0sfr61xv02iq90ayd8wky6p2vbnj57xqc1yk1rzbrm";
+    };
+  };
+
 in {
 
   environment.variables = { EDITOR = "nvim"; };
@@ -193,6 +203,8 @@ in {
                   ctrlp                 # Easy file opener using Ctrl+P
                   goyo
 
+
+vim-illuminate
                 ];    
               };
           };
