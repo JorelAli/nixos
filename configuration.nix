@@ -34,12 +34,11 @@ in let
 ##### Nix expressions ##########################################################
   
   # Calculates the blur strength for compton windows with background blur 
-  calcBlurStrength = (input: assert (bitAnd input 1) == 1; 
+  calcBlurStrength = input: assert (bitAnd input 1) == 1; 
     foldl' 
       (x: y: x + y) 
       (toString(input) + "," + toString(input)) 
-      (genList (x: ",1.000000") (input * input - 1))
-    );
+      (genList (x: ",1.000000") (input * input - 1));
 
   nixSnowflake = fetchurl { 
     url = https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nix-snowflake.svg; 
@@ -393,6 +392,17 @@ in {
     hunspellDicts.en-gb-ise             # English (GB with '-ise' spellings)
     hunspellDicts.en-us                 # English (US)
 
+    ### Custom Bash Scripts ####################################################
+
+    (writeShellScriptBin "nixdoc" "${ripgrep}/bin/rg $1 /etc/nixos/NixDoc.md")
+    (writeShellScriptBin "setuptty" ''
+      echo -en "\e]PB657b83" # S_base00
+      echo -en "\e]PA586e75" # S_base01
+      echo -en "\e]P0073642" # S_base02
+    '')
+
+    ###
+
   ] ++ ( if unfreePermitted then [
     
     gitkraken                           # Advanced git management
@@ -486,7 +496,7 @@ in {
       gparted = "sudo fish -c gparted";
       hash = "nix-hash --type sha256 --flat --base32";
       history = "history | bat";
-      i3config = "vim ~/.config/i3/config";
+      i3config = "sudo vim /etc/nixos/i3config.nix";
       icat = "kitty +kitten icat";
       ls = "exa";
       mocp = "mocp --theme solarized";
