@@ -31,6 +31,15 @@ in let
     sha256 = "157a5h1vcfj892b20c90n7i6rfr5k61242ylgz6i21m8sbcxfry6";
   }) {};*/
 
+  reallyOld = import (pkgs.fetchFromGitHub {
+    owner = "NixOS";
+    repo = "nixpkgs";
+    rev = "083d0890f50c7bff87419b88465af6589faffa2e";
+    sha256 = "13gldascq0wjifcpd8sh0rq0gx074x1n2ybx5mwq6hinjplgfi50";
+  }) {};
+
+  #  https://github.com/NixOS/nixpkgs/archive/083d0890f50c7bff87419b88465af6589faffa2e.tar.gz
+
 ##### Nix expressions ##########################################################
   
   # Calculates the blur strength for compton windows with background blur 
@@ -230,7 +239,10 @@ in {
       ];
       runScript = "bash";
     })
-  
+
+    reallyOld.lyx
+
+    minecraft-launcher
 
     ### KDE Applications #######################################################
 
@@ -405,11 +417,9 @@ in {
 
   ] ++ ( if unfreePermitted then [
     
-    gitkraken                           # Advanced git management
     google-chrome                       # Google Chrome browser (Has flash!)
     minecraft                           # Minecraft video game
     steam                               # Game distribution platform
-    typora                              # Visual markdown editor
     unrar                               # Command to unzip .rar files
 
   ] else [] ) ++ ( if haskellSetup then [
@@ -696,7 +706,7 @@ in {
 
   ### Systemd Services #########################################################
 
-  systemd.user.services."dunst" = {
+  systemd.services."dunst" = {
     enable = true;
     description = "Notification system daemon";
     wantedBy = [ "default.target" ];
@@ -706,7 +716,7 @@ in {
     serviceConfig.ExecStart = "${pkgs.dunst}/bin/dunst";
   };
 
-  systemd.user.services."xcompmgr" = {
+  systemd.services."xcompmgr" = {
     enable = true;
     description = "Transparency compositing service";
     wantedBy = [ "default.target" ];
@@ -832,6 +842,12 @@ in {
         autoFocusPassword = true;
         backgroundURL = "https://wallpapercave.com/wp/wp1860715.jpg";
         inherit stdenv fetchFromGitHub;
+      });
+
+      minecraft-launcher = (import ./minecraft-launcher.nix {
+        inherit stdenv freetype xlibs lib gtk2 nss nspr cairo expat alsaLib cups
+          atk gdk_pixbuf fontconfig gnome2 curl glib fetchurl glibc systemd 
+          dbus libpulseaudio;
       });
 
     };
