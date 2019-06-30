@@ -235,6 +235,8 @@ in {
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
         curlFull openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
         xdg_utils
+
+        flite
         # export LC_ALL=C; unset LANGUAGE # <-- You'll need this for minecraft-launcher
       ];
       runScript = "bash";
@@ -242,6 +244,8 @@ in {
 
     reallyOld.lyx
 
+    flite
+    openal
     minecraft-launcher
 
     ### KDE Applications #######################################################
@@ -847,7 +851,7 @@ in {
       minecraft-launcher = (import ./minecraft-launcher.nix {
         inherit stdenv freetype xlibs lib gtk2 nss nspr cairo expat alsaLib cups
           atk gdk_pixbuf fontconfig gnome2 curl glib fetchurl glibc systemd 
-          dbus libpulseaudio;
+          dbus libpulseaudio makeWrapper; libXxf86vm = xorg.libXxf86vm;
       });
 
     };

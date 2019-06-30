@@ -1,8 +1,21 @@
 { stdenv, freetype, xlibs, lib, gtk2, nss, nspr, cairo, expat, alsaLib, cups,
   atk, gdk_pixbuf, fontconfig, gnome2, curl, glib, fetchurl, glibc, systemd, 
-  dbus, libpulseaudio
+  dbus, libpulseaudio, makeWrapper, libXxf86vm
 
 }:
+
+/*
+IMPORTANT NOTE on how to get sound working:
+
+You need to put libpulseaudio in the LD_LIBRARY_PATH. To do this,
+use:
+
+stdenv.lib.makeLibraryPath [ libpulseaudio ] (While you're at it, 
+probs include xorg.libXxf86vm for previous versions of Minecraft)
+
+And somehow, probably using the makeWrapper command, turn Minecraft
+into a wrapper with the new LD_LIBRARY_PATH or somethng.
+*/
 
 
 stdenv.mkDerivation rec {
@@ -21,6 +34,13 @@ stdenv.mkDerivation rec {
 
   buildPhase = ":";   # nothing to build
 
+  nativeBuildInputs = [ makeWrapper ];
+
+  mclibPath = stdenv.lib.makeLibraryPath [
+    libpulseaudio
+    libXxf86vm # Needed only for versions <1.13
+  ];
+
   installPhase = ''
     mkdir -p $out/bin
     cp -R usr/share opt $out/
@@ -30,13 +50,17 @@ stdenv.mkDerivation rec {
       $out/share/applications/minecraft-launcher.desktop \
       --replace /opt/ $out/opt/
 
-    ln -s $out/opt/minecraft-launcher/minecraft-launcher $out/bin/minecraft-launcher
+    makeWrapper $out/opt/minecraft-launcher/minecraft-launcher $out/opt/minecraft-launcher/minecraft-launcher-wrapper \
+      --suffix LD_LIBRARY_PATH : ${mclibPath}
+
+    ln -s $out/opt/minecraft-launcher/minecraft-launcher-wrapper $out/bin/minecraft-launcher
   '';
 
   dontPatchELF = true; # Needed for local libraries
 
   preFixup = let
     libPath = lib.makeLibraryPath [ stdenv.cc.cc.lib glibc ];
+
 
     libLibraryPath = lib.makeLibraryPath [ stdenv.cc.cc.lib glibc xlibs.libX11 curl ];
 
@@ -95,3 +119,4 @@ stdenv.mkDerivation rec {
   /*
 
   */
+
