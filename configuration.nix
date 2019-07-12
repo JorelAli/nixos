@@ -89,7 +89,7 @@ in {
   ############################################
 
   containers.jshell = {
-    autoStart = true;
+    autoStart = false;
     config = { config, pkgs, ...}: {
       environment.systemPackages = with pkgs; [ openjdk11 ];
       services.mingetty.autologinUser = "root";
@@ -244,8 +244,6 @@ in {
 
     reallyOld.lyx
 
-    flite
-    openal
     minecraft-launcher
 
     ### KDE Applications #######################################################
@@ -416,13 +414,14 @@ in {
       echo -en "\e]PA586e75" # S_base01
       echo -en "\e]P0073642" # S_base02
     '')
+    (writeShellScriptBin "autofish" "${xdotool}/bin/xdotool mousedown 3")
 
     ###
 
   ] ++ ( if unfreePermitted then [
     
     google-chrome                       # Google Chrome browser (Has flash!)
-    minecraft                           # Minecraft video game
+    #minecraft                           # Minecraft video game
     steam                               # Game distribution platform
     unrar                               # Command to unzip .rar files
 
@@ -639,7 +638,11 @@ in {
     logind = {
       lidSwitch = "suspend";
       lidSwitchDocked = "ignore";
-      lidSwitchExternalPower = "suspend";
+      lidSwitchExternalPower = "ignore";
+      extraConfig = ''
+        HandlePowerKey=suspend
+        IdleAction=ignore
+      '';
     };
     
     gnome3.gnome-disks.enable = true;   # Something something USBs
@@ -703,7 +706,7 @@ in {
       windowManager.i3 = {
         enable = true;                  # Enable i3 tiling manager
         package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
-        configFile = import ./i3config.nix {};
+        configFile = import ./i3config.nix;
       };
     };
   };
@@ -851,7 +854,7 @@ in {
       minecraft-launcher = (import ./minecraft-launcher.nix {
         inherit stdenv freetype xlibs lib gtk2 nss nspr cairo expat alsaLib cups
           atk gdk_pixbuf fontconfig gnome2 curl glib fetchurl glibc systemd 
-          dbus libpulseaudio makeWrapper; libXxf86vm = xorg.libXxf86vm;
+          dbus libpulseaudio makeWrapper makeDesktopItem; libXxf86vm = xorg.libXxf86vm;
       });
 
     };

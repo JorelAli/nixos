@@ -1,6 +1,6 @@
 { stdenv, freetype, xlibs, lib, gtk2, nss, nspr, cairo, expat, alsaLib, cups,
   atk, gdk_pixbuf, fontconfig, gnome2, curl, glib, fetchurl, glibc, systemd, 
-  dbus, libpulseaudio, makeWrapper, libXxf86vm
+  dbus, libpulseaudio, makeWrapper, libXxf86vm, makeDesktopItem
 
 }:
 
@@ -17,8 +17,16 @@ And somehow, probably using the makeWrapper command, turn Minecraft
 into a wrapper with the new LD_LIBRARY_PATH or somethng.
 */
 
-
-stdenv.mkDerivation rec {
+let
+  desktopItem = makeDesktopItem {
+    name = "minecraftlauncher";
+    comment = "Official Minecraft Launcher";
+    exec = "minecraft-launcher";
+    icon = "minecraft-launcher";
+    categories = "Application;Game;";
+    desktopName = "Minecraft Launcher";
+  };
+in stdenv.mkDerivation rec {
   name = "minecraft-launcher-${version}";
   version = "2.1.5410";
 
@@ -54,6 +62,9 @@ stdenv.mkDerivation rec {
       --suffix LD_LIBRARY_PATH : ${mclibPath}
 
     ln -s $out/opt/minecraft-launcher/minecraft-launcher-wrapper $out/bin/minecraft-launcher
+
+    mkdir -pv $out/share/applications
+    ln -s ${desktopItem}/share/applications/* $out/share/applications
   '';
 
   dontPatchELF = true; # Needed for local libraries

@@ -1,4 +1,4 @@
-{}: with builtins;
+with builtins;
 
 let
   
