@@ -156,7 +156,7 @@ in {
 
 ##### Regional Settings ########################################################
 
-  time.timeZone = "Asia/Nicosia";#"Europe/London";
+  time.timeZone = "Europe/London";
 
 ##### Environment Variables ####################################################
 
@@ -845,17 +845,12 @@ in {
       #   https://github.com/eayus/sddm-theme-clairvoyance              #
       ###################################################################
 
-      clairvoyance = (import ./clairvoyance.nix {
+      clairvoyance = callPackage ./clairvoyance.nix {
         autoFocusPassword = true;
         backgroundURL = "https://wallpapercave.com/wp/wp1860715.jpg";
-        inherit stdenv fetchFromGitHub;
-      });
+      };
 
-      minecraft-launcher = (import ./minecraft-launcher.nix {
-        inherit stdenv freetype xlibs lib gtk2 nss nspr cairo expat alsaLib cups
-          atk gdk_pixbuf fontconfig gnome2 curl glib fetchurl glibc systemd 
-          dbus libpulseaudio makeWrapper makeDesktopItem; libXxf86vm = xorg.libXxf86vm;
-      });
+      minecraft-launcher = callPackage ./minecraft-launcher.nix {};
 
     };
   };
