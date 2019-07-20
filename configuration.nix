@@ -234,17 +234,10 @@ in {
         xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
         curlFull openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
-        xdg_utils
-
-        flite
-        # export LC_ALL=C; unset LANGUAGE # <-- You'll need this for minecraft-launcher
+        xdg_utils flite
       ];
       runScript = "bash";
     })
-
-    reallyOld.lyx
-
-    minecraft-launcher
 
     ### KDE Applications #######################################################
 
@@ -323,9 +316,7 @@ in {
     breeze-qt5                          # Breeze theme for qt5 (cursors!)
     numix-solarized-gtk-theme           # Numix solarized theme for GTK & Qt
     
-    (import ./breezeAdaptaCursor.nix    # Breeze Adapta cursors
-      {inherit stdenv fetchFromGitHub;}
-    )
+    breeze-adapta                       # Breeze-inspired cursors
 
     lxappearance-062                    # Program that manages themeing 
     clairvoyance                        # SDDM greeter theme
@@ -337,6 +328,7 @@ in {
 
     _2048-in-terminal                   # 2048 game in terminal
     gnome3.gnome-mahjongg               # Mahjong game
+    minecraft-launcher                  # Minecraft (actually updated)
     pacvim                              # Pacman, but with vim controls
     vitetris                            # Terminal based tetris game
 
@@ -850,7 +842,18 @@ in {
         backgroundURL = "https://wallpapercave.com/wp/wp1860715.jpg";
       };
 
+      ### Minecraft Launcher ####################
+      # The new Minecraft Launcher (executable) #
+      # as opposed to the Java-based launcher   #
+      ###########################################
+
       minecraft-launcher = callPackage ./minecraft-launcher.nix {};
+
+      ### Breeze Adapta #############################
+      # Some cursor inspired by Breeze or something #
+      ###############################################
+
+      breeze-adapta = callPackage ./breezeAdaptaCursor.nix {};
 
     };
   };
