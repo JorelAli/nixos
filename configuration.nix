@@ -146,6 +146,7 @@ in {
   networking = {
     hostName = "NixOS";                 # Set computer's hostname
     networkmanager.enable = true;       # Use nm-connection-editor
+    networkmanager.packages = with pkgs; [ gnome3.networkmanager-openvpn ];
 
     firewall = {
       enable = true;                    # Enable firewall
@@ -234,7 +235,7 @@ in {
         xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
         curlFull openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
-        xdg_utils flite
+        xdg_utils flite fuse
       ];
       runScript = "bash";
     })

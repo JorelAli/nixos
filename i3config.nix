@@ -131,7 +131,7 @@ bindsym Mod1+F4 kill
 
 # start rofi (program opener)
 bindsym $mod+d exec rofi -show run
-bindsym $mod exec rofi -show run
+bindsym $mod+Shift+d exec rofi -show drun
 bindsym $mod+Tab exec rofi -show window
 
 # Gaps!
