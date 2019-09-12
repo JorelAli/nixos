@@ -223,7 +223,7 @@ in {
     #   https://github.com/NixOS/nixpkgs/issues/37864                          #
     ############################################################################
 
-    qutebrowser                         # Lightweight minimal browser (v1.6.2)
+    unstable.qutebrowser                         # Lightweight minimal browser (v1.6.2)
 
     (buildFHSUserEnv {
       name = "enter-fhs";
