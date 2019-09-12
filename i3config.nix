@@ -2,9 +2,25 @@ with builtins;
 
 let
   
-  i3statusRustConfig = ''
+  i3statusRustConfig = 
+  let color = id: (import ./configutil.nix).getColor id true; in
+  ''
   [theme]
   name = "solarized-dark"
+
+  [theme.overrides]
+  idle_bg = "${color "bg"}"
+  idle_fg = "${color "fg"}"
+  info_bg = "${color 4}"
+  info_fg = "${color "bg"}"
+  good_bg = "${color 2}"
+  good_fg = "${color "bg"}"
+  warning_bg = "${color 3}"
+  warning_fg = "${color "bg"}"
+  critical_bg = "${color 1}"
+  critical_fg = "${color "bg"}"
+  #alternating_tint_bg = "#11111105"
+  #alternating_tint_fg = "#000000"
 
   [icons]
   name = "awesome"
@@ -75,9 +91,11 @@ let
 
 in let
 
-  config = ''
+  config = 
+  let color = id: (import ./configutil.nix).getColor id true; in
+  ''
 set $mod Mod4
-set $terminal kitty
+set $terminal kitty -c=${toFile "kitty.conf" (import ./kittyconf.nix)}
 
 font pango:Fira Code Medium 12
 
@@ -271,13 +289,13 @@ bar {
     font pango: Fira Code Medium, FontAwesome 12
     position bottom
     colors {
-        separator #002b36
-        background #002b36
+        separator ${color "bg"}
+        background ${color "bg"}
         statusline #dddddd
-        focused_workspace #2aa198 #2aa198 #ffffff
+        focused_workspace ${color 6} ${color 6} #ffffff
         active_workspace #073642 #073642 #ffffff
         inactive_workspace #073642 #073642 #888888
-        urgent_workspace #2f343a #dc322f #ffffff
+        urgent_workspace #2f343a ${color 1} #ffffff
     }
 }
   '';
