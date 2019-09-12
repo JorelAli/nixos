@@ -63,7 +63,7 @@ in {
   imports = [
     ./hardware-configuration.nix        # Import hardware configuration
     ./cachix.nix                        # Import cached nixpkg locations
-    ./vim.nix                           # Import neovim setup
+    ./extrapackages/vim.nix                           # Import neovim setup
   ];
 
 ##### Boot Settings ############################################################
@@ -208,7 +208,7 @@ in {
   # Zathura configuration, handled using symlinks from .configs 
   # Symlink ~/.config/zathura/zathurarc -> /etc/configs/zathurarc
   environment.etc."configs/zathurarc" = {
-    text = import ./zathuraconf.nix;
+    text = import ./programconfigs/zathuraconf.nix;
   };
 
 ##### System Packages ##########################################################
@@ -508,7 +508,6 @@ in {
       gparted = "sudo fish -c gparted";
       hash = "nix-hash --type sha256 --flat --base32";
       history = "history | bat";
-      i3config = "sudo vim /etc/nixos/i3config.nix";
       icat = "kitty +kitten icat";
       ls = "exa";
       mocp = "mocp --theme solarized";
@@ -705,7 +704,7 @@ in {
       windowManager.i3 = {
         enable = true;                  # Enable i3 tiling manager
         package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
-        configFile = import ./i3config.nix;
+        configFile = import ./programconfigs/i3config.nix;
       };
     };
   };
@@ -722,7 +721,7 @@ in {
     #postStart = "pkill dunst";
 #    script = "${pkgs.coreutils}/bin/echo hi";
     script = "${pkgs.dunst}/bin/dunst -h";
-    scriptArgs = "-config ${toFile "dunstrc" (import ./dunstconf.nix)}";
+    scriptArgs = "-config ${toFile "dunstrc" (import ./programconfigs/dunstconf.nix)}";
     serviceConfig.Restart = "always";
     #serviceConfig.RestartSec = 2;
     serviceConfig.ExecStartPre = "${pkgs.procps}/bin/pkill dunst";
@@ -799,18 +798,6 @@ in {
 
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
 
-      ### Qutebrowser #############
-      # Bleeding-edge qutebrowser #
-      #############################
-
-      qutebrowser = qutebrowser.overrideAttrs (oldAttrs: {
-        version = "1.6.3";
-        src = fetchurl {
-          url = "https://github.com/qutebrowser/qutebrowser/releases/download/v1.6.3/qutebrowser-1.6.3.tar.gz";
-          sha256 = "0z9an14vlv0r48x7fk0mk7465gnhh19dx1w63lyhsgnfqy5pzlhy";
-         };
-      });
-
       ### Typora Markdown Editor #################################################
       # Typora - another markdown editor with fancy features (such as exporting  # 
       # to PDF). This overrides the build script for typora, in particular:      #
@@ -851,7 +838,7 @@ in {
       #   https://github.com/eayus/sddm-theme-clairvoyance              #
       ###################################################################
 
-      clairvoyance = callPackage ./clairvoyance.nix {
+      clairvoyance = callPackage ./extrapackages/clairvoyance.nix {
         autoFocusPassword = true;
         backgroundURL = "https://wallpapercave.com/wp/wp1860715.jpg";
       };
@@ -861,13 +848,13 @@ in {
       # as opposed to the Java-based launcher   #
       ###########################################
 
-      minecraft-launcher = callPackage ./minecraft-launcher.nix {};
+      minecraft-launcher = callPackage ./extrapackages/minecraft-launcher.nix {};
 
       ### Breeze Adapta #############################
       # Some cursor inspired by Breeze or something #
       ###############################################
 
-      breeze-adapta = callPackage ./breezeAdaptaCursor.nix {};
+      breeze-adapta = callPackage ./extrapackages/breezeAdaptaCursor.nix {};
 
     };
   };

@@ -69,6 +69,7 @@ in {
                 let g:airline_powerline_fonts = 1
                 set backspace=indent,eol,start
                 set ignorecase
+                set clipboard^=unnamed
 
                 " Enable TagBar support for rust files
                 autocmd VimEnter *.rs TagbarOpen

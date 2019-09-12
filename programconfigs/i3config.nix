@@ -19,7 +19,7 @@ let
   warning_fg = "${color "bg"}"
   critical_bg = "${color 1}"
   critical_fg = "${color "bg"}"
-  #alternating_tint_bg = "#11111105"
+  #alternating_tint_bg = "#22222225"
   #alternating_tint_fg = "#000000"
 
   [icons]
