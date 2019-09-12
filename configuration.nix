@@ -205,6 +205,12 @@ in {
     '';
   };
 
+  # Zathura configuration, handled using symlinks from .configs 
+  # Symlink ~/.config/zathura/zathurarc -> /etc/configs/zathurarc
+  environment.etc."configs/zathurarc" = {
+    text = import ./zathuraconf.nix;
+  };
+
 ##### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [
