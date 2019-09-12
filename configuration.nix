@@ -645,7 +645,7 @@ in {
     udisks2.enable = true;              # Something something USBs
     upower.enable = true;               # Battery info
 
-    teamviewer.enable = unfreePermitted;
+    #teamviewer.enable = unfreePermitted;
 
     # Adds support for scrolling to change the brightness for i3status-rs
     udev.extraRules = ''  
@@ -706,14 +706,21 @@ in {
 
   ### Systemd Services #########################################################
 
-  systemd.services."dunst" = {
+  systemd.user.services."dunst" = {
+    # Honestly, I give up trying to configure dunst. 
+    # You tell it to use -config <configFile> but it just
+    # defaults to ~/.config/dunst/dunstrc for LITERALLY NO REASON
     enable = true;
     description = "Notification system daemon";
     wantedBy = [ "default.target" ];
-    postStart = "pkill dunst";
+    #postStart = "pkill dunst";
+#    script = "${pkgs.coreutils}/bin/echo hi";
+    script = "${pkgs.dunst}/bin/dunst -h";
+    scriptArgs = "-config ${toFile "dunstrc" (import ./dunstconf.nix)}";
     serviceConfig.Restart = "always";
-    serviceConfig.RestartSec = 2;
-    serviceConfig.ExecStart = "${pkgs.dunst}/bin/dunst";
+    #serviceConfig.RestartSec = 2;
+    serviceConfig.ExecStartPre = "${pkgs.procps}/bin/pkill dunst";
+    #serviceConfig.ExecStart = "${pkgs.dunst}/bin/dunst"; # -config ${toFile "dunstrc" (import ./dunstconf.nix)}";
   };
 
   systemd.services."xcompmgr" = {

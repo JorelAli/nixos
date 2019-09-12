@@ -293,8 +293,8 @@ bar {
         background ${color "bg"}
         statusline #dddddd
         focused_workspace ${color 6} ${color 6} #ffffff
-        active_workspace #073642 #073642 #ffffff
-        inactive_workspace #073642 #073642 #888888
+        active_workspace ${color "bg"} ${color "bg"} #ffffff
+        inactive_workspace ${color "bg"} ${color "bg"} #888888
         urgent_workspace #2f343a ${color 1} #ffffff
     }
 }
