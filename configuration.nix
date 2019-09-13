@@ -205,10 +205,16 @@ in {
     '';
   };
 
-  # Zathura configuration, handled using symlinks from .configs 
+  # Zathura configuration, handled using symlinks from dotfiles 
   # Symlink ~/.config/zathura/zathurarc -> /etc/configs/zathurarc
   environment.etc."configs/zathurarc" = {
     text = import ./programconfigs/zathuraconf.nix;
+  };
+
+  # Dunst configuration, handled using symlinks from dotfiles
+  # Symlink ~/.config/dunst/dunstrc -> /etc/configs/dunstrc
+  environment.etc."configs/dunstrc" = {
+    text = import ./programconfigs/dunstconf.nix;
   };
 
 ##### System Packages ##########################################################
@@ -711,24 +717,16 @@ in {
 
   ### Systemd Services #########################################################
 
-  systemd.user.services."dunst" = {
-    # Honestly, I give up trying to configure dunst. 
-    # You tell it to use -config <configFile> but it just
-    # defaults to ~/.config/dunst/dunstrc for LITERALLY NO REASON
+  systemd.user.services.dunst = {
     enable = true;
     description = "Notification system daemon";
     wantedBy = [ "default.target" ];
-    #postStart = "pkill dunst";
-#    script = "${pkgs.coreutils}/bin/echo hi";
-    script = "${pkgs.dunst}/bin/dunst -h";
-    scriptArgs = "-config ${toFile "dunstrc" (import ./programconfigs/dunstconf.nix)}";
+    script = "${pkgs.dunst}/bin/dunst";
     serviceConfig.Restart = "always";
     #serviceConfig.RestartSec = 2;
-    serviceConfig.ExecStartPre = "${pkgs.procps}/bin/pkill dunst";
-    #serviceConfig.ExecStart = "${pkgs.dunst}/bin/dunst"; # -config ${toFile "dunstrc" (import ./dunstconf.nix)}";
   };
 
-  systemd.services."xcompmgr" = {
+  systemd.services.xcompmgr = {
     enable = true;
     description = "Transparency compositing service";
     wantedBy = [ "default.target" ];
