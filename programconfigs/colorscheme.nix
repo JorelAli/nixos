@@ -1,6 +1,6 @@
 rec { 
   background = "#360036";# default: 002b36 
-  background_light = "#073642"; # default: 073642
+  background_light = "#660066"; # default: 073642
   foreground = "#93a1a1";
   color = [ 
     # Color scheme inspired by Paraiso Dark

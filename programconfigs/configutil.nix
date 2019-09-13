@@ -15,6 +15,8 @@ rec {
         colorScheme.background
       else if colorID == "fg" then
         colorScheme.foreground
+      else if colorID == "bgl" then
+        colorScheme.background_light
       else 
         builtins.elemAt colorScheme.color colorID; in
     if withHash then color else builtins.replaceStrings ["#"] [""] color; 

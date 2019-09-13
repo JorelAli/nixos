@@ -2,7 +2,7 @@ let color = id: (import ./configutil.nix).getColor id true; in
 ''
 customtheme = {
     'base03': '${color "bg"}',
-    'base02': '${color "bg"}', ## old: 073642
+    'base02': '${color "bgl"}', 
     'base01': '#586e75',
     'base00': '${color 8}',
     'base0': '#839496',

@@ -228,6 +228,14 @@ in {
     text = import ./programconfigs/qutebrowserconf.nix;
   };
 
+  environment.etc."configs/customtheme.conf" = {
+    text = import ./programconfigs/qt5ctconf.nix;
+  };
+
+  environment.etc."configs/DolphinFix.qss" = {
+    text = import ./programconfigs/dolphinqss.nix;
+  };
+
 ##### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [

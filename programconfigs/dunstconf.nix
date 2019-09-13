@@ -66,7 +66,7 @@ let color = id: (import ./configutil.nix).getColor id true; in
     frame_width = 3
     
     # Defines color of the frame around the notification window.
-    frame_color = "${color 6}"
+    frame_color = "${color 5}"
     
     # Define a color for the separator.
     # possible values are:
@@ -74,7 +74,7 @@ let color = id: (import ./configutil.nix).getColor id true; in
     #  * foreground: use the same color as the foreground;
     #  * frame: use the same color as the frame;
     #  * anything else will be interpreted as a X color.
-    separator_color = frame #"${color 6}" #bfbfbf #frame
+    separator_color = frame
     
     # Sort messages by urgency.
     sort = yes

@@ -292,9 +292,9 @@ bar {
         separator ${color "bg"}
         background ${color "bg"}
         statusline #dddddd
-        focused_workspace ${color 6} ${color 6} #ffffff
-        active_workspace ${color "bg"} ${color "bg"} #ffffff
-        inactive_workspace ${color "bg"} ${color "bg"} #888888
+        focused_workspace ${color 5} ${color 5} #ffffff
+        active_workspace ${color "bgl"} ${color "bgl"} #ffffff
+        inactive_workspace ${color "bgl"} ${color "bgl"} #ffffff
         urgent_workspace #2f343a ${color 1} #ffffff
     }
 }
