@@ -206,41 +206,6 @@ in {
     '';
   };
 
-/*
-  # Zathura configuration, handled using symlinks from dotfiles 
-  # Symlink ~/.config/zathura/zathurarc -> /etc/configs/zathurarc
-  environment.etc."configs/zathurarc" = {
-    text = import ./programconfigs/zathuraconf.nix;
-  };
-
-  # Dunst configuration, handled using symlinks from dotfiles
-  # Symlink ~/.config/dunst/dunstrc -> /etc/configs/dunstrc
-  environment.etc."configs/dunstrc" = {
-    text = import ./programconfigs/dunstconf.nix;
-  };
-
-  # Fish (budspencer theme) configuration, using symlinks from dotfiles
-  # Symlink ~/.config/fish/budspencer_config.fish -> 
-  #   /etc/configs/budspencer_config.fish
-  environment.etc."configs/budspencer_config.fish" = {
-    text = import ./programconfigs/budspencerconf.nix;
-  };
-
-  # Qutebrowser configuration, handled using symlinks from dotfiles
-  # Symlink ~/.config/qutebrowser/customtheme.py -> 
-  #   /etc/configs/customtheme.py
-  environment.etc."configs/customtheme.py" = {
-    text = import ./programconfigs/qutebrowserconf.nix;
-  };
-
-  environment.etc."configs/customtheme.conf" = {
-    text = import ./programconfigs/qt5ctconf.nix;
-  };
-
-  environment.etc."configs/DolphinFix.qss" = {
-    text = import ./programconfigs/dolphinqss.nix;
-  };
-*/
 ##### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [
@@ -259,7 +224,7 @@ in {
     #   https://github.com/NixOS/nixpkgs/issues/37864                          #
     ############################################################################
 
-    unstable.qutebrowser                         # Lightweight minimal browser (v1.6.2)
+    unstable.qutebrowser                         # Lightweight minimal browser (v1.7.0)
 
     (buildFHSUserEnv {
       name = "enter-fhs";
@@ -444,6 +409,7 @@ in {
       echo -en "\e]P0073642" # S_base02
     '')
     (writeShellScriptBin "autofish" "${xdotool}/bin/xdotool mousedown 3")
+    (writeShellScriptBin "arc" "${ark}/bin/ark")
 
     ###
 
