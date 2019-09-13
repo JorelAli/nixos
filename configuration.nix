@@ -217,8 +217,15 @@ in {
     text = import ./programconfigs/dunstconf.nix;
   };
 
+  # Fish (budspencer theme) configuration, using symlinks from dotfiles
+  # Symlink ~/.config/fish/budspencer_config.fish -> 
+  #   /etc/configs/budspencer_config.fish
   environment.etc."configs/budspencer_config.fish" = {
     text = import ./programconfigs/budspencerconf.nix;
+  };
+
+  environment.etc."configs/customtheme.py" = {
+    text = import ./programconfigs/qutebrowserconf.nix;
   };
 
 ##### System Packages ##########################################################
