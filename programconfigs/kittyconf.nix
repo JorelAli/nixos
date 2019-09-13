@@ -86,7 +86,7 @@ cursor_text_color #111111
 #: with the background color of the cell underneath instead, use the
 #: special keyword: background
 
-cursor_shape block
+cursor_shape beam
 
 #: The cursor shape can be one of (block, beam, underline)
 

@@ -217,6 +217,10 @@ in {
     text = import ./programconfigs/dunstconf.nix;
   };
 
+  environment.etc."configs/budspencer_config.fish" = {
+    text = import ./programconfigs/budspencerconf.nix;
+  };
+
 ##### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [

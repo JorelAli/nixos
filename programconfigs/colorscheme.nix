@@ -8,11 +8,11 @@ rec {
 
     # Background colors:
     background # Color 0 (black)
-    "#ef6155" # Color 1 (red) # default ef6155
-    "#48b685" # Color 2 (green) # default 48b685
-    "#fec418" # Color 3 (yellow) # default fec418
+    "#ef6155" # Color 1 (red) # default dc322f
+    "#48b685" # Color 2 (green) # default 859900
+    "#fec418" # Color 3 (yellow) # default b58900 
     "#06b6ef" # Color 4 (blue) # default 268bd2
-    "#da06ef" # Color 5 (magenta) # default da06ef
+    "#da06ef" # Color 5 (magenta) # default 6c71c4 
     "#2aa198" # Color 6 (cyan)
     foreground # Color 7 (white)
 
