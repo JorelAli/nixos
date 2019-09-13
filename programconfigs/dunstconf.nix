@@ -66,7 +66,7 @@ let color = id: (import ./configutil.nix).getColor id true; in
     frame_width = 3
     
     # Defines color of the frame around the notification window.
-    frame_color = "${color 5}"
+    frame_color = "${color "ac"}"
     
     # Define a color for the separator.
     # possible values are:
