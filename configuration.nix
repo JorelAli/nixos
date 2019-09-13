@@ -63,7 +63,8 @@ in {
   imports = [
     ./hardware-configuration.nix        # Import hardware configuration
     ./cachix.nix                        # Import cached nixpkg locations
-    ./extrapackages/vim.nix                           # Import neovim setup
+    ./extrapackages/vim.nix             # Import neovim setup
+    ./programthemes.nix
   ];
 
 ##### Boot Settings ############################################################
@@ -205,6 +206,7 @@ in {
     '';
   };
 
+/*
   # Zathura configuration, handled using symlinks from dotfiles 
   # Symlink ~/.config/zathura/zathurarc -> /etc/configs/zathurarc
   environment.etc."configs/zathurarc" = {
@@ -224,6 +226,9 @@ in {
     text = import ./programconfigs/budspencerconf.nix;
   };
 
+  # Qutebrowser configuration, handled using symlinks from dotfiles
+  # Symlink ~/.config/qutebrowser/customtheme.py -> 
+  #   /etc/configs/customtheme.py
   environment.etc."configs/customtheme.py" = {
     text = import ./programconfigs/qutebrowserconf.nix;
   };
@@ -235,7 +240,7 @@ in {
   environment.etc."configs/DolphinFix.qss" = {
     text = import ./programconfigs/dolphinqss.nix;
   };
-
+*/
 ##### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [
