@@ -38,4 +38,8 @@
   environment.etc."configs/gtkrc" = {
     text = import ./programconfigs/gtk2theme.nix;
   };
+
+  environment.etc."configs/chromiumtheme/manifest.json" = {
+    text = import ./programconfigs/chromiumconf.nix;
+  };
 }

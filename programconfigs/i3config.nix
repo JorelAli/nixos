@@ -126,8 +126,8 @@ floating_modifier $mod
 # App launchers
 bindsym $mod+space exec $terminal 
 bindsym $mod+q exec qutebrowser
-bindsym $mod+Shift+q exec google-chrome-stable 
-bindsym $mod+Shift+n exec google-chrome-stable --incognito
+bindsym $mod+Shift+q exec chromium --load-extension=/etc/configs/chromiumtheme
+bindsym $mod+Shift+n exec chromium --load-extension=/etc/configs/chromiumtheme --incognito
 bindsym $mod+j exec $terminal -e nixos-container login jshell 
 #~/init.java
 bindsym $mod+k exec $terminal 
