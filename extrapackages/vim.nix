@@ -77,20 +77,20 @@ in {
                 " Configured color pairs for rainbow parentheses
                 let g:rbpt_colorpairs = [
                     \ ['brown',       'RoyalBlue3'],
-                    \ ['Darkblue',    'SeaGreen3'],
-                    \ ['darkgray',    'DarkOrchid3'],
-                    \ ['darkgreen',   'firebrick3'],
-                    \ ['darkcyan',    'RoyalBlue3'],
-                    \ ['darkred',     'SeaGreen3'],
-                    \ ['darkmagenta', 'DarkOrchid3'],
+                    \ ['red',    'SeaGreen3'],
+                    \ ['magenta',    'DarkOrchid3'],
+                    \ ['blue',   'firebrick3'],
+                    \ ['cyan',    'RoyalBlue3'],
+                    \ ['green',     'SeaGreen3'],
+                    \ ['yellow', 'DarkOrchid3'],
                     \ ['brown',       'firebrick3'],
-                    \ ['gray',        'RoyalBlue3'],
-                    \ ['black',       'SeaGreen3'],
-                    \ ['darkmagenta', 'DarkOrchid3'],
-                    \ ['Darkblue',    'firebrick3'],
-                    \ ['darkgreen',   'RoyalBlue3'],
-                    \ ['darkcyan',    'SeaGreen3'],
-                    \ ['darkred',     'DarkOrchid3'],
+                    \ ['red',        'RoyalBlue3'],
+                    \ ['magenta',       'SeaGreen3'],
+                    \ ['blue', 'DarkOrchid3'],
+                    \ ['cyan',    'firebrick3'],
+                    \ ['green',   'RoyalBlue3'],
+                    \ ['yellow',    'SeaGreen3'],
+                    \ ['brown',     'DarkOrchid3'],
                     \ ['red',         'firebrick3'],
                     \ ]
 
@@ -183,6 +183,7 @@ in {
                   deoplete-rust         # Autocompletion for rust
 
                   gitgutter             # Shows git changes in sidebar
+                  #rainbow
                   rainbow_parentheses   # Pairs parentheses with colors
                   solarized             # Solarized theme (of course)
                   supertab              # Tab key does suggestions

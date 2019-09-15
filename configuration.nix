@@ -411,6 +411,7 @@ in {
     '')
     (writeShellScriptBin "autofish" "${xdotool}/bin/xdotool mousedown 3")
     (writeShellScriptBin "arc" "${ark}/bin/ark")
+    (writeShellScriptBin "caln" "notify-send \" $(date +\"%A %e %B\")\" \"$(cal)\"")
 
     ###
 

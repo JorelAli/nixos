@@ -42,8 +42,16 @@ let
   [[block]]
   block = "net"
   device = "wlp3s0"
-  ip = true 
+  ip = false
   speed_up = false 
+  speed_down = false
+  bitrate = false
+
+  [[block]]
+  block = "net"
+  device = "tun0"
+  ip = false
+  speed_up = false
   speed_down = false
   bitrate = false
 
@@ -82,11 +90,14 @@ let
   [[block]]
   block = "music"
   buttons = ["prev", "play", "next"]
+  player = "google-play-music-desktop-player"
+  #on_collapsed_click = "google-play-music-desktop-player"
 
   [[block]]
   block = "time"
   interval = 1
   format = "%a %e %b %r"
+  on_click = "caln"
   '';
 
 in let
