@@ -171,6 +171,8 @@ in {
                 autocmd VimEnter *.md SoftPencil
                 autocmd VimEnter *.md set spell spelllang=en_gb
 
+                " Syntax highlighting for .rasi (rofi themes) 
+                au BufNewFile,BufRead /*.rasi setf css
 
               '';
 

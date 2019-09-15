@@ -42,4 +42,8 @@
   environment.etc."configs/chromiumtheme/manifest.json" = {
     text = import ./programconfigs/chromiumconf.nix;
   };
+
+  environment.etc."configs/nix_generated.rasi" = {
+    text = import ./programconfigs/roficonf.nix;
+  };
 }
