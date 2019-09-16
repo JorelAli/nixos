@@ -330,7 +330,8 @@ in {
     ### Games ##################################################################
 
     _2048-in-terminal                   # 2048 game in terminal
-    gnome3.gnome-mahjongg               # Mahjong game
+    #gnome3.gnome-mahjongg               # Mahjong game
+    mahjong
     minecraft-launcher                  # Minecraft (actually updated)
     pacvim                              # Pacman, but with vim controls
     vitetris                            # Terminal based tetris game
@@ -799,6 +800,13 @@ in {
         postFixup = (builtins.substring 0 (builtins.stringLength oldAttrs.postFixup - 1)) 
           oldAttrs.postFixup + 
           " \\\n --prefix XDG_DATA_DIRS : \"$GSETTINGS_SCHEMAS_PATH\"\n";
+      });
+
+      mahjong = gnome3.gnome-mahjongg.overrideAttrs (oldAttrs: {
+        postInstall = ''
+          mkdir -p $out/share/gnome-mahjongg/themes/
+          cp -f ${builtins.fetchurl "file:///etc/nixos/programconfigs/postmodern.svg"} $out/share/gnome-mahjongg/themes/postmodern.svg
+        '';
       });
 
       ### LXAppearance - GTK Themer  ########################
