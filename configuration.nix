@@ -625,7 +625,7 @@ in {
         paint-on-overlay = true; 
         glx-no-stencil = true;
         unredir-if-possible = true;
-        blur-background-exclude = [ "class_g = 'escrotum'" ];
+        blur-background-exclude = [ "name = 'Screenshot'", "class_g = 'Escrotum'" ];
         blur-background = true;
         blur-background-fixed = true;
         blur-kern = "${calcBlurStrength 13}";
