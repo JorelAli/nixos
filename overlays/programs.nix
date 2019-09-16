@@ -59,11 +59,11 @@ self: super: {
   # as opposed to the Java-based launcher   #
   ###########################################
 
-  minecraft-launcher = super.callPackage ./extrapackages/minecraft-launcher.nix {};
+  minecraft-launcher = super.callPackage ./../extrapackages/minecraft-launcher.nix {};
 
   ### Breeze Adapta #############################
   # Some cursor inspired by Breeze or something #
   ###############################################
 
-  breeze-adapta = super.callPackage ./extrapackages/breezeAdaptaCursor.nix {};
+  breeze-adapta = super.callPackage ./../extrapackages/breezeAdaptaCursor.nix {};
 }

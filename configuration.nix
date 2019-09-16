@@ -65,6 +65,8 @@ in {
     ./cachix.nix                        # Import cached nixpkg locations
     ./extrapackages/vim.nix             # Import neovim setup
     ./programthemes.nix
+  ] ++ [
+    ./modules/dunst.nix
   ];
 
 ##### Boot Settings ############################################################
@@ -606,6 +608,8 @@ in {
 ##### Services #################################################################
 
   services = {
+
+  dunst.enable = true;
   
     ### Compton ###########################################
     # Compositing effects for windows (Blur backgrounds!) #
@@ -709,14 +713,14 @@ in {
 
   ### Systemd Services #########################################################
 
-  systemd.user.services.dunst = {
+  /*systemd.user.services.dunst = {
     enable = true;
     description = "Notification system daemon";
     wantedBy = [ "default.target" ];
     script = "${pkgs.dunst}/bin/dunst";
     serviceConfig.Restart = "always";
     #serviceConfig.RestartSec = 2;
-  };
+  };*/
 
   systemd.services.xcompmgr = {
     enable = true;
