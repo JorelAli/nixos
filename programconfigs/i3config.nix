@@ -112,6 +112,7 @@ font pango:Fira Code Medium 12
 
 # Fix any keybindings whenever i3 starts
 exec_always xmodmap ~/.Xmodmap
+exec_always nmcli connection up NordVPN
 
 # Use i3Gaps!
 for_window [class="^.*"] border pixel 0

@@ -330,8 +330,7 @@ in {
     ### Games ##################################################################
 
     _2048-in-terminal                   # 2048 game in terminal
-    #gnome3.gnome-mahjongg               # Mahjong game
-    mahjong
+    mahjong                             # Mahjong game
     minecraft-launcher                  # Minecraft (actually updated)
     pacvim                              # Pacman, but with vim controls
     vitetris                            # Terminal based tetris game
@@ -418,7 +417,6 @@ in {
 
   ] ++ ( if unfreePermitted then [
     
-    google-chrome                       # Google Chrome browser (Has flash!)
     #minecraft                           # Minecraft video game
     steam                               # Game distribution platform
     unrar                               # Command to unzip .rar files
@@ -802,6 +800,13 @@ in {
           " \\\n --prefix XDG_DATA_DIRS : \"$GSETTINGS_SCHEMAS_PATH\"\n";
       });
 
+      ### Mahjong ###########################################
+      # I don't want my mahjong "postmodern" theme showing  #
+      # the gnome icon, so I changed it to the Nix icon     #
+      # (Inspired by ubuntu's mahjongg which has the ubuntu #
+      # icon instead of the gnome icon)                     #
+      #######################################################
+
       mahjong = gnome3.gnome-mahjongg.overrideAttrs (oldAttrs: {
         postInstall = ''
           mkdir -p $out/share/gnome-mahjongg/themes/
@@ -831,10 +836,11 @@ in {
         fetchTarball "https://github.com/infinisil/all-hies/tarball/master"
       ) {};
 
-      ### Clairvoyance SDDM Theme #######################################
-      # Custom nix derivation for the Clairvoyance SDDM theme by eayus: #
-      #   https://github.com/eayus/sddm-theme-clairvoyance              #
-      ###################################################################
+      ### Clairvoyance SDDM Theme ###########################
+      # Custom nix derivation for the Clairvoyance SDDM     #
+      # theme by eayus:                                     #
+      #   https://github.com/eayus/sddm-theme-clairvoyance  #
+      #######################################################
 
       clairvoyance = callPackage ./extrapackages/clairvoyance.nix {
         autoFocusPassword = true;
