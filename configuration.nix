@@ -68,6 +68,7 @@ in {
   ] ++ [
     ./modules/dunst.nix
     ./modules/xcompmgr.nix
+    ./modules/compton.nix
   ];
 
 ##### Boot Settings ############################################################
@@ -622,15 +623,13 @@ in {
       vSync = "opengl-swc";             # Remove screen tearing
       backend = "glx";
       inactiveOpacity = "0.85";         # Make programs blur on unfocus
-      extraOptions = ''
-        paint-on-overlay = true; 
-        glx-no-stencil = true;
-        unredir-if-possible = true;
-        blur-background-exclude = [ "name = 'Screenshot'", "class_g = 'Escrotum'" ];
-        blur-background = true;
-        blur-background-fixed = true;
-        blur-kern = "${calcBlurStrength 13}";
-        '';
+      blur-background = true;
+      blur-strength = 13;
+      paint-on-overlay = true;
+      blur-excludes = [
+        "name = 'Screenshot'"
+        "class_g = 'Escrotum'"
+      ];
     };
 
     logind = {
