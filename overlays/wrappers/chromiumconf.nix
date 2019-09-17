@@ -1,4 +1,4 @@
-with import ./configutil.nix;
+with import ./../../programconfigs/configutil.nix;
 let 
   color = id: getColor id false;
   rgb = hex: hexToDec (color hex);

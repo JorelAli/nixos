@@ -1,6 +1,6 @@
 { pkgs }:
 let
-  dunst-config = import ./../programconfigs/dunstconf.nix;
+  dunst-config = import ./dunstconf.nix;
   dunst-config-file = builtins.toFile "dunstrc" dunst-config;
   dunst = pkgs.dunst.override {dunstify = true;};
 in

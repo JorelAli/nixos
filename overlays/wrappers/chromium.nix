@@ -2,7 +2,7 @@
 let
   chromium-extension = pkgs.writeTextFile {
     name = "manifest.json";
-    text = import ./../programconfigs/chromiumconf.nix;
+    text = import ./chromiumconf.nix;
     destination = "/theme/manifest.json";
   };
 in

@@ -42,13 +42,6 @@ in let
 
 ##### Nix expressions ##########################################################
   
-  # Calculates the blur strength for compton windows with background blur 
-  calcBlurStrength = input: assert (bitAnd input 1) == 1; 
-    foldl' 
-      (x: y: x + y) 
-      (toString(input) + "," + toString(input)) 
-      (genList (x: ",1.000000") (input * input - 1));
-
   nixSnowflake = fetchurl { 
     url = https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nix-snowflake.svg; 
     sha256 = "14mbpw8jv1w2c5wvfvj8clmjw0fi956bq5xf9s2q3my14far0as8";
@@ -759,6 +752,7 @@ in {
 
   nixpkgs.overlays = [
     (import ./overlays/programs.nix)
+    (import ./overlays/wrappers)
   ];
 
   nixpkgs.config = {

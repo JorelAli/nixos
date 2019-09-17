@@ -1,4 +1,4 @@
-let color = id: (import ./configutil.nix).getColor id true; in
+let color = id: (import ./../../programconfigs/configutil.nix).getColor id true; in
 ''
 [global]
     ### Display ###

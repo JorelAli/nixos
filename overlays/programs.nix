@@ -54,7 +54,6 @@ self: super: {
       };
   });
 
-  dunst = super.callPackage ./../extrapackages/dunst.nix { pkgs = super; };
 
   ### Minecraft Launcher ####################
   # The new Minecraft Launcher (executable) #
@@ -69,5 +68,4 @@ self: super: {
 
   breeze-adapta = super.callPackage ./../extrapackages/breezeAdaptaCursor.nix {};
 
-  chromium = super.callPackage ./../extrapackages/chromium.nix { pkgs = super; };
 }
