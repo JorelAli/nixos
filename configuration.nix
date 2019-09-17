@@ -67,6 +67,7 @@ in {
     ./programthemes.nix
   ] ++ [
     ./modules/dunst.nix
+    ./modules/xcompmgr.nix
   ];
 
 ##### Boot Settings ############################################################
@@ -488,10 +489,6 @@ in {
     #   set fish_color_search_match --background=d33682 #
     # Remove greeting:                                  #
     #   set fish_greeting                               #
-    # Solarized budspencer powerline colors:            #
-    #  set budspencer_colors ffffff 073642              #
-    #    6c71c4 ffffff b58900 cb4b16 dc322f             #
-    #    d33682 268bd2 073642 268bd2 00ff00             #
     #####################################################
 
     fish.enable = true;                 # Fish shell (Better bash)
@@ -609,7 +606,8 @@ in {
 
   services = {
 
-  dunst.enable = true;
+    dunst.enable = true;
+    xcompmgr.enable = true;
   
     ### Compton ###########################################
     # Compositing effects for windows (Blur backgrounds!) #
@@ -709,26 +707,6 @@ in {
         configFile = import ./programconfigs/i3config.nix;
       };
     };
-  };
-
-  ### Systemd Services #########################################################
-
-  /*systemd.user.services.dunst = {
-    enable = true;
-    description = "Notification system daemon";
-    wantedBy = [ "default.target" ];
-    script = "${pkgs.dunst}/bin/dunst";
-    serviceConfig.Restart = "always";
-    #serviceConfig.RestartSec = 2;
-  };*/
-
-  systemd.services.xcompmgr = {
-    enable = true;
-    description = "Transparency compositing service";
-    wantedBy = [ "default.target" ];
-    serviceConfig.Restart = "always";
-    serviceConfig.RestartSrc = 2;
-    serviceConfig.ExecStart = "${pkgs.xcompmgr}/bin/xcompmgr";
   };
 
 ##### User Accounts ############################################################

@@ -54,6 +54,8 @@ self: super: {
       };
   });
 
+  dunst = super.callPackage ./../extrapackages/dunst.nix { pkgs = super; };
+
   ### Minecraft Launcher ####################
   # The new Minecraft Launcher (executable) #
   # as opposed to the Java-based launcher   #
