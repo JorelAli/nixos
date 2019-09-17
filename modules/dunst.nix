@@ -18,7 +18,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemd.user.services."dunst" = {
+    systemd.services."dunst" = {
         enable = true;
         description = "";
         wantedBy = [ "default.target" ];

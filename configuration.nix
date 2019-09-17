@@ -375,6 +375,7 @@ in {
     dunst                               # Notification manager
     libnotify                           # Notification library
     imlib2                              # Image manipulation library (for feh)
+    mpg123
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
     system-config-printer               # Add/manage printers
