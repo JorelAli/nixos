@@ -2,6 +2,7 @@
 let
   dunst-config = import ./../programconfigs/dunstconf.nix;
   dunst-config-file = builtins.toFile "dunstrc" dunst-config;
+  dunst = pkgs.dunst.override {dunstify = true;};
 in
 pkgs.stdenv.mkDerivation {
   name = "dunstWrapper";
@@ -9,6 +10,6 @@ pkgs.stdenv.mkDerivation {
   phases = [ "buildPhase" ];
   buildCommand = ''
     mkdir -p $out/bin
-    makeWrapper "${pkgs.dunst}/bin/dunst" $out/bin/dunst --add-flags "-config ${dunst-config-file}"
+    makeWrapper "${dunst}/bin/dunst" $out/bin/dunst --add-flags "-config ${dunst-config-file}"
   '';
 }

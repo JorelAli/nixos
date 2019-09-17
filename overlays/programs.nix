@@ -68,4 +68,6 @@ self: super: {
   ###############################################
 
   breeze-adapta = super.callPackage ./../extrapackages/breezeAdaptaCursor.nix {};
+
+  chromium = super.callPackage ./../extrapackages/chromium.nix { pkgs = super; };
 }

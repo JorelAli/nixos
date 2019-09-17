@@ -9,9 +9,9 @@
 
   # Dunst configuration, handled using symlinks from dotfiles
   # Symlink ~/.config/dunst/dunstrc -> /etc/configs/dunstrc
-  environment.etc."configs/dunstrc" = {
-    text = import ./programconfigs/dunstconf.nix;
-  };
+  #environment.etc."configs/dunstrc" = {
+  #  text = import ./programconfigs/dunstconf.nix;
+  #};
 
   # Fish (budspencer theme) configuration, using symlinks from dotfiles
   # Symlink ~/.config/fish/budspencer_config.fish -> 

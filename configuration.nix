@@ -773,6 +773,8 @@ in {
     # above.
     packageOverrides = pkgs: with pkgs; {
 
+      dunst = pkgs.dunst.override { dunstify = true; };
+
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
 
 
