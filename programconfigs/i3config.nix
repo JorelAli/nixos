@@ -135,14 +135,22 @@ bindsym XF86AudioPrev exec playerctl previous
 
 floating_modifier $mod
 
+# Simulated media player controls
+bindsym $mod+j exec playerctl previous
+bindsym $mod+k exec playerctl play-pause
+bindsym $mod+l exec playerctl next
+
+# Lock screen!
+#bindsym $mod+l exec lock
+
 # App launchers
 bindsym $mod+space exec $terminal 
 bindsym $mod+q exec qutebrowser
 bindsym $mod+Shift+q exec chromium
 bindsym $mod+Shift+n exec chromium --incognito
-bindsym $mod+j exec $terminal -e nixos-container login jshell 
+#bindsym $mod+j exec $terminal -e nixos-container login jshell 
 #~/init.java
-bindsym $mod+k exec $terminal 
+#bindsym $mod+k exec $terminal 
 bindsym $mod+n exec $terminal -e nix repl '<nixpkgs>'
 bindsym $mod+e exec dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss 
 bindsym $mod+m exec google-play-music-desktop-player

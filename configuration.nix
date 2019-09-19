@@ -47,6 +47,8 @@ in let
     sha256 = "14mbpw8jv1w2c5wvfvj8clmjw0fi956bq5xf9s2q3my14far0as8";
   };
 
+  color = id: (import ./programconfigs/configutil.nix).getColor id false;
+
 ##### NixOS configuration starts here ##########################################
 
 in {
@@ -264,6 +266,7 @@ in {
     neofetch                            # screenfetch, but better
     p7zip                               # 7z zip manager
     pdfgrep                             # Grep, but for PDF files
+    playerctl                           # Control media player (e.g. play/pause)
     ranger                              # Terminal file manager
     ripgrep                             # Better grep (use rg command)
     rofi                                # Window switcher & App launcher
@@ -411,6 +414,8 @@ in {
     (writeShellScriptBin "arc" "${ark}/bin/ark")
     (writeShellScriptBin "caln" "notify-send \" $(date +\"%A %e %B\")\" \"$(cal)\"")
     (writeShellScriptBin "ding" "${mpv}/bin/mpv /home/jorel/.config/dunst/notifsound.mp3")
+
+    (writeShellScriptBin "lock" "${i3lock-color}/bin/i3lock-color --ringcolor=ffffffff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=ffffffff --datecolor=ffffffff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --ring-width=6")
 
     ###
 
@@ -697,6 +702,9 @@ in {
       windowManager.i3 = {
         enable = true;                  # Enable i3 tiling manager
         package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
+        extraPackages = with pkgs; [
+          i3lock-color
+        ];
         configFile = import ./programconfigs/i3config.nix;
       };
     };
