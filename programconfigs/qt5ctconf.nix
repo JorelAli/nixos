@@ -22,7 +22,7 @@ let color = id: (import ./configutil.nix).getColor id true; in
 ; 18) ?? white
 ; 19)
 ; 20)
-active_colors=#ffffff, ${color "bg"}, #979797, #5e5c5b, #204953, #4a4947, #ffffff, #839496, #839496, ${color "bg"}, ${color "bg"}, #cf0000, ${color 5}, #ffffff, ${color 2}, #a70b06, ${color "bgl"}, #00ff00, #0a0a0a, #ffffff
-disabled_colors=#808080, ${color "bgl"}, #979797, #5e5c5b, #204953, #4a4947, #808080, #808080, #808080, ${color "bg"}, ${color "bg"}, #839496, ${color "bg"}, #808080, ${color 2}, #a70b06, #5c5b5a, #ffffff, #0a0a0a, #ffffff
-inactive_colors=#839496, ${color "bgl"}, #979797, #5e5c5b, #204953, #4a4947, #839496, #839496, #839496, ${color "bgl"}, ${color "bgl"}, #839496, #204953, #839496, ${color 2}, #a70b06, #5c5b5a, #ffffff, #0a0a0a, #ffffff
+active_colors=${color 15}, ${color "bg"}, #979797, #5e5c5b, #204953, #4a4947, ${color 15}, #839496, #839496, ${color "bg"}, ${color "bg"}, #cf0000, ${color 5}, ${color 15}, ${color 2}, #a70b06, ${color "bgl"}, #00ff00, #0a0a0a, ${color 15}
+disabled_colors=#808080, ${color "bgl"}, #979797, #5e5c5b, #204953, #4a4947, #808080, #808080, #808080, ${color "bg"}, ${color "bg"}, #839496, ${color "bg"}, #808080, ${color 2}, #a70b06, #5c5b5a, ${color 15}, #0a0a0a, ${color 15}
+inactive_colors=#839496, ${color "bgl"}, #979797, #5e5c5b, #204953, #4a4947, #839496, #839496, #839496, ${color "bgl"}, ${color "bgl"}, #839496, #204953, #839496, ${color 2}, #a70b06, #5c5b5a, ${color 15}, #0a0a0a, ${color 15}
 ''

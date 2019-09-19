@@ -24,6 +24,6 @@ rec {
     "#06b6ef" # Color 12 (blue)
     "#da06ef" # Color 13 (magenta)
     "#2aa198" # Color 14 (cyan)
-    "#fdf6e3" # Color 15 (white)
+    "#ffffff" # Color 15 (white)
   ]; 
 }

@@ -13,15 +13,15 @@ in
    "name": "NixOS generated theme",
    "theme": {
       "colors": {
-         "bookmark_text": [ 255, 255, 255 ],
+         "bookmark_text": ${rgbStr (rgb 15)},
          "frame": ${rgbStr (rgb "bg")},
          "frame_inactive": ${rgbStr (rgb "bgl")},
          "frame_incognito": [ 51, 51, 51 ],
          "frame_incognito_inactive": [ 51, 51, 51 ], 
          "ntp_background": ${rgbStr (rgb "bg")},
-         "ntp_text": [ 255, 255, 255 ],
-         "tab_background_text": [ 255, 255, 255 ],
-         "tab_text": [ 255, 255, 255 ],
+         "ntp_text": ${rgbStr (rgb 15)},
+         "tab_background_text": ${rgbStr (rgb 15)},
+         "tab_text": ${rgbStr (rgb 15)},
          "toolbar": ${rgbStr (rgb "bgl")}
       },
       "properties": {

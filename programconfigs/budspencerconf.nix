@@ -28,5 +28,5 @@ if tty | grep tty > /dev/null
 end
 
 # Set budspencer color scheme
-set budspencer_colors ffffff ${color "bg"} ${color "ac"} ffffff ${color 3} cb4b16 ${color 1} d33682 ${color 4} ${color "bg"} ${color 4} ${color 2}
+set budspencer_colors ${color 15} ${color "bg"} ${color "ac"} ${color 15} ${color 3} cb4b16 ${color 1} d33682 ${color 4} ${color "bg"} ${color 4} ${color 2}
 ''

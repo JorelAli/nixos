@@ -15,7 +15,7 @@ let color = id: (import ./configutil.nix).getColor id true; in
   background-light: ${color "bgl"};
   background-focus: ${color 5};
   foreground:       ${color "fg"};
-  foreground-list:  #ffffff;
+  foreground-list:  ${color 15};
   
   /* General */
   text-font:            "Fira Code Medium 16";

@@ -415,7 +415,7 @@ in {
     (writeShellScriptBin "caln" "notify-send \" $(date +\"%A %e %B\")\" \"$(cal)\"")
     (writeShellScriptBin "ding" "${mpv}/bin/mpv /home/jorel/.config/dunst/notifsound.mp3")
 
-    (writeShellScriptBin "lock" "${i3lock-color}/bin/i3lock-color --ringcolor=ffffffff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=ffffffff --datecolor=ffffffff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --ring-width=6")
+    (writeShellScriptBin "lock" "${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --ring-width=6")
 
     ###
 
@@ -564,10 +564,10 @@ in {
       "${powerline-fonts}/share/fonts/psf/ter-powerline-v28b.psf.gz";
     consoleKeyMap = "uk";               # TTY keyboard layout = UK layout
     consoleColors = [                   # The 16 terminal colors 
-      "002b36" "dc322f" "859900" "b58900" 
-      "268bd2" "d33682" "2aa198" "eee8d5" 
-      "002b36" "cb4b16" "586e75" "657b83" 
-      "839496" "6c71c4" "93a1a1" "fdf6e3"
+      "${color 0}" "${color 1}" "${color 2}" "${color 3}" 
+      "${color 4}" "${color 5}" "${color 6}" "${color 7}" 
+      "${color 8}" "${color 9}" "${color 10}" "${color 11}" 
+      "${color 12}" "${color 13}" "${color 14}" "${color 15}"
     ];
   };
 
@@ -623,7 +623,7 @@ in {
       backend = "glx";
       inactiveOpacity = "0.85";         # Make programs blur on unfocus
       blur-background = true;
-      blur-strength = 13;
+      blur-strength = 3;
       paint-on-overlay = true;
       blur-excludes = [
         "name = 'Screenshot'"
