@@ -371,6 +371,11 @@ in {
     rustc
     pkgconfig
 
+    ### Programming (Elm) ######################################################
+
+    elmPackages.elm
+    webkitgtk
+
     ### GUI/Window Manager #####################################################
 
     # i3status-rust        coming soon: https://github.com/JorelAli/i3status-rust
@@ -777,8 +782,6 @@ in {
     # script. This is then used in the Typora package in the system packages
     # above.
     packageOverrides = pkgs: with pkgs; {
-
-      dunst = pkgs.dunst.override { dunstify = true; };
 
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
 

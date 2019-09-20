@@ -174,6 +174,10 @@ in {
                 " Syntax highlighting for .rasi (rofi themes) 
                 au BufNewFile,BufRead /*.rasi setf css
 
+                " No tabs in elm files!
+                au BufRead,BufNewFile *.elm set noexpandtab
+                au BufRead,BufNewFile *.elm set tabstop=2
+            
               '';
 
               ### Vim packages #################################################
@@ -204,6 +208,7 @@ in {
                   vim-pencil            # Word wrapping for markdown documents
                   vim-toml              # Toml language syntax
 
+                  elm-vim
                   ctrlp                 # Easy file opener using Ctrl+P
                   goyo
 

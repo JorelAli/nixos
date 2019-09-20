@@ -18,13 +18,14 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemd.services."dunst" = {
+    systemd.user.services."dunst" = {
         enable = true;
-        description = "";
+        description = "A notification system";
         wantedBy = [ "default.target" ];
         serviceConfig.Restart = "always";
         serviceConfig.RestartSec = 2;
         serviceConfig.ExecStart = "${pkgs.dunst}/bin/dunst";
+        path = [ pkgs.mpv ];
     };
   };
 }
