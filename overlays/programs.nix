@@ -26,6 +26,20 @@ self: super: {
       " \\\n --prefix XDG_DATA_DIRS : \"$GSETTINGS_SCHEMAS_PATH\"\n";
   });
 
+  ### Google Play Music Desktop Player #####################
+  # Fixes a bug (similar to Typora) where the file chooser #
+  # doesn't open properly because it's not linked properly #
+  ##########################################################
+
+  google-play-music-desktop-player = super.google-play-music-desktop-player.overrideAttrs (oldAttrs: {
+    installPhase = (builtins.substring 0 (builtins.stringLength oldAttrs.installPhase - 1)) 
+      oldAttrs.installPhase + 
+      " \\\n --prefix XDG_DATA_DIRS : \"$GSETTINGS_SCHEMAS_PATH\"\n";
+
+    buildInputs = oldAttrs.buildInputs ++ [ self.gtk3 ];
+
+  });
+
   ### Mahjong ###########################################
   # I don't want my mahjong "postmodern" theme showing  #
   # the gnome icon, so I changed it to the Nix icon     #

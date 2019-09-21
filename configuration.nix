@@ -63,6 +63,7 @@ in {
     ./glib-networking.nix
   ] ++ [
     ./modules/dunst.nix
+    ./modules/emojione.nix
     ./modules/xcompmgr.nix
     ./modules/compton.nix
   ];
@@ -540,7 +541,8 @@ in {
 
   fonts = {
     fonts = with pkgs; [
-      emojione                          # Emoji font
+      #twemoji-color-font
+      #emojione                          # Emoji font
       font-awesome_4                    # Fancy icons font
       ipafont                           # Japanese font
       siji                              # Iconic bitmap font
@@ -557,6 +559,7 @@ in {
       powerline-fonts                   # Fonts for powerlines (Used in my tty)
     ];
 
+#    fontconfig.ultimate.enable = true;
     fontconfig.defaultFonts.monospace = [
       "Fira Code Medium"                # Set default font as Fira Code Medium
       "Symbola"                         # Use Symbola as fallback font
