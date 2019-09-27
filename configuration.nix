@@ -254,6 +254,7 @@ in {
     escrotum                            # Screenshot tool (what a name...)
     exa                                 # Better ls command
     feh                                 # Image viewer
+    ffmpeg-full                         # Used to record the screen
     fzf                                 # Find files easily
     git                                 # Version control
     git-lfs                             # Support for large files for git
@@ -368,14 +369,14 @@ in {
 
     ncurses                             # Library to create Text User Interfaces
     rustup                              # Rust toolchain manager
-    cargo
-    rustc
-    pkgconfig
+    cargo                               # Rust package manager
+    rustc                               # Rust compiler
+    pkgconfig                           # Compiler helper tool
 
     ### Programming (Elm) ######################################################
 
-    elmPackages.elm
-    webkitgtk
+    elmPackages.elm                     # Elm programming language
+    webkitgtk                           # Library to display native web views
 
     ### GUI/Window Manager #####################################################
 

@@ -98,4 +98,5 @@ let color = id: (import ./../../programconfigs/configutil.nix).getColor id true;
 [play_sound]
     summary = "*"
     script = /home/jorel/.config/dunst/notifsound.sh
+    Notif sound: https://notificationsounds.com/notification-sounds/quite-impressed-565/download/mp3
 ''
