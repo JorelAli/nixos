@@ -312,6 +312,7 @@ in {
     android-studio                      # Android development environment
     deluge                              # Torrent client
     gnumeric                            # Spreadsheets
+    libreoffice
     pavucontrol                         # Pulse Audio controller
     sqlitebrowser                       # SQLite .db file browser
 
@@ -617,6 +618,39 @@ in {
 ##### Services #################################################################
   
   services = {
+
+    httpd = {
+      enable = true;
+      #documentRoot = /var/www/html/home;
+      adminAddr = "localhost";
+      listen = [ { port = 1000; } ];
+      servedFiles = [ {
+        file = builtins.toFile "index" ''
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <style>
+                h1 {
+                  left: 0;
+                  line-height: 200px;
+                  margin-top: -100px;
+                  position: absolute;
+                  text-align: center;
+                  top: 50%;
+                  width: 100%;
+                  font-family: Fira Code Medium;
+                  color: #${color "fg"};
+                }
+              </style>
+            </head>
+            <body style="background: #${color "bg"};">
+              <h1>->> You're in a browser <<-</h1>
+            </body>
+        </html>
+        '';
+        urlPath = "/index.html";
+      } ];
+    };
 
     dunst.enable = true;
     xcompmgr.enable = true;
