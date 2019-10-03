@@ -55,6 +55,10 @@ let
   speed_down = false
   bitrate = false
 
+  [[block]]
+  block = "bluetooth"
+  mac = "E8:AB:FA:24:9F:09"
+
   #[[block]]
   #block = "net"
   #device = "enp0s20f0u4"
@@ -172,6 +176,13 @@ bindsym Mod1+F4 kill
 bindsym $mod+d exec rofi -show run
 bindsym $mod+Shift+d exec rofi -show drun
 bindsym $mod+Tab exec rofi -show window
+# What if I have something like
+# mod + shift + m = "move"
+# which executes a rofi with 
+# i3-msg move container to workspace <input here>
+# And (maybe?) it lets you populate with existing
+# workspaces. If you have workspace "example", you can
+# easily move stuff to it
 
 # Gaps!
 bindsym $mod+o gaps inner all plus 10

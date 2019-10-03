@@ -437,6 +437,8 @@ in {
 
     (writeShellScriptBin "lock" "${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --ring-width=6")
 
+    (writeShellScriptBin "ws" "${i3-gaps}/bin/i3-msg move container to workspace $1")
+
     ###
 
   ] ++ ( if unfreePermitted then [

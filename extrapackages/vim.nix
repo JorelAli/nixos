@@ -4,18 +4,6 @@ let
 
 ##### Custom Vim plugins #######################################################
 
-  # Java Complete 2, with pre-built packages (todo: extract into Nix expression
-  # for a more "pure" installation of Java Complete 2)
-  customPlugins.vim-javacomplete2 = pkgs.vimUtils.buildVimPlugin {
-    name = "vim-javacomplete2";
-    src = pkgs.fetchFromGitHub {
-      owner = "JorelAli";
-      repo = "vim-javacomplete2";
-      rev = "cc140af15dc850372655a45cca5b5d07e0d14344";
-      sha256 = "1kzx80hz9n2bawrx9lgsfqmjkljbgc1lpl8abnhfzkyy9ax9svk3";
-    };
-  };
-
   customPlugins.vim-devdocs = pkgs.vimUtils.buildVimPlugin {
     name = "vim-devdocs";
     src = pkgs.fetchFromGitHub {
@@ -70,9 +58,7 @@ in {
                 set backspace=indent,eol,start
                 set ignorecase
                 set clipboard^=unnamed
-
-                " Enable TagBar support for rust files
-                autocmd VimEnter *.rs TagbarOpen
+                hi illuminatedWord cterm=underline gui=underline
 
                 " Configured color pairs for rainbow parentheses
                 let g:rbpt_colorpairs = [
@@ -130,29 +116,15 @@ in {
                 let g:syntastic_check_on_open = 1
                 let g:syntastic_check_on_wq = 0
 
-                " Some Java Complete 2 setup (might be unnecessary)
-                let g:JavaComplete_JavaviLogDirectory = $HOME . '/javavilogs'
-                let g:JavaComplete_Home = $HOME . '/.vim/bundle/vim-javacomplete2'
-                let $CLASSPATH .= '.:' . $HOME . '/.vim/bundle/vim-javacomplete2/lib/javavi/target/classes'
-
-                nmap <F4> <Plug>(JavaComplete-Imports-AddSmart)
-                imap <F4> <Plug>(JavaComplete-Imports-AddSmart)
-                nmap <F5> <Plug>(JavaComplete-Imports-Add)
-                imap <F5> <Plug>(JavaComplete-Imports-Add)
-                nmap <F6> <Plug>(JavaComplete-Imports-AddMissing)
-                imap <F6> <Plug>(JavaComplete-Imports-AddMissing)
-                nmap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
-                imap <F7> <Plug>(JavaComplete-Imports-RemoveUnused)
-
                 inoremap <C-@> <c-x><c-o>
 
-                autocmd FileType java setlocal omnifunc=javacomplete#Complete
-                autocmd FileType javacc setlocal omnifunc=javacomplete#Complete
+                let g:kronos_database = $HOME . '.kronos.database'
 
                 " Enable quality autocompletion
                 let g:deoplete#enable_at_startup = 1 
 
-                " Rust stuff
+                " Rust programs 
+                autocmd VimEnter *.rs TagbarOpen
                 let g:deoplete#sources#rust#racer_binary = $HOME . '/.cargo/bin/racer'
                 let g:deoplete#sources#rust#rust_source_path = $HOME . '/github/rust/src'
                 let g:syntastic_rust_checkers = ['cargo']
@@ -160,24 +132,25 @@ in {
                 " Markdown
                 let g:markdown_enable_mappings = 0
                 let g:vim_markdown_folding_disabled = 1
-
-                let g:kronos_database = $HOME . '.kronos.database'
-
-                " Don't indent .nix files!
-                autocmd FileType nix let b:did_indent = 1
-                autocmd FileType nix setlocal indentexpr=
-
-                " autocmd VimEnter *.md Goyo
                 autocmd VimEnter *.md SoftPencil
                 autocmd VimEnter *.md set spell spelllang=en_gb
+
+                " Nix programs
+                autocmd FileType nix let b:did_indent = 1
+                autocmd FileType nix setlocal indentexpr=
 
                 " Syntax highlighting for .rasi (rofi themes) 
                 au BufNewFile,BufRead /*.rasi setf css
 
-                " No tabs in elm files!
+                " Elm programs
                 au BufRead,BufNewFile *.elm set noexpandtab
                 au BufRead,BufNewFile *.elm set tabstop=2
-            
+
+                " LaTeX documents
+                let g:livepreview_previewer = 'zathura'
+                let g:syntastic_loc_list_height = 2
+                autocmd VimEnter *.md SoftPencil
+                autocmd VimEnter *.md set spell spelllang=en_gb
               '';
 
               ### Vim packages #################################################
@@ -185,16 +158,17 @@ in {
               packages.myVimPackage = with pkgs.vimPlugins // customPlugins; {
                 
                 start = [ 
-                  deoplete-nvim         # Dark powered autocompletion
-                  deoplete-rust         # Autocompletion for rust
-
-                  gitgutter             # Shows git changes in sidebar
-                  #rainbow
-                  rainbow_parentheses   # Pairs parentheses with colors
-                  solarized             # Solarized theme (of course)
-                  supertab              # Tab key does suggestions
-                  Syntastic             # Syntax checking for languages
-                  tagbar                # Shows declared file methods etc.
+                  ctrlp                  # Easy file opener using Ctrl+P
+                  deoplete-nvim          # Dark powered autocompletion
+                  deoplete-rust          # Autocompletion for rust
+                  elm-vim                # Elm support for vim
+                  gitgutter              # Shows git changes in sidebar
+                  goyo                   # Makes vim look more like a doc editor
+                  rainbow_parentheses    # Pairs parentheses with colors
+                  solarized              # Solarized theme (of course)
+                  supertab               # Tab key does suggestions
+                  Syntastic              # Syntax checking for languages
+                  tagbar                 # Shows declared file methods etc.
 
                   vim-airline           # Fancy bottom bar for vim
                   vim-airline-themes    # Theme support for bottom bar 
@@ -202,18 +176,13 @@ in {
                   vim-dart              # Dart language support
                   vim-devdocs           # Easy file documentation using ':DevDocs'
                   vim-fugitive          # Git for vim
-                  #vim-javacomplete2    # Java IDE features (autocomplete)
                   vim-markdown          # Markdown syntax highlighting
                   vim-nix               # Nix language syntax
                   vim-pencil            # Word wrapping for markdown documents
                   vim-toml              # Toml language syntax
+                  vim-latex-live-preview # LaTeX compiling for vim
 
-                  elm-vim
-                  ctrlp                 # Easy file opener using Ctrl+P
-                  goyo
-
-
-vim-illuminate
+                  vim-illuminate         # Highlights similar words
                 ];    
               };
           };
