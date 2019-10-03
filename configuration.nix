@@ -63,7 +63,7 @@ in {
     ./glib-networking.nix
   ] ++ [
     ./modules/dunst.nix
-    ./modules/emojione.nix
+#    ./modules/emojione.nix
     ./modules/xcompmgr.nix
     ./modules/compton.nix
   ];
@@ -412,6 +412,15 @@ in {
     hunspell                            # Dictionary for document programs
     hunspellDicts.en-gb-ise             # English (GB with '-ise' spellings)
     hunspellDicts.en-us                 # English (US)
+
+    ### TeX
+
+    texlive.combined.scheme-full
+    texstudio
+
+    fsharp
+    dotnetPackages.FSharpData
+    dotnetPackages.FSharpCore
 
     ### Custom Bash Scripts ####################################################
 
