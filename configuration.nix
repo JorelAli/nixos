@@ -255,6 +255,7 @@ in {
     exa                                 # Better ls command
     feh                                 # Image viewer
     ffmpeg-full                         # Used to record the screen
+    file                                # View information about a file
     fzf                                 # Find files easily
     git                                 # Version control
     git-lfs                             # Support for large files for git

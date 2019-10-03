@@ -2,19 +2,6 @@
   atk, gdk_pixbuf, fontconfig, gnome2, curl, glib, fetchurl, glibc, systemd, 
   dbus, libpulseaudio, makeWrapper, libXxf86vm, makeDesktopItem }:
 
-/*
-IMPORTANT NOTE on how to get sound working:
-
-You need to put libpulseaudio in the LD_LIBRARY_PATH. To do this,
-use:
-
-stdenv.lib.makeLibraryPath [ libpulseaudio ] (While you're at it, 
-probs include xorg.libXxf86vm for previous versions of Minecraft)
-
-And somehow, probably using the makeWrapper command, turn Minecraft
-into a wrapper with the new LD_LIBRARY_PATH or somethng.
-*/
-
 let
   desktopItem = makeDesktopItem {
     name = "minecraftlauncher";
@@ -28,20 +15,12 @@ in stdenv.mkDerivation rec {
   name = "minecraft-launcher-${version}";
   version = "2.1.5410";
   
-  # ACTUAL URL should be: https://launcher.mojang.com/download/linux/x86_64/minecraft-launcher_2.1.5410.tar.gz
-  # for proper purity!!
-
   src = fetchurl {
     url = "https://launcher.mojang.com/download/linux/x86_64/minecraft-launcher_2.1.5410.tar.gz";
     sha256 = "1jhy653hxxgxmk2lc8zi3g41ayd6fdl06j507gvnbh9fh7dwlkr9";
   };
 
-  #sourceRoot = ".";
-  #unpackCmd = ''
-  #  tar xzf .
-  #'';
-
-  buildPhase = ":";   # nothing to build
+  phases = [ "unpackPhase" "buildPhase" "installPhase" "fixupPhase" ];
 
   nativeBuildInputs = [ makeWrapper ];
 
@@ -52,7 +31,7 @@ in stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out/bin
-	mkdir -p $out/opt/minecraft-launcher
+    mkdir -p $out/opt/minecraft-launcher
     cp -R . $out/opt/minecraft-launcher
 
     # fix the path in the desktop file
@@ -72,18 +51,35 @@ in stdenv.mkDerivation rec {
   dontPatchELF = true; # Needed for local libraries
 
   preFixup = let
-    libPath = lib.makeLibraryPath [ stdenv.cc.cc.lib glibc ];
+    libPath = lib.makeLibraryPath [ 
+      glibc 
+      stdenv.cc.cc.lib 
+    ];
 
-
-    libLibraryPath = lib.makeLibraryPath [ stdenv.cc.cc.lib glibc xlibs.libX11 curl ];
+    liblauncherPath = lib.makeLibraryPath [ 
+      curl 
+      glibc 
+      stdenv.cc.cc.lib 
+      xlibs.libX11 
+    ];
 
     libcefPath = lib.makeLibraryPath [
-      gtk2 
-      systemd 
       alsaLib 
+      atk
+      cairo
+      cups
+      dbus 
+      expat 
+      fontconfig
+      gdk_pixbuf 
+      glib 
+      gnome2.pango
+      gnome2.GConf
+      gtk2 
       libpulseaudio
-      glib nss gdk_pixbuf dbus nspr expat cups
-      
+      nspr 
+      nss 
+      systemd 
       xlibs.libX11
       xlibs.libxcb
       xlibs.libXcomposite
@@ -96,12 +92,6 @@ in stdenv.mkDerivation rec {
       xlibs.libXtst
       xlibs.libXScrnSaver
       xlibs.libXrandr
-
-      fontconfig
-      gnome2.pango
-      gnome2.GConf
-      cairo
-      atk
     ];
 
     in ''
@@ -115,21 +105,15 @@ in stdenv.mkDerivation rec {
         $out/opt/minecraft-launcher/libcef.so
 
       patchelf \
-        --set-rpath "${libLibraryPath}:$out/opt/minecraft-launcher" \
+        --set-rpath "${liblauncherPath}:$out/opt/minecraft-launcher" \
         $out/opt/minecraft-launcher/liblauncher.so
-      
     '';
 
-    meta = with stdenv.lib; {
-      homepage = https://minecraft.net/;
-      description = "Minecraft launcher";
-      license = licenses.proprietary;
-      platforms = platforms.linux;
-      maintainers = [ jorelali ];
-    };
-  }
-
-  /*
-
-  */
-
+  meta = with stdenv.lib; {
+    homepage = https://minecraft.net/;
+    description = "Minecraft launcher";
+    license = licenses.proprietary;
+    platforms = platforms.linux;
+    maintainers = [ jorelali ];
+  };
+}
