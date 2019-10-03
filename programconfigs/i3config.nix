@@ -55,9 +55,9 @@ let
   speed_down = false
   bitrate = false
 
-  [[block]]
-  block = "bluetooth"
-  mac = "E8:AB:FA:24:9F:09"
+  #[[block]]
+  #block = "bluetooth"
+  #mac = "E8:AB:FA:24:9F:09"
 
   #[[block]]
   #block = "net"
@@ -176,6 +176,7 @@ bindsym Mod1+F4 kill
 bindsym $mod+d exec rofi -show run
 bindsym $mod+Shift+d exec rofi -show drun
 bindsym $mod+Tab exec rofi -show window
+bindsym $mod+Shift+m exec ws
 # What if I have something like
 # mod + shift + m = "move"
 # which executes a rofi with 
@@ -258,7 +259,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exiting i3 in 2 seconds..' -f 'pango:Fira Code Medium 12' & sleep 2; i3-msg exit"
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exiting i3 in 2 seconds..' -f 'pango:Fira Code Medium 12' & sleep 1; i3-nagbar -t warning -m 'Exiting i3 in 1 second..' -f 'pango:Fira Code Medium 12' & sleep 1; i3-msg exit"
 #"i3-nagbar -t warning -m 'You really want to exit i3?' -b 'Yup!' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
