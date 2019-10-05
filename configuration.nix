@@ -16,20 +16,10 @@ in let
   # These are channels defined using the `sudo nix-channel --list` command.    #
   # They are as follows:                                                       #
   #   nixos https://nixos.org/channels/nixos-19.03                             #
-  #   nixos-old https://nixos.org/channels/nixos-18.09                         #
   #   unstable https://nixos.org/channels/nixos-unstable                       #
   ##############################################################################
 
   unstable   = import <unstable>       { config.allowUnfree = unfreePermitted; };
-  old        = import <nixos-old>      { config.allowUnfree = unfreePermitted; };
-
-  /* I thought it's good to include this code, might be useful later:
-  pkgs_at_8669561 = import (pkgs.fetchFromGitHub {
-    owner = "NixOS";
-    repo = "nixpkgs";
-    rev = "8669561bde00b4039cda2b662f9f726db8385069";
-    sha256 = "157a5h1vcfj892b20c90n7i6rfr5k61242ylgz6i21m8sbcxfry6";
-  }) {};*/
 
   reallyOld = import (pkgs.fetchFromGitHub {
     owner = "NixOS";
@@ -75,7 +65,7 @@ in {
     loader.efi.canTouchEfiVariables = true;   # Allow EFI variable modifications
     loader.grub.useOSProber = true;           # Search for other OSs
 
-    extraTTYs = [ "tty8" "tty9" ];            # More ttys!
+    extraTTYs = [ "tty8" "tty9" "tty10" ];            # More ttys!
     extraModulePackages = [ 
       config.boot.kernelPackages.exfat-nofuse # exFAT format for USBs/HDDs
     ];
@@ -106,7 +96,7 @@ in {
   # I was just testing containers #
   #################################
 
-  containers.test = {
+  /*containers.test = {
     autoStart = false;
     privateNetwork = true;
     hostAddress = "192.168.101.10";
@@ -141,7 +131,7 @@ in {
 
       programs.ssh.setXAuthLocation = true;
     };
-  };
+  };*/
 
 ##### Networking Settings ######################################################
 
@@ -181,9 +171,10 @@ in {
     _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd"; # Java font antialiasing
     QT_XCB_GL_INTEGRATION = "xcb_egl";
 
-    ANDROID_HOME = "$HOME/Android/Sdk";       # Set the home of the android SDK
+    ANDROID_HOME = "$HOME/Android/Sdk"; # Set the home of the android SDK
     
-    BAT_PAGER = "less -RF";                   # Use less -RF as the pager for bat
+    BAT_PAGER = "less -RF";             # Use less -RF as the pager for bat
+    PAGER = "less -RF";                 # Use less -RF as the pager for git
   };
 
 ##### /etc/ Files ##############################################################
@@ -224,10 +215,22 @@ in {
     #   https://github.com/NixOS/nixpkgs/issues/37864                          #
     ############################################################################
 
-    unstable.qutebrowser                         # Lightweight minimal browser (v1.7.0)
+    unstable.qutebrowser                # Lightweight minimal browser (v1.7.0)
+
+    ### FHS user environment ###################################################
+    # A very glorious sandbox that uses the Linux FHS-compatible sandbox. As   #
+    # described by the Nixpkgs manual:                                         #
+    #   This allows one to run software which is hard or unfeasible to patch   #
+    #   for NixOS -- 3rd-party source trees with FHS assumptions, games        #
+    #   distributed as tarballs, software with integrity checking and/or       #
+    #   external self-updated binaries. It uses Linux namespaces feature to    # 
+    #   create temporary lightweight environments which are destroyed after    #
+    #   all child processes exit, without root user rights requirement.        #
+    ############################################################################
 
     (buildFHSUserEnv {
-      name = "enter-fhs";
+      name = "fhs";
+      runScript = "bash";
       targetPkgs = pkgs: with pkgs; [
         alsaLib atk cairo cups dbus expat file fontconfig freetype gdb git glib 
         gnome3.gdk_pixbuf gnome3.gtk libnotify libxml2 libxslt
@@ -236,18 +239,22 @@ in {
         xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
         curlFull openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
-        xdg_utils flite fuse
-      ];
-      runScript = "bash";
-    })
+        xdg_utils flite fuse 
+      ]; })
 
     ### KDE Applications #######################################################
+    # Despite the fact that I don't (really) use a desktop environment, I do   #
+    # like KDE's password management system, kwallet, to manage various        #
+    # passwords, for things such as pushing to git.                            #
+    ############################################################################
 
     kdeApplications.kwalletmanager      # Manager for password manager
     ksshaskpass                         # Password manager
     libsForQt5.kwallet                  # Password manager
 
     ### Command line utilities #################################################
+    # A very exhaustive list of command-line commands                          #
+    ############################################################################
 
     bat                                 # cat command, but better
     cht-sh                              # Everything cheat sheet
@@ -305,6 +312,7 @@ in {
     mpv                                 # Video player
     redshift                            # Screen temperature changer
     simplescreenrecorder                # ... A simple screen recorder (duh)
+    x2goclient                          # An x2go client (Similar to VNC)
     zathura                             # PDF viewer
 
     ### Backup Applications (You never know when you might need them...) #######
@@ -313,7 +321,7 @@ in {
     android-studio                      # Android development environment
     deluge                              # Torrent client
     gnumeric                            # Spreadsheets
-    libreoffice
+    libreoffice                         # More word processing
     pavucontrol                         # Pulse Audio controller
     sqlitebrowser                       # SQLite .db file browser
 
@@ -379,6 +387,13 @@ in {
 
     elmPackages.elm                     # Elm programming language
     webkitgtk                           # Library to display native web views
+    
+    ### Programming (F#) #######################################################
+
+    mono                                # Run F# programs
+    fsharp                              # F# compiler and interpreter
+    dotnetPackages.FSharpData           # ??
+    dotnetPackages.FSharpCore           # ??
 
     ### GUI/Window Manager #####################################################
 
@@ -390,7 +405,6 @@ in {
     dunst                               # Notification manager
     libnotify                           # Notification library
     imlib2                              # Image manipulation library (for feh)
-    mpg123
     networkmanagerapplet                # GUI for networking
     ntfs3g                              # Access a USB drive
     system-config-printer               # Add/manage printers
@@ -414,14 +428,10 @@ in {
     hunspellDicts.en-gb-ise             # English (GB with '-ise' spellings)
     hunspellDicts.en-us                 # English (US)
 
-    ### TeX
+    ### LaTeX ##################################################################
 
-    texlive.combined.scheme-full
-    texstudio
-
-    fsharp
-    dotnetPackages.FSharpData
-    dotnetPackages.FSharpCore
+    texlive.combined.scheme-full        # TeX + TeX packages
+    texstudio                           # Solely as a backup. I use vim.
 
     ### Custom Bash Scripts ####################################################
 
@@ -433,12 +443,12 @@ in {
     '')
     (writeShellScriptBin "autofish" "${xdotool}/bin/xdotool mousedown 3")
     (writeShellScriptBin "arc" "${ark}/bin/ark")
-    (writeShellScriptBin "caln" "notify-send \" $(date +\"%A %e %B\")\" \"$(cal)\"")
+    (writeShellScriptBin "caln" "${libnotify}/bin/notify-send \"$(cal)\"")
+
     (writeShellScriptBin "ding" "${mpv}/bin/mpv /home/jorel/.config/dunst/notifsound.mp3")
+    (writeShellScriptBin "ding2" "${mpv}/bin/mpv ${builtins.fetchurl "https://notificationsounds.com/notification-sounds/quite-impressed-565/download/mp3"}")
 
     (writeShellScriptBin "lock" "${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --ring-width=6")
-
-    #(writeShellScriptBin "ws" "${i3-gaps}/bin/i3-msg move container to workspace $1")
 
     (writeShellScriptBin "ws" ''
       function gen_workspaces() {
@@ -451,11 +461,8 @@ in {
       fi
     '')
 
-    ###
-
   ] ++ ( if unfreePermitted then [
     
-    #minecraft                           # Minecraft video game
     steam                               # Game distribution platform
     unrar                               # Command to unzip .rar files
 
@@ -728,6 +735,8 @@ in {
     openssh = {
       enable = true;                    # Enable ssh
       forwardX11 = true;                # Enable forwarding X session over ssh
+      allowSFTP = true;
+
     };
 
     ### X ######################################################################
@@ -772,7 +781,7 @@ in {
         enable = true;                  # Enable i3 tiling manager
         package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
         extraPackages = with pkgs; [
-          i3lock-color
+          i3lock-color                  # A decent lock screen command
         ];
         configFile = import ./programconfigs/i3config.nix;
       };
