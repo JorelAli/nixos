@@ -461,6 +461,13 @@ in {
       fi
     '')
 
+    (writeShellScriptBin "jshell" ''
+      if nixos-container status jshell | grep "down" > /dev/null; then
+        sudo nixos-container start jshell
+      fi
+      sudo nixos-container login jshell
+    '')
+
   ] ++ ( if unfreePermitted then [
     
     steam                               # Game distribution platform

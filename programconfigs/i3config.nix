@@ -153,7 +153,7 @@ bindsym $mod+space exec $terminal
 bindsym $mod+q exec qutebrowser
 bindsym $mod+Shift+q exec chromium
 bindsym $mod+Shift+n exec chromium --incognito
-#bindsym $mod+j exec $terminal -e nixos-container login jshell 
+#bindsym $mod+j exec $terminal -e jshell 
 #~/init.java
 #bindsym $mod+k exec $terminal 
 bindsym $mod+n exec $terminal -e nix repl '<nixpkgs>'
