@@ -1,27 +1,27 @@
 let color = id: (import ./configutil.nix).getColor id true; in
 ''
 # zathurarc-dark
-set notification-error-bg       "#586e75" # base01  # seem not work
+set notification-error-bg       "${color "bgl"}" # base01  # seem not work
 set notification-error-fg       "${color 1}" # red
-set notification-warning-bg     "#586e75" # base01
+set notification-warning-bg     "${color "bgl"}" # base01
 set notification-warning-fg     "${color 1}" # red
-set notification-bg             "#586e75" # base01
+set notification-bg             "${color "bgl"}" # base01
 set notification-fg             "${color 3}" # yellow
 
 set completion-group-bg         "${color "bg"}" # base03
 set completion-group-fg         "#839496" # base0
 set completion-bg               "${color "bg"}" # base02
 set completion-fg               "${color "fg"}" # base1
-set completion-highlight-bg     "#586e75" # base01
+set completion-highlight-bg     "${color "bgl"}" # base01
 set completion-highlight-fg     "#eee8d5" # base2
 
 # Define the color in index mode
 set index-bg                   "${color "bg"}" # base02
 set index-fg                   "${color "fg"}" # base1
-set index-active-bg             "#586e75" # base01
+set index-active-bg             "${color "bgl"}" # base01
 set index-active-fg             "#eee8d5" # base2
 
-set inputbar-bg                 "#586e75" # base01
+set inputbar-bg                 "${color "bgl"}" # base01
 set inputbar-fg                 "#eee8d5" # base2
 
 set statusbar-bg                "${color "bg"}" # base02
