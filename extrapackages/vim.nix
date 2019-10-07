@@ -115,6 +115,7 @@ in {
                 let g:syntastic_auto_loc_list = 1
                 let g:syntastic_check_on_open = 1
                 let g:syntastic_check_on_wq = 0
+                let g:syntastic_tex_checkers = ['lacheck']
 
                 inoremap <C-@> <c-x><c-o>
 
@@ -149,8 +150,8 @@ in {
                 " LaTeX documents
                 let g:livepreview_previewer = 'zathura'
                 let g:syntastic_loc_list_height = 2
-                autocmd VimEnter *.md SoftPencil
-                autocmd VimEnter *.md set spell spelllang=en_gb
+                autocmd VimEnter *.tex SoftPencil
+                autocmd VimEnter *.tex set spell spelllang=en_gb
               '';
 
               ### Vim packages #################################################
