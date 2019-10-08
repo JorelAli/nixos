@@ -175,6 +175,8 @@ in {
     
     BAT_PAGER = "less -RF";             # Use less -RF as the pager for bat
     PAGER = "less -RF";                 # Use less -RF as the pager for git
+
+    DCS = (import ./secrets.nix).DCS;
   };
 
 ##### /etc/ Files ##############################################################
@@ -239,7 +241,7 @@ in {
         xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
         curlFull openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
-        xdg_utils flite fuse 
+        xdg_utils flite fuse
       ]; })
 
     ### KDE Applications #######################################################
