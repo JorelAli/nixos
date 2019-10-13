@@ -80,6 +80,7 @@ let
   [[block]]
   block = "sound"
   step_width = 1
+  driver = "alsa"
 
   [[block]]
   block = "bluetooth"
@@ -139,9 +140,14 @@ gaps inner 20                           # Default gap size is 20
 default_border none                     # No borders!
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+#bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+#bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+#bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+bindsym XF86AudioRaiseVolume exec amixer set Master 5%+
+bindsym XF86AudioLowerVolume exec amixer set Master 5%-
+bindsym XF86AudioMute exec amixer set Master toggle
+
 bindsym XF86MonBrightnessUp exec brightnessctl s +20% # xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec brightnessctl s 20%- # xbacklight -dec 20 # decrease screen brightness
 

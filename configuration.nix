@@ -177,6 +177,8 @@ in {
     PAGER = "less -RF";                 # Use less -RF as the pager for git
 
     DCS = (import ./secrets.nix).DCS;
+
+    TERMINAL = "kitty";
   };
 
 ##### /etc/ Files ##############################################################
@@ -404,6 +406,7 @@ in {
 
     ### System tools ###########################################################
 
+    alsaUtils
     brightnessctl                       # Brightness change for NixOS 19.03
     dunst                               # Notification manager
     libnotify                           # Notification library
@@ -659,7 +662,7 @@ in {
   
   services = {
 
-    httpd = {
+    /*httpd = {
       enable = true;
       #documentRoot = /var/www/html/home;
       adminAddr = "localhost";
@@ -690,7 +693,7 @@ in {
         '';
         urlPath = "/index.html";
       } ];
-    };
+    };*/
 
     dunst.enable = true;
     xcompmgr.enable = true;
@@ -728,7 +731,7 @@ in {
     };
     
     gnome3.gnome-disks.enable = true;   # Something something USBs
-    nixosManual.showManual = true;      # Enable the NixOS manual in tty 8
+    nixosManual.showManual = false;     # Disable the NixOS manual in tty 8
     printing.enable = true;             # Printing (You know, to a printer...)
     rogue.enable = true;                # Enable the rogue game in tty 9 
     udisks2.enable = true;              # Something something USBs
