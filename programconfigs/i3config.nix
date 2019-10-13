@@ -25,9 +25,9 @@ let
   [icons]
   name = "awesome"
 
-  [[block]]
-  block = "focused_window"
-  max_width = 21
+  #[[block]]
+  #block = "focused_window"
+  #max_width = 21
 
   [[block]]
   block = "cpu"
@@ -57,8 +57,8 @@ let
   bitrate = false
 
   [[block]]
-  block = "bluetooth"
-  mac = "E8:AB:FA:24:9F:09"
+  block = "custom"
+  command = "curl icanhazip.com"
 
   #[[block]]
   #block = "net"
@@ -80,6 +80,10 @@ let
   [[block]]
   block = "sound"
   step_width = 1
+
+  [[block]]
+  block = "bluetooth"
+  mac = "E8:AB:FA:24:9F:09"
 
   [[block]]
   block = "battery"
