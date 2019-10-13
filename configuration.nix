@@ -272,6 +272,7 @@ in {
     gnumake                             # 'make' command to build executables
     gotop                               # Shows processes, CPU usage etc.
     htop                                # A better 'top' command
+    iw
     lynx                                # Terminal web browser
     mdbook                              # A markdown to web "book" generator
     moc                                 # Music player in a terminal

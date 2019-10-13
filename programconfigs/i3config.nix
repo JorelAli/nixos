@@ -19,8 +19,8 @@ let
   warning_fg = "${color "bg"}"
   critical_bg = "${color 1}"
   critical_fg = "${color "bg"}"
-  #alternating_tint_bg = "#22222225"
-  #alternating_tint_fg = "#000000"
+  alternating_tint_bg = "#22222225"
+  alternating_tint_fg = "#000000"
 
   [icons]
   name = "awesome"
@@ -42,6 +42,7 @@ let
   [[block]]
   block = "net"
   device = "wlp3s0"
+  signal_strength = true
   ip = false
   speed_up = false 
   speed_down = false
@@ -55,9 +56,9 @@ let
   speed_down = false
   bitrate = false
 
-  #[[block]]
-  #block = "bluetooth"
-  #mac = "E8:AB:FA:24:9F:09"
+  [[block]]
+  block = "bluetooth"
+  mac = "E8:AB:FA:24:9F:09"
 
   #[[block]]
   #block = "net"
@@ -67,8 +68,14 @@ let
   #speed_down = false
   #bitrate = false
 
+  #[[block]]
+  #block = "splitstatus"
+
   [[block]]
-  block = "splitstatus"
+  block = "custom"
+  #command = "i3-msg -t get_tree | grep -o \"scratchpad_state\":\"fresh\" | wc --lines"
+  command = "i3-msg -t get_tree | grep -o fresh | wc -l"
+  interval = 1
 
   [[block]]
   block = "sound"
@@ -76,15 +83,17 @@ let
 
   [[block]]
   block = "battery"
-  upower = true
+  driver = "upower"
+  #upower = true
   device = "BAT1"
+  show = "both"
 
   [[block]]
   block = "backlight"
 
-  [[block]]
-  block = "nightlight"
-  color_temperature = 4500
+  #[[block]]
+  #block = "nightlight"
+  #color_temperature = 4500
 
   [[block]]
   block = "custom"
@@ -318,7 +327,8 @@ bindsym $mod+r mode "resize"
 bindsym $mod+w mode "workspace"
 
 bar {
-    status_command ~/github/i3status-rust/target/release/i3status-rs ${toFile "i3statusrust.toml" i3statusRustConfig}
+    #status_command ~/github/i3status-rust/target/release/i3status-rs ${toFile "i3statusrust.toml" i3statusRustConfig}
+    status_command ~/github/greshake-i3status-rust/target/release/i3status-rs ${toFile "i3statusrust.toml" i3statusRustConfig}
     font pango: Fira Code Medium, FontAwesome 12
     position bottom
     colors {
