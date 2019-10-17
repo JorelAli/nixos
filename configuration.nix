@@ -83,6 +83,7 @@ in {
   containers.jshell = {
     autoStart = false;
     config = { config, pkgs, ...}: {
+      time.timeZone = "Europe/London";
       environment.systemPackages = with pkgs; [ openjdk11 ];
       services.mingetty.autologinUser = "root";
       environment.shellInit = ''
@@ -357,6 +358,7 @@ in {
     ant                                 # Java building tool
     eclipses.eclipse-java               # Eclipse Java IDE
     maven                               # Java dependency manager
+    gradle
     openjdk                             # Java Development Kit for Java 
 
     ### Programming (Other) ####################################################
@@ -397,8 +399,8 @@ in {
 
     mono                                # Run F# programs
     fsharp                              # F# compiler and interpreter
-    dotnetPackages.FSharpData           # ??
-    dotnetPackages.FSharpCore           # ??
+    #dotnetPackages.FSharpData           # ??
+    #dotnetPackages.FSharpCore           # ??
 
     ### GUI/Window Manager #####################################################
 
@@ -534,6 +536,7 @@ in {
     adb.enable = true;                  # Enables the Android Debug Bridge
     bash.enableCompletion = true;       # Enable completion in bash shell
     dconf.enable = true;                # Gnome configuration tool
+    gnome-disks.enable = true;
 
     ### My Fish setup ###################################
     # Color scheme:                                     #
@@ -706,6 +709,8 @@ in {
       opacityRules = [ 
         "100: class_g = 'kitty' && !focused"
         "100: class_g = 'kitty' && focused"
+        "100: class_g = 'eclipse'"
+        "100: class_g = 'Eclipse'"
         "85: class_g = 'dolphin'"       # Always blur for dolphin
       ];
       vSync = "opengl-swc";             # Remove screen tearing
@@ -730,7 +735,7 @@ in {
       '';
     };
     
-    gnome3.gnome-disks.enable = true;   # Something something USBs
+    #gnome3.gnome-disks.enable = true;   # Something something USBs
     nixosManual.showManual = false;     # Disable the NixOS manual in tty 8
     printing.enable = true;             # Printing (You know, to a printer...)
     rogue.enable = true;                # Enable the rogue game in tty 9 

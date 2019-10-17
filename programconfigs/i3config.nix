@@ -179,7 +179,8 @@ bindsym $mod+n exec $terminal -e nix repl '<nixpkgs>'
 bindsym $mod+e exec dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss 
 bindsym $mod+m exec google-play-music-desktop-player
 
-bindsym Print exec escrotum '%Y-%m-%d-%H%M%S-screenshot.png' -e 'notify-send "Screenshot" "Saved at $f"'
+bindsym Print exec escrotum '~/Pictures/screenshots/%Y-%m-%d-%H%M%S-screenshot.png' -e 'notify-send "Screenshot" "Saved at $f"'
+bindsym Shift+Print exec escrotum -sC
 
 # 'pin' windows that are floating
 bindsym $mod+Shift+p sticky toggle

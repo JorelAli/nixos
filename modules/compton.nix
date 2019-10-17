@@ -51,7 +51,8 @@ in
   };
 
   config = mkIf cfg.blur-background {
-    services.compton.extraOptions =  ''
+  # TODO: FIX THIS
+    /*services.compton.extraOptions =  ''
       blur-background = true;
       blur-background-fixed = true;
       glx-no-stencil = true;
@@ -64,6 +65,6 @@ in
       blur-background-exclude = [
         ${blur-exclusions}
       ];
-    '';
+    '';*/
   };
 }

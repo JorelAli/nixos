@@ -116,6 +116,7 @@ in {
                 let g:syntastic_check_on_open = 1
                 let g:syntastic_check_on_wq = 0
                 let g:syntastic_tex_checkers = ['lacheck']
+                let g:syntastic_java_javac_config_file_enabled = 1
 
                 inoremap <C-@> <c-x><c-o>
 
