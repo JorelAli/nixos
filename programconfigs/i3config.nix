@@ -101,11 +101,6 @@ let
   #color_temperature = 4500
 
   [[block]]
-  block = "custom"
-  on_click = "escrotum -sC"
-  command = "echo "
-
-  [[block]]
   block = "music"
   buttons = ["prev", "play", "next"]
   player = "google-play-music-desktop-player"

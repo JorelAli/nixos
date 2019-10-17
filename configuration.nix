@@ -55,7 +55,6 @@ in {
     ./modules/dunst.nix
 #    ./modules/emojione.nix
     ./modules/xcompmgr.nix
-    ./modules/compton.nix
   ];
 
 ##### Boot Settings ############################################################
@@ -706,23 +705,36 @@ in {
     #######################################################
     compton = {
       enable = true;                    # Application transparency
+      vSync = true;                     # Remove screen tearing
+      backend = "glx";
+      inactiveOpacity = "0.85";         # Make programs blur on unfocus
       opacityRules = [ 
         "100: class_g = 'kitty' && !focused"
         "100: class_g = 'kitty' && focused"
-        "100: class_g = 'eclipse'"
         "100: class_g = 'Eclipse'"
         "85: class_g = 'dolphin'"       # Always blur for dolphin
       ];
-      vSync = "opengl-swc";             # Remove screen tearing
-      backend = "glx";
-      inactiveOpacity = "0.85";         # Make programs blur on unfocus
-      blur-background = true;
-      blur-strength = 3;
-      paint-on-overlay = true;
-      blur-excludes = [
-        "name = 'Screenshot'"
-        "class_g = 'Escrotum'"
-      ];
+      settings = {
+        blur-background = true;
+        blur-background-fixed = true;
+        glx-no-stencil = true;
+        paint-on-overlay = true;
+        unredir-if-possible = false;
+        blur-kern = let
+          calcBlurStrength = input:
+            foldl' 
+              (x: y: x + y) 
+              (toString(input) + "," + toString(input)) 
+              (genList (x: ",1.000000") (input * input - 1));
+        in "${calcBlurStrength 3}";
+        focus-exclude = [ 
+          "class_g = 'Eclipse'"
+        ];
+        blur-background-exclude = [
+          "name = 'Screenshot'"
+          "class_g = 'Escrotum'"
+        ];
+      };
     };
 
     logind = {
