@@ -305,6 +305,7 @@ in {
     arandr                              # Multiple display manager
     ark                                 # Archive manager
     blueman                             # Bluetooth manager
+    brave
     chromium                            # Open-source version of chrome
     dolphin                             # File browser
     filelight                           # View disk usage

@@ -35,3 +35,5 @@ My NixOS configuration
   - [x] Steam
   - [ ] ~~Derivation for new Minecraft launcher~~
   - [ ] Enable qutebrowser pdf viewer
+  - [ ] [Ungoogled Chromium](https://github.com/Eloston/ungoogled-chromium/blob/master/docs/building.md)
+  - [ ] [FreeTube](https://freetubeapp.io/#download)
