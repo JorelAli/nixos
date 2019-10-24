@@ -119,7 +119,7 @@ in let
   let color = id: (import ./configutil.nix).getColor id true; in
   ''
 set $mod Mod4
-set $terminal kitty -c=${toFile "kitty.conf" (import ./kittyconf.nix)}
+set $terminal kitty
 
 font pango:Fira Code Medium 12
 

@@ -313,7 +313,7 @@ in {
     google-play-music-desktop-player    # Google Play Music for desktop
     gparted                             # Partition manager
     inkscape                            # Vector artwork
-    unstable.kitty                      # Terminal
+    kitty                               # Terminal
     libsForQt5.vlc                      # Video player (VLC)
     mpv                                 # Video player
     redshift                            # Screen temperature changer
