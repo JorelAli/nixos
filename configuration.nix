@@ -563,6 +563,7 @@ in {
       hash = "nix-hash --type sha256 --flat --base32";
       history = "history | bat";
       icat = "kitty +kitten icat";
+      kitty = "kittyw";
       ls = "exa";
       mocp = "mocp --theme solarized";
       neofetchnix = "neofetch --ascii_colors 68 110 --kitty ${nixSnowflake}";

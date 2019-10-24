@@ -9,5 +9,6 @@ pkgs.stdenv.mkDerivation {
   buildCommand = with builtins; ''
     mkdir -p $out/bin
     makeWrapper "${pkgs.kitty}/bin/kitty" $out/bin/kitty --add-flags "-c=${toFile "kitty.conf" kitty-config}"
+    makeWrapper "${pkgs.kitty}/bin/kitty" $out/bin/kittyw --add-flags "-c=${toFile "kitty.conf" kitty-config}"
   '';
 }
