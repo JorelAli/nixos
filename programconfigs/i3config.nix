@@ -131,7 +131,7 @@ exec_always nmcli connection up NordVPN
 # Use i3Gaps!
 for_window [class="^.*"] border pixel 0
 for_window [title="^feh.*$"] floating enable
-gaps inner 20                           # Default gap size is 20 
+exec gaps inner all set 20                           # Default gap size is 20 
 default_border none                     # No borders!
 
 # Pulse Audio controls
@@ -274,7 +274,7 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exiting i3 in 2 seconds..' -f 'pango:Fira Code Medium 12' & sleep 1; i3-nagbar -t warning -m 'Exiting i3 in 1 second..' -f 'pango:Fira Code Medium 12' & sleep 1; i3-msg exit"
+bindsym $mod+Shift+e exec "swaynag -t warning -m 'Exiting i3 in 2 seconds..' -f 'pango:Fira Code Medium 12' & sleep 1; i3-nagbar -t warning -m 'Exiting i3 in 1 second..' -f 'pango:Fira Code Medium 12' & sleep 1; i3-msg exit"
 #"i3-nagbar -t warning -m 'You really want to exit i3?' -b 'Yup!' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
@@ -347,7 +347,12 @@ bar {
         urgent_workspace #2f343a ${color 1} ${color 15}
     }
 }
+
+# Sway based config
+input * xkb_layout "gb"
+output "*" bg /home/jorel/.background-image fill
+
   '';
 
 in
- toFile "i3config" config
+ config #toFile "i3config" config

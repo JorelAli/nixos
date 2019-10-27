@@ -179,6 +179,11 @@ in {
     DCS = (import ./secrets.nix).DCS;
 
     TERMINAL = "kitty";
+
+    # SWAY
+    QT_QPA_PLATFORM = "wayland"; 
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    SDL_VIDEODRIVER = "wayland";
   };
 
 ##### /etc/ Files ##############################################################
@@ -201,6 +206,10 @@ in {
     '';
   };
 
+  environment.etc."sway/config" = {
+    text = import ./programconfigs/i3config.nix;
+  };
+
 ##### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [
@@ -220,6 +229,10 @@ in {
     ############################################################################
 
     unstable.qutebrowser                # Lightweight minimal browser (v1.7.0)
+
+    ## [ SWAY ] ##
+    qt5.qtwayland
+    xorg.xeyes
 
     ### FHS user environment ###################################################
     # A very glorious sandbox that uses the Linux FHS-compatible sandbox. As   #
@@ -586,6 +599,8 @@ in {
     ssh.setXAuthLocation = true;        # Authenticated X ssh connections
     ssh.forwardX11 = true;              # Allow X server forwarding over ssh
 
+    sway.enable = true;
+
   };
 
 ##### Fonts ####################################################################
@@ -776,7 +791,7 @@ in {
     ### X ######################################################################
 
     xserver = {
-      enable = true;                    # GUI for the entire computer
+      enable = false;                    # GUI for the entire computer
       exportConfiguration = true;       # symlink the config to /etc/X11/xorg.conf
       gdk-pixbuf.modulePackages = [ 
         pkgs.librsvg 
@@ -797,7 +812,7 @@ in {
 
       displayManager = {
         sessionCommands = ''xmodmap .Xmodmap'';
-        sddm.enable = true;             # Login screen manager
+        sddm.enable = false;             # Login screen manager
         sddm.theme = "clairvoyance";    # Clairvoyance theme for sddm
         sddm.extraConfig = ''
           [General]
@@ -817,7 +832,7 @@ in {
         extraPackages = with pkgs; [
           i3lock-color                  # A decent lock screen command
         ];
-        configFile = import ./programconfigs/i3config.nix;
+        #configFile = import ./programconfigs/i3config.nix;
       };
     };
   };
@@ -839,6 +854,7 @@ in {
       "storage"                         # Access storage devices 
       "video"                           # 2D/3D hardware acceleration & camera
       "wheel"                           # Access sudo command
+      "sway"
     ];
     uid = 1000;
     shell = pkgs.fish;                  # Use fish as the default shell
