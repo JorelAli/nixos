@@ -147,6 +147,7 @@ in {
                 " Elm programs
                 au BufRead,BufNewFile *.elm set noexpandtab
                 au BufRead,BufNewFile *.elm set tabstop=2
+                let g:elm_syntastic_show_warnings = 0
 
                 " LaTeX documents
                 let g:livepreview_previewer = 'zathura'
@@ -163,7 +164,7 @@ in {
                   ctrlp                  # Easy file opener using Ctrl+P
                   deoplete-nvim          # Dark powered autocompletion
                   deoplete-rust          # Autocompletion for rust
-                  elm-vim                # Elm support for vim
+                  #elm-vim                # Elm support for vim
                   gitgutter              # Shows git changes in sidebar
                   goyo                   # Makes vim look more like a doc editor
                   rainbow_parentheses    # Pairs parentheses with colors

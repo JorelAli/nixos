@@ -82,4 +82,10 @@ self: super: {
 
   breeze-adapta = super.callPackage ./../extrapackages/breezeAdaptaCursor.nix {};
 
+  ### Freetube ################
+  # An alternative to YouTube #
+  #############################
+  
+  freetube = import ./../extrapackages/freetube.nix ;
+
 }

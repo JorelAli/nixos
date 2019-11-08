@@ -243,7 +243,7 @@ in {
         xorg.libXext xorg.libXfixes xorg.libXi xorg.libXrandr xorg.libXrender
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
         curlFull openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
-        xdg_utils flite fuse
+        xdg_utils flite fuse ncurses5 clang_8 llvm_8 libgit2
       ]; })
 
     ### KDE Applications #######################################################
@@ -305,10 +305,10 @@ in {
     arandr                              # Multiple display manager
     ark                                 # Archive manager
     blueman                             # Bluetooth manager
-    brave
-    chromium                            # Open-source version of chrome
+    brave                               # Chromium based browser
     dolphin                             # File browser
     filelight                           # View disk usage
+    freetube 
     gimp                                # Image editor
     google-play-music-desktop-player    # Google Play Music for desktop
     gparted                             # Partition manager
@@ -360,6 +360,7 @@ in {
     maven                               # Java dependency manager
     gradle
     openjdk                             # Java Development Kit for Java 
+    #unstable.openjdk12
 
     ### Programming (Other) ####################################################
 
@@ -392,16 +393,11 @@ in {
 
     ### Programming (Elm) ######################################################
 
-    elmPackages.elm                     # Elm programming language
+    unstable.elmPackages.elm            # Elm programming language
+    unstable.elmPackages.elm-live       # An alternative to the Elm reactor
+    vscode                              # Powerful text editor
     webkitgtk                           # Library to display native web views
     
-    ### Programming (F#) #######################################################
-
-    mono                                # Run F# programs
-    fsharp                              # F# compiler and interpreter
-    #dotnetPackages.FSharpData           # ??
-    #dotnetPackages.FSharpCore           # ??
-
     ### GUI/Window Manager #####################################################
 
     # i3status-rust        coming soon: https://github.com/JorelAli/i3status-rust
@@ -444,6 +440,7 @@ in {
     ### Custom Bash Scripts ####################################################
 
     (writeShellScriptBin "nixdoc" "${ripgrep}/bin/rg $1 /etc/nixos/NixDoc.md")
+    (writeShellScriptBin "default" "${perl530Packages.FileMimeInfo}/bin/mimeopen -d $1")
     (writeShellScriptBin "setuptty" ''
       echo -en "\e]PB657b83" # S_base00
       echo -en "\e]PA586e75" # S_base01
@@ -456,7 +453,11 @@ in {
     (writeShellScriptBin "ding" "${mpv}/bin/mpv /home/jorel/.config/dunst/notifsound.mp3")
     (writeShellScriptBin "ding2" "${mpv}/bin/mpv ${builtins.fetchurl "https://notificationsounds.com/notification-sounds/quite-impressed-565/download/mp3"}")
 
-    (writeShellScriptBin "lock" "${feh}/bin/feh ~/.background-image --full-screen & ${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --ring-width=6 -n; pkill feh")
+    (writeShellScriptBin "lock" "${feh}/bin/feh ~/.background-image --full-screen & ${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --ring-width=6 -n; pkill feh; postlock")
+
+    (writeShellScriptBin "postlock" ''
+      nmcli connection up NordVPN
+    '')
 
     (writeShellScriptBin "fork" "kittyw --detach fish -c \"cd $(pwd) && fish\"")
 
@@ -637,6 +638,11 @@ in {
 
   sound.enable = true;                  # Enable sound
   sound.mediaKeys.enable = true;        # Enable sound keys (play/pause)
+
+  powerManagement.resumeCommands = ''
+    xmodmap /home/jorel/.Xmodmap
+    nmcli connection up NordVPN
+  '';
 
   hardware = {
     pulseaudio = {
