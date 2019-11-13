@@ -88,4 +88,11 @@ self: super: {
   
   freetube = import ./../extrapackages/freetube.nix ;
 
+  mycode = super.vscode-with-extensions.override {
+        # When the extension is already available in the default extensions set.
+        vscodeExtensions = with super.vscode-extensions; [
+            ms-vscode.cpptools
+        ];
+    };
+
 }

@@ -106,7 +106,7 @@ cursor_stop_blinking_after 15.0
 
 #: Scrollback {{{
 
-scrollback_lines -1 
+scrollback_lines 10000
 
 #: Number of lines of history to keep in memory for scrolling back.
 #: Memory is allocated on demand. Negative numbers are (effectively)

@@ -308,6 +308,7 @@ in {
     brave                               # Chromium based browser
     dolphin                             # File browser
     filelight                           # View disk usage
+    
     freetube 
     gimp                                # Image editor
     google-play-music-desktop-player    # Google Play Music for desktop
@@ -395,7 +396,9 @@ in {
 
     unstable.elmPackages.elm            # Elm programming language
     unstable.elmPackages.elm-live       # An alternative to the Elm reactor
-    vscode                              # Powerful text editor
+    #vscode                              # Powerful text editor
+    llvm_8
+    mycode
     webkitgtk                           # Library to display native web views
     
     ### GUI/Window Manager #####################################################
@@ -478,6 +481,8 @@ in {
       fi
       sudo nixos-container login jshell
     '')
+
+    #(writeShellScriptBin "@abort" ''git add .; git commit -m "@abort commit"; git push; sudo shutdown now'')
 
   ] ++ ( if unfreePermitted then [
     
@@ -575,6 +580,7 @@ in {
       rebuild = "sudo nixos-rebuild switch";
       rebuilt = "sudo nixos-rebuild switch";
       vimf = "vim (fzf)";
+      "@abort" = ''git add .; git commit -m "@abort commit"; git push; sudo shutdown now'';
     };
 
     less.enable = true;                 # Enables config for the `less` command
@@ -865,14 +871,14 @@ in {
     autoOptimiseStore = true;
 
     #####################################################################
-    # This setting, when enabled to true, allows writing access to the  #
+    # This setting, when set to false, allows writing access to the     #
     # /nix/store/ directories. This isn't a good thing on NixOS, since  #
     # new derivations can override these folders (or be deleted with    #
     # nix's garbage collector) whenever the system does so. This should #
     # only be toggled for development testing purposes ONLY.            #
     #####################################################################
     
-    readOnlyStore = false;            # Allows writing access to /nix/store
+    readOnlyStore = true;            # Allows writing access to /nix/store
   };
 
 ##### NixPkgs Configuration ####################################################
