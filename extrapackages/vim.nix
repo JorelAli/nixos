@@ -163,6 +163,7 @@ in {
                 start = [ 
                   ctrlp                  # Easy file opener using Ctrl+P
                   deoplete-nvim          # Dark powered autocompletion
+                  deoplete-jedi
                   deoplete-rust          # Autocompletion for rust
                   #elm-vim                # Elm support for vim
                   gitgutter              # Shows git changes in sidebar

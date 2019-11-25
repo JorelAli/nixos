@@ -294,7 +294,7 @@ c.colors.statusbar.url.warn.fg = customtheme['yellow']
 
 ## Background color of the tab bar.
 ## Type: QtColor
-# c.colors.tabs.bar.bg = '#555555'
+# c.colors.tabs.bar.bg = customtheme['base03']
 
 ## Background color of unselected even tabs.
 ## Type: QtColor

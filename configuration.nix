@@ -170,6 +170,7 @@ in {
 
     _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd"; # Java font antialiasing
     QT_XCB_GL_INTEGRATION = "xcb_egl";
+    QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase.bin}/lib/qt-${pkgs.qt5.qtbase.qtCompatVersion}/plugins/platforms";
 
     ANDROID_HOME = "$HOME/Android/Sdk"; # Set the home of the android SDK
     
@@ -221,6 +222,24 @@ in {
 
     unstable.qutebrowser                # Lightweight minimal browser (v1.7.0)
 
+    wayfire
+    wf-config
+    xwayland
+    wf-recorder
+    wl-clipboard
+    waypipe
+    wofi
+    grim
+    cage
+    oguri
+    kanshi
+    dmenu
+    wlay
+    wldash
+    wlroots
+    waybar
+
+
     ### FHS user environment ###################################################
     # A very glorious sandbox that uses the Linux FHS-compatible sandbox. As   #
     # described by the Nixpkgs manual:                                         #
@@ -244,6 +263,7 @@ in {
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
         curlFull openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
         xdg_utils flite fuse ncurses5 clang_8 llvm_8 libgit2
+        x2goclient
       ]; })
 
     ### KDE Applications #######################################################
@@ -649,6 +669,10 @@ in {
     xmodmap /home/jorel/.Xmodmap
     nmcli connection up NordVPN
   '';
+  powerManagement.powerUpCommands = ''
+    xmodmap /home/jorel/.Xmodmap
+    nmcli connection up NordVPN
+  '';
 
   hardware = {
     pulseaudio = {
@@ -670,6 +694,8 @@ in {
         intel-media-driver              # Intel Drivers
       ];
     };
+
+    steam-hardware.enable = true;
   };
 
 ##### Security Settings ########################################################
@@ -886,6 +912,7 @@ in {
   nixpkgs.overlays = [
     (import ./overlays/programs.nix)
     (import ./overlays/wrappers)
+    (import (builtins.fetchTarball "https://github.com/colemickens/nixpkgs-wayland/archive/master.tar.gz"))
   ];
 
   nixpkgs.config = {
