@@ -97,22 +97,29 @@ self: super: {
         vscodeExtensions = with super.vscode-extensions; [
             ms-vscode.cpptools
 
-            (
-            
-  super.vscode-utils.buildVscodeMarketplaceExtension {
-    mktplcRef = {
-      name = "elm";
-      publisher = "sbrink";
-      version = "0.25.0";
-      sha256 = "1djsif15s13k762f1yyffiprlsm18p4b8fmc8cxs5w5z8xfb2wp8";
-    };
-    meta = {
-      license = stdenv.lib.licenses.mit;
-    };
-  }
-            )
+            (super.vscode-utils.buildVscodeMarketplaceExtension {
+                mktplcRef = {
+                  name = "elm";
+                  publisher = "sbrink";
+                  version = "0.25.0";
+                  sha256 = "1djsif15s13k762f1yyffiprlsm18p4b8fmc8cxs5w5z8xfb2wp8";
+                };
+                meta = {
+                  license = stdenv.lib.licenses.mit;
+                };
+              })
 
-
+            (super.vscode-utils.buildVscodeMarketplaceExtension {
+               mktplcRef = {
+                 name = "pico8vscodeeditor";
+                 publisher = "Grumpydev";
+                 version = "0.2.3";
+                 sha256 = "0xaaxddljcv2jf47nriwkrmdb4v26qi9lh5yvd0947sg0b0sqm32";
+               };
+               meta = {
+                 license = stdenv.lib.licenses.mit;
+               };
+             })
         ];
     };
 

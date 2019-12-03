@@ -92,6 +92,8 @@ in {
                 au BufReadPost *.als set syntax=java
                 au BufReadPost *.vue set syntax=html
 
+                au BufReadPost *.p8 set syntax=lua
+
                 " Show tabs as lines
                 set listchars=tab:\¦\ 
                 set list
@@ -134,6 +136,8 @@ in {
                 " Markdown
                 let g:markdown_enable_mappings = 0
                 let g:vim_markdown_folding_disabled = 1
+                " let g:vim_markdown_conceal = 0
+                let g:vim_markdown_conceal_code_blocks = 0
                 autocmd VimEnter *.md SoftPencil
                 autocmd VimEnter *.md set spell spelllang=en_gb
 
@@ -154,6 +158,7 @@ in {
                 let g:syntastic_loc_list_height = 2
                 autocmd VimEnter *.tex SoftPencil
                 autocmd VimEnter *.tex set spell spelllang=en_gb
+                let g:vimtex_compiler_progname = 'nvr'
               '';
 
               ### Vim packages #################################################
@@ -185,6 +190,8 @@ in {
                   vim-pencil            # Word wrapping for markdown documents
                   vim-toml              # Toml language syntax
                   vim-latex-live-preview # LaTeX compiling for vim
+
+                  vimtex
 
                   vim-illuminate         # Highlights similar words
                 ];    

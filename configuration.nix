@@ -55,6 +55,7 @@ in {
     ./modules/dunst.nix
 #    ./modules/emojione.nix
     ./modules/xcompmgr.nix
+    ./modules/wayfire.nix
   ];
 
 ##### Boot Settings ############################################################
@@ -222,23 +223,7 @@ in {
 
     unstable.qutebrowser                # Lightweight minimal browser (v1.7.0)
 
-    wayfire
-    wf-config
-    xwayland
-    wf-recorder
-    wl-clipboard
-    waypipe
-    wofi
-    grim
-    cage
-    oguri
-    kanshi
-    dmenu
-    wlay
-    wldash
-    wlroots
-    waybar
-
+    
 
     ### FHS user environment ###################################################
     # A very glorious sandbox that uses the Linux FHS-compatible sandbox. As   #
@@ -299,6 +284,7 @@ in {
     mdbook                              # A markdown to web "book" generator
     moc                                 # Music player in a terminal
     neofetch                            # screenfetch, but better
+    neovim-remote
     p7zip                               # 7z zip manager
     pdfgrep                             # Grep, but for PDF files
     playerctl                           # Control media player (e.g. play/pause)
@@ -912,7 +898,6 @@ in {
   nixpkgs.overlays = [
     (import ./overlays/programs.nix)
     (import ./overlays/wrappers)
-    (import (builtins.fetchTarball "https://github.com/colemickens/nixpkgs-wayland/archive/master.tar.gz"))
   ];
 
   nixpkgs.config = {

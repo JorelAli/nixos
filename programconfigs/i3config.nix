@@ -175,6 +175,7 @@ bindsym $mod+m exec google-play-music-desktop-player
 
 bindsym Print exec escrotum '~/Pictures/screenshots/%Y-%m-%d-%H%M%S-screenshot.png' -e 'notify-send "Screenshot" "Saved at $f"'
 bindsym Shift+Print exec escrotum -sC
+bindsym $mod+Shift+s exec escrotum -sC
 
 # 'pin' windows that are floating
 bindsym $mod+Shift+p sticky toggle
