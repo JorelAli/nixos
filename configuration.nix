@@ -41,7 +41,7 @@ in let
 
 ##### NixOS configuration starts here ##########################################
 
-in {
+in with lib; {
 
 ##### NixOS important settings #################################################
 
@@ -80,7 +80,7 @@ in {
   # to use Java 8 on my main machine         #
   ############################################
 
-  containers.jshell = {
+  /*containers.jshell = {
     autoStart = false;
     config = { config, pkgs, ...}: {
       time.timeZone = "Europe/London";
@@ -91,7 +91,7 @@ in {
         jshell /root/init.java
       '';
     };
-  };
+  };*/
 
   ### Test container ##############
   # I was just testing containers #
@@ -143,7 +143,11 @@ in {
 
     firewall = {
       enable = true;                    # Enable firewall
-      allowedTCPPorts = [ 25565 ];      # Minecraft
+      allowedTCPPorts = [ 
+        25565                           # Minecraft
+        22070                           # Syncthing relay
+        22067                           # Syncthing relay
+      ];
       allowedUDPPorts = [ 25565 ];      # Minecraft
     };
   };
@@ -203,6 +207,34 @@ in {
     '';
   };
 
+  environment.etc."qutebrowserhomepage.html" = {
+    text = ''
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            h1 {
+              left: 0;
+              line-height: 200px;
+              margin-top: -100px;
+              position: absolute;
+              text-align: center;
+              top: 50%;
+              width: 100%;
+              font-family: Fira Code Medium;
+              color: #${color "fg"};
+            }
+          </style>
+        </head>
+        <body style="background: #${color "bg"};">
+          <h1>->> You're in a browser <<-</h1>
+        </body>
+      </html>
+    '';
+  };
+
+#  environment.etc."jdk11".source = pkgs.openjdk11;
+
 ##### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [
@@ -223,7 +255,7 @@ in {
 
     unstable.qutebrowser                # Lightweight minimal browser (v1.7.0)
 
-    
+    syncthing
 
     ### FHS user environment ###################################################
     # A very glorious sandbox that uses the Linux FHS-compatible sandbox. As   #
@@ -356,7 +388,8 @@ in {
 
     _2048-in-terminal                   # 2048 game in terminal
     mahjong                             # Mahjong game
-    minecraft-launcher                  # Minecraft (actually updated)
+#    minecraft-launcher                  # Minecraft (actually updated)
+    minecraft-launcher2
     pacvim                              # Pacman, but with vim controls
     vitetris                            # Terminal based tetris game
 
@@ -431,6 +464,7 @@ in {
     ### Nix related stuff ######################################################
 
     cachix                              # Compiled binary hosting for Nix
+    direnv
     nix-index                           # Locate packages
     nox                                 # Better nix searching
     patchelf                            # Patches binaries for Nix support
@@ -481,12 +515,14 @@ in {
       fi
     '')
 
-    (writeShellScriptBin "jshell" ''
+    (writeShellScriptBin "jshell" "${pkgs.openjdk11}/bin/jshell")
+
+    /*(writeShellScriptBin "jshell" ''
       if nixos-container status jshell | grep "down" > /dev/null; then
         sudo nixos-container start jshell
       fi
       sudo nixos-container login jshell
-    '')
+    '')*/
 
     #(writeShellScriptBin "@abort" ''git add .; git commit -m "@abort commit"; git push; sudo shutdown now'')
 
@@ -563,6 +599,7 @@ in {
     #####################################################
 
     fish.enable = true;                 # Fish shell (Better bash)
+    fish.shellInit = "direnv hook fish | source";
 
     fish.shellAliases = {               
       arc = "ark";
@@ -726,6 +763,13 @@ in {
     };*/
 
     dunst.enable = true;
+    syncthing = {
+      enable = true;
+      openDefaultPorts = true;
+      relay.enable = true;
+      user = "jorel";
+    };
+    lorri.enable = true;
     xcompmgr.enable = true;
 
     ### Compton ###########################################
@@ -910,6 +954,11 @@ in {
     # script. This is then used in the Typora package in the system packages
     # above.
     packageOverrides = pkgs: with pkgs; {
+
+      jshEnv = buildEnv {
+        name = "jsh";
+        paths = [ pkgs.openjdk11 ];
+      };
 
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
 

@@ -75,6 +75,7 @@ self: super: {
   ###########################################
 
   minecraft-launcher = super.callPackage ./../extrapackages/minecraft-launcher.nix {};
+  minecraft-launcher2 = super.callPackage ./../extrapackages/minecraft-launcher2.nix {};
 
   ### Breeze Adapta #############################
   # Some cursor inspired by Breeze or something #

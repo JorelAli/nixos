@@ -94,6 +94,7 @@ let
 
   [[block]]
   block = "backlight"
+  step_width = 1
 
   #[[block]]
   #block = "nightlight"
@@ -104,6 +105,11 @@ let
   buttons = ["prev", "play", "next"]
   player = "google-play-music-desktop-player"
   #on_collapsed_click = "google-play-music-desktop-player"
+
+  [[block]]
+  block = "pomodoro"
+  length = 30
+  break_length = 10
 
   [[block]]
   block = "time"
@@ -173,9 +179,13 @@ bindsym $mod+n exec $terminal -e nix repl '<nixpkgs>'
 bindsym $mod+e exec dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss 
 bindsym $mod+m exec google-play-music-desktop-player
 
+bindsym $mod+Shift+t exec notify-send "$(date -u +%I:%M:%S)"
+
 bindsym Print exec escrotum '~/Pictures/screenshots/%Y-%m-%d-%H%M%S-screenshot.png' -e 'notify-send "Screenshot" "Saved at $f"'
 bindsym Shift+Print exec escrotum -sC
 bindsym $mod+Shift+s exec escrotum -sC
+
+bindsym $mod+Shift+o exec compton-trans 100
 
 # 'pin' windows that are floating
 bindsym $mod+Shift+p sticky toggle
