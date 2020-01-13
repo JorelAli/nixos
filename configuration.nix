@@ -7,7 +7,7 @@ with builtins; let
 
 ##### Important settings #######################################################
 
-  haskellSetup = false;                 # Haskell, GHC, Stack, Atom ...
+  haskellSetup = true;                 # Haskell, GHC, Stack, Atom ...
   unfreePermitted = true;               # Allow installing unfree packages
 
 in let
@@ -546,7 +546,7 @@ in with lib; {
     haskellPackages.container           # Represents Haskell containers (e.g. Monoid)
     haskellPackages.zlib                # Compression library for Haskell
 
-    all-hies.versions.ghc843            # Haskell IDE Engine for GHC v8.4.3
+    #all-hies.versions.ghc843            # Haskell IDE Engine for GHC v8.4.3
 
       ### How to get the best Haskell setup ##########################
       # Install the following system packages:                       #
@@ -770,7 +770,7 @@ in with lib; {
       user = "jorel";
     };
     lorri.enable = true;
-    xcompmgr.enable = true;
+    xcompmgr.enable = false;
 
     ### Compton ###########################################
     # Compositing effects for windows (Blur backgrounds!) #
@@ -784,7 +784,10 @@ in with lib; {
         "100: class_g = 'kitty' && !focused"
         "100: class_g = 'kitty' && focused"
         "100: class_g = 'Eclipse'"
-        "85: class_g = 'dolphin'"       # Always blur for dolphin
+        #"85: class_g = 'rofi'"
+        #"85: class_g = 'Rofi'"
+        #"85: glass_g = 'i3lock'"
+        #"85: class_g = 'dolphin'"       # Always blur for dolphin
       ];
       settings = {
         blur-background = true;

@@ -103,13 +103,16 @@ let
   [[block]]
   block = "music"
   buttons = ["prev", "play", "next"]
-  player = "google-play-music-desktop-player"
-  #on_collapsed_click = "google-play-music-desktop-player"
+  # player = "google-play-music-desktop-player"
+  # on_collapsed_click = "google-play-music-desktop-player"
 
   [[block]]
   block = "pomodoro"
-  length = 30
-  break_length = 10
+  length = 35
+  break_length = 15
+  use_nag = true
+  message = "Break time!"
+  break_message = "Back to work then!"
 
   [[block]]
   block = "time"
@@ -138,6 +141,18 @@ for_window [class="^.*"] border pixel 0
 for_window [title="^feh.*$"] floating enable
 gaps inner 20                           # Default gap size is 20 
 default_border none                     # No borders!
+
+#default_border pixel 1
+
+# Apparently this can do colors as well!
+# class                 border  backgr. text    indicator child_border
+#client.focused          #ff0000 #00ff00 #ffffff ${color "fg"}   ${color "ac"}
+#client.focused_inactive #ff0000 #00ff00 #ffffff ${color "fg"}   ${color "ac"}
+#client.unfocused        #ff0000 #00ff00 #888888 ${color "fg"}   ${color "bg"}
+#client.urgent           #ff0000 #00ff00 #ffffff ${color "fg"}   ${color "ac"}
+
+#client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+#client.background       #ffffff
 
 # Pulse Audio controls
 #bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
