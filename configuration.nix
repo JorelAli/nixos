@@ -344,7 +344,8 @@ in with lib; {
     ark                                 # Archive manager
     blueman                             # Bluetooth manager
     brave                               # Chromium based browser
-    dolphin                             # File browser
+    #dolphin                             # File browser
+    gnome3.nautilus                     # File browser
     filelight                           # View disk usage
     
     freetube 
@@ -607,7 +608,7 @@ in with lib; {
       config = "sudo vim /etc/nixos/configuration.nix";
       cp = "rsync -ahv --progress";
       dirsize = "du -sh";
-      dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
+      #dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
       evalnix = "nix-instantiate --eval";
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
       gparted = "sudo fish -c gparted";
@@ -762,7 +763,8 @@ in with lib; {
       } ];
     };*/
 
-    dunst.enable = true;
+    dunst.enable = true;                # Notification service
+    devmon.enable = true;               # Auto mount USBs
     syncthing = {
       enable = true;
       openDefaultPorts = true;
@@ -795,13 +797,16 @@ in with lib; {
         glx-no-stencil = true;
         paint-on-overlay = true;
         unredir-if-possible = false;
-        blur-kern = let
-          calcBlurStrength = input:
-            foldl' 
-              (x: y: x + y) 
-              (toString(input) + "," + toString(input)) 
-              (genList (x: ",1.000000") (input * input - 1));
-        in "${calcBlurStrength 3}";
+        blur-kern = "3x3box";
+        blur-method = "kawase";
+        blur-strength = 10;
+        #let
+        #  calcBlurStrength = input:
+        #    foldl' 
+        #      (x: y: x + y) 
+        #      (toString(input) + "," + toString(input)) 
+        #      (genList (x: ",1.000000") (input * input - 1));
+        #in "${calcBlurStrength 3}";
         focus-exclude = [ 
           "class_g = 'Eclipse'"
         ];
@@ -822,11 +827,9 @@ in with lib; {
       '';
     };
     
-    #gnome3.gnome-disks.enable = true;   # Something something USBs
     nixosManual.showManual = false;     # Disable the NixOS manual in tty 8
     printing.enable = true;             # Printing (You know, to a printer...)
     rogue.enable = true;                # Enable the rogue game in tty 9 
-    udisks2.enable = true;              # Something something USBs
     upower.enable = true;               # Battery info
 
     #teamviewer.enable = unfreePermitted;
@@ -890,6 +893,8 @@ in with lib; {
         ];
         configFile = import ./programconfigs/i3config.nix;
       };
+      
+#      desktopManager.mate.enable = true;
     };
   };
 

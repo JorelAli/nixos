@@ -191,7 +191,9 @@ bindsym $mod+Shift+n exec brave --incognito
 #~/init.java
 #bindsym $mod+k exec $terminal 
 bindsym $mod+n exec $terminal -e nix repl '<nixpkgs>'
-bindsym $mod+e exec dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss 
+bindsym $mod+e exec nautilus
+# dolphin 
+#-stylesheet ~/.config/qt5ct/qss/DolphinFix.qss 
 bindsym $mod+m exec google-play-music-desktop-player
 
 bindsym $mod+Shift+t exec notify-send "$(date -u +%I:%M:%S)"
