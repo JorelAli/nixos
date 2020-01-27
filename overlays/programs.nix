@@ -89,7 +89,11 @@ self: super: {
   
   freetube = import ./../extrapackages/freetube.nix ;
 
-
+#  polybar = super.polybar.override {
+#    i3Support = true;
+#    pulseSupport = true;
+#    i3GapsSupport = true;
+#  };
 
 
 

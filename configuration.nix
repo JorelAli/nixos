@@ -28,6 +28,13 @@ in let
     sha256 = "13gldascq0wjifcpd8sh0rq0gx074x1n2ybx5mwq6hinjplgfi50";
   }) {};
 
+  polybarPin = import (pkgs.fetchFromGitHub {
+    owner = "NixOS";
+    repo = "nixpkgs";
+    rev = "9543e3553719894e71591c5905889fc4ffaa5932";
+    sha256 = "0x86w7lxhfdchnqfan6fqpj6j09mjz2sq1plmbwchnqfjg37akfa";
+  }) {};
+
   #  https://github.com/NixOS/nixpkgs/archive/083d0890f50c7bff87419b88465af6589faffa2e.tar.gz
 
 ##### Nix expressions ##########################################################
@@ -185,6 +192,8 @@ in with lib; {
     DCS = (import ./secrets.nix).DCS;
 
     TERMINAL = "kitty";
+
+    NIX_AUTO_RUN = "1";
   };
 
 ##### /etc/ Files ##############################################################
@@ -374,6 +383,7 @@ in with lib; {
     ### System-wide theming ####################################################
 
     papirus-icon-theme                  # Papirus theme icons
+    gnome3.adwaita-icon-theme
     breeze-qt5                          # Breeze theme for qt5 (cursors!)
     numix-solarized-gtk-theme           # Numix solarized theme for GTK & Qt
     
@@ -447,6 +457,8 @@ in with lib; {
 
     ### System tools ###########################################################
 
+#    polybarPin.polybar
+    polybar
     alsaUtils
     brightnessctl                       # Brightness change for NixOS 19.03
     dunst                               # Notification manager
@@ -969,6 +981,12 @@ in with lib; {
       };
 
       vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+
+      polybar = polybar.override {
+        i3GapsSupport = true;
+        #i3Support = true;
+        #pulseSupport = true;
+      };
 
 
       ### HIEs #################
