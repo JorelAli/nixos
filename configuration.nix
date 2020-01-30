@@ -319,7 +319,6 @@ in with lib; {
 
     ### System-wide theming ####################################################
 
-    breeze-adapta                       # Breeze-inspired cursors
     breeze-qt5                          # Breeze theme for qt5 (cursors!)
     clairvoyance                        # SDDM greeter theme
     gnome3.adwaita-icon-theme           # Adwaita icon theme

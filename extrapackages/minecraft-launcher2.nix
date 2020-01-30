@@ -13,11 +13,11 @@ let
   };
 in stdenv.mkDerivation rec {
   name = "minecraft-launcher-${version}";
-  version = "2.1.9618";
+  version = "2.1.11314";
   
   src = fetchurl {
-    url = "https://launcher.mojang.com/download/linux/x86_64/minecraft-launcher_2.1.9618.tar.gz";
-    sha256 = "1wk7414i9n6yvhhc0g3cpqjs4ryklmdp2pxgvfdg9zibjdx0avvy";
+    url = "https://launcher.mojang.com/download/linux/x86_64/minecraft-launcher_2.1.11314.tar.gz";
+    sha256 = "1wd3zh91zamlpgnqlk7sq3xja2g5qz34amy4v8yhdxkhj79plwhg";
   };
 
   phases = [ "unpackPhase" "buildPhase" "installPhase" "fixupPhase" ];
