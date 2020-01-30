@@ -80,67 +80,6 @@ in with lib; {
 
 ##### Containers ###############################################################
 
-  ### JShell #################################
-  # The JShell program is basically a Java   #
-  # based REPL. Unfortunately, it's only     #
-  # available in Java 9 and above and I want #
-  # to use Java 8 on my main machine         #
-  ############################################
-
-  /*containers.jshell = {
-    autoStart = false;
-    config = { config, pkgs, ...}: {
-      time.timeZone = "Europe/London";
-      environment.systemPackages = with pkgs; [ openjdk11 ];
-      services.mingetty.autologinUser = "root";
-      environment.shellInit = ''
-        clear
-        jshell /root/init.java
-      '';
-    };
-  };*/
-
-  ### Test container ##############
-  # I was just testing containers #
-  #################################
-
-  /*containers.test = {
-    autoStart = false;
-    privateNetwork = true;
-    hostAddress = "192.168.101.10";
-    localAddress = "192.168.101.11"; #ssh -X testusr@192.168.101.11
-    
-    config = { config, pkgs, ... }: { 
-      environment.systemPackages = with pkgs; [
-        hello
-        gparted
-        ark 
-      ];
-      
-      users.users.testusr = {
-        isNormalUser = true;
-        home = "/home/testusr";
-        description = "test";
-        # mkpasswd -m sha-512 <NEW_PASSWORD>
-        initialHashedPassword = "$6$0z67w00YMNumxeCY$GfFK.qW/cyV1aHfnRWWSwxByoX.VbikO7EvFjhWG8vj9LfU99wgcLT5wov8iwKfCsSTGXgmV8NDD3D6iBYATG.";
-        extraGroups = [ "wheel" ];
-        uid = 2000;
-      };
-      
-      services.xserver = {
-        enable = true;
-        windowManager.i3.enable = true;
-      };
-
-      services.openssh = {
-        enable = true;
-        forwardX11 = true;
-      };
-
-      programs.ssh.setXAuthLocation = true;
-    };
-  };*/
-
 ##### Networking Settings ######################################################
 
   networking = {
@@ -242,8 +181,6 @@ in with lib; {
     '';
   };
 
-#  environment.etc."jdk11".source = pkgs.openjdk11;
-
 ##### System Packages ##########################################################
 
   environment.systemPackages = with pkgs; [
@@ -263,8 +200,6 @@ in with lib; {
     ############################################################################
 
     unstable.qutebrowser                # Lightweight minimal browser (v1.7.0)
-
-    syncthing
 
     ### FHS user environment ###################################################
     # A very glorious sandbox that uses the Linux FHS-compatible sandbox. As   #
@@ -320,12 +255,12 @@ in with lib; {
     gnumake                             # 'make' command to build executables
     gotop                               # Shows processes, CPU usage etc.
     htop                                # A better 'top' command
-    iw
+    iw                                  # Wireless device info
     lynx                                # Terminal web browser
     mdbook                              # A markdown to web "book" generator
     moc                                 # Music player in a terminal
     neofetch                            # screenfetch, but better
-    neovim-remote
+    neovim-remote                       # Remotely control neovim
     p7zip                               # 7z zip manager
     pdfgrep                             # Grep, but for PDF files
     playerctl                           # Control media player (e.g. play/pause)
@@ -353,45 +288,44 @@ in with lib; {
     ark                                 # Archive manager
     blueman                             # Bluetooth manager
     brave                               # Chromium based browser
-    #dolphin                             # File browser
-    gnome3.nautilus                     # File browser
+    code                                # VSCode with extensions
     filelight                           # View disk usage
-    
-    freetube 
     gimp                                # Image editor
+    gnome3.nautilus                     # File browser
     google-play-music-desktop-player    # Google Play Music for desktop
-    gparted                             # Partition manager
     inkscape                            # Vector artwork
     kitty                               # Terminal
     libsForQt5.vlc                      # Video player (VLC)
     mpv                                 # Video player
-    redshift                            # Screen temperature changer
     simplescreenrecorder                # ... A simple screen recorder (duh)
+    syncthing                           # File syncing program across devices
     x2goclient                          # An x2go client (Similar to VNC)
     zathura                             # PDF viewer
+
 
     ### Backup Applications (You never know when you might need them...) #######
 
     abiword                             # Word processing
     android-studio                      # Android development environment
+    ant                                 # Java building tool
     deluge                              # Torrent client
+    freetube                            # Alternative to YouTube
     gnumeric                            # Spreadsheets
+    gparted                             # Partition manager
     libreoffice                         # More word processing
     pavucontrol                         # Pulse Audio controller
+    redshift                            # Screen temperature changer
     sqlitebrowser                       # SQLite .db file browser
 
     ### System-wide theming ####################################################
 
-    papirus-icon-theme                  # Papirus theme icons
-    gnome3.adwaita-icon-theme
-    breeze-qt5                          # Breeze theme for qt5 (cursors!)
-    numix-solarized-gtk-theme           # Numix solarized theme for GTK & Qt
-    
     breeze-adapta                       # Breeze-inspired cursors
-
-    lxappearance-062                    # Program that manages themeing 
+    breeze-qt5                          # Breeze theme for qt5 (cursors!)
     clairvoyance                        # SDDM greeter theme
-
+    gnome3.adwaita-icon-theme           # Adwaita icon theme
+    lxappearance-062                    # Program that manages themeing 
+    numix-solarized-gtk-theme           # Numix solarized theme for GTK & Qt
+    papirus-icon-theme                  # Papirus theme icons
     wmctrl                              # Budspencer requirement for fish shell
     xsel                                # Budspencer requirement for fish shell
 
@@ -399,19 +333,16 @@ in with lib; {
 
     _2048-in-terminal                   # 2048 game in terminal
     mahjong                             # Mahjong game
-#    minecraft-launcher                  # Minecraft (actually updated)
-    minecraft-launcher2
+    minecraft-launcher                  # Minecraft (actually updated)
     pacvim                              # Pacman, but with vim controls
     vitetris                            # Terminal based tetris game
 
     ### Programming (Java) #####################################################
     
-    ant                                 # Java building tool
     eclipses.eclipse-java               # Eclipse Java IDE
     maven                               # Java dependency manager
-    gradle
+    gradle                              # Java dependency manager
     openjdk                             # Java Development Kit for Java 
-    #unstable.openjdk12
 
     ### Programming (Other) ####################################################
 
@@ -419,6 +350,7 @@ in with lib; {
     gcc                                 # C/C++ compiler
     gdb                                 # C code debugger
     idris                               # Idris programming language
+    llvm_8                              # LLVM 
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
@@ -446,15 +378,8 @@ in with lib; {
 
     unstable.elmPackages.elm            # Elm programming language
     unstable.elmPackages.elm-live       # An alternative to the Elm reactor
-    #vscode                              # Powerful text editor
-    llvm_8
-    mycode
     webkitgtk                           # Library to display native web views
     
-    ### GUI/Window Manager #####################################################
-
-    # i3status-rust        coming soon: https://github.com/JorelAli/i3status-rust
-
     ### System tools ###########################################################
 
 #    polybarPin.polybar
@@ -477,7 +402,7 @@ in with lib; {
     ### Nix related stuff ######################################################
 
     cachix                              # Compiled binary hosting for Nix
-    direnv
+    direnv                              # Manage directory environments
     nix-index                           # Locate packages
     nox                                 # Better nix searching
     patchelf                            # Patches binaries for Nix support
@@ -503,7 +428,6 @@ in with lib; {
       echo -en "\e]P0073642" # S_base02
     '')
     (writeShellScriptBin "autofish" "${xdotool}/bin/xdotool mousedown 3")
-    (writeShellScriptBin "arc" "${ark}/bin/ark")
     (writeShellScriptBin "caln" "${libnotify}/bin/notify-send \"$(cal)\"")
 
     (writeShellScriptBin "ding" "${mpv}/bin/mpv /home/jorel/.config/dunst/notifsound.mp3")
@@ -530,21 +454,12 @@ in with lib; {
 
     (writeShellScriptBin "jshell" "${pkgs.openjdk11}/bin/jshell")
 
-    /*(writeShellScriptBin "jshell" ''
-      if nixos-container status jshell | grep "down" > /dev/null; then
-        sudo nixos-container start jshell
-      fi
-      sudo nixos-container login jshell
-    '')*/
-
-    #(writeShellScriptBin "@abort" ''git add .; git commit -m "@abort commit"; git push; sudo shutdown now'')
-
-  ] ++ ( if unfreePermitted then [
+  ] ++ optionals unfreePermitted [
     
     steam                               # Game distribution platform
     unrar                               # Command to unzip .rar files
 
-  ] else [] ) ++ ( if haskellSetup then [
+  ] ++ optionals haskellSetup [
 
     ### Programming (Haskell) ##################################################
 
@@ -590,7 +505,7 @@ in with lib; {
       #     packages: [zlib.dev, zlib.out]                           #
       ################################################################
 
-  ] else [] );
+  ];
 
 
 ##### Programs #################################################################
@@ -620,7 +535,6 @@ in with lib; {
       config = "sudo vim /etc/nixos/configuration.nix";
       cp = "rsync -ahv --progress";
       dirsize = "du -sh";
-      #dolphin = "dolphin -stylesheet ~/.config/qt5ct/qss/DolphinFix.qss";
       evalnix = "nix-instantiate --eval";
       fonts = "fc-list : family | cut -f1 -d\",\" | sort";
       gparted = "sudo fish -c gparted";
@@ -655,8 +569,6 @@ in with lib; {
 
   fonts = {
     fonts = with pkgs; [
-      #twemoji-color-font
-      #emojione                          # Emoji font
       font-awesome_4                    # Fancy icons font
       ipafont                           # Japanese font
       siji                              # Iconic bitmap font
@@ -673,7 +585,6 @@ in with lib; {
       powerline-fonts                   # Fonts for powerlines (Used in my tty)
     ];
 
-#    fontconfig.ultimate.enable = true;
     fontconfig.defaultFonts.monospace = [
       "Fira Code Medium"                # Set default font as Fira Code Medium
       "Symbola"                         # Use Symbola as fallback font
@@ -742,39 +653,6 @@ in with lib; {
   
   services = {
 
-    /*httpd = {
-      enable = true;
-      #documentRoot = /var/www/html/home;
-      adminAddr = "localhost";
-      listen = [ { port = 1000; } ];
-      servedFiles = [ {
-        file = builtins.toFile "index" ''
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <style>
-                h1 {
-                  left: 0;
-                  line-height: 200px;
-                  margin-top: -100px;
-                  position: absolute;
-                  text-align: center;
-                  top: 50%;
-                  width: 100%;
-                  font-family: Fira Code Medium;
-                  color: #${color "fg"};
-                }
-              </style>
-            </head>
-            <body style="background: #${color "bg"};">
-              <h1>->> You're in a browser <<-</h1>
-            </body>
-        </html>
-        '';
-        urlPath = "/index.html";
-      } ];
-    };*/
-
     dunst.enable = true;                # Notification service
     devmon.enable = true;               # Auto mount USBs
     syncthing = {
@@ -798,10 +676,6 @@ in with lib; {
         "100: class_g = 'kitty' && !focused"
         "100: class_g = 'kitty' && focused"
         "100: class_g = 'Eclipse'"
-        #"85: class_g = 'rofi'"
-        #"85: class_g = 'Rofi'"
-        #"85: glass_g = 'i3lock'"
-        #"85: class_g = 'dolphin'"       # Always blur for dolphin
       ];
       settings = {
         blur-background = true;
@@ -812,13 +686,6 @@ in with lib; {
         blur-kern = "3x3box";
         blur-method = "kawase";
         blur-strength = 10;
-        #let
-        #  calcBlurStrength = input:
-        #    foldl' 
-        #      (x: y: x + y) 
-        #      (toString(input) + "," + toString(input)) 
-        #      (genList (x: ",1.000000") (input * input - 1));
-        #in "${calcBlurStrength 3}";
         focus-exclude = [ 
           "class_g = 'Eclipse'"
         ];
@@ -844,8 +711,6 @@ in with lib; {
     rogue.enable = true;                # Enable the rogue game in tty 9 
     upower.enable = true;               # Battery info
 
-    #teamviewer.enable = unfreePermitted;
-
     # Adds support for scrolling to change the brightness for i3status-rs
     udev.extraRules = ''  
       ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
@@ -856,7 +721,6 @@ in with lib; {
       enable = true;                    # Enable ssh
       forwardX11 = true;                # Enable forwarding X session over ssh
       allowSFTP = true;
-
     };
 
     ### X ######################################################################
@@ -900,13 +764,10 @@ in with lib; {
       windowManager.i3 = {
         enable = true;                  # Enable i3 tiling manager
         package = pkgs.i3-gaps;         # Use i3-gaps (lets you have gaps (duh))
-        extraPackages = with pkgs; [
-          i3lock-color                  # A decent lock screen command
-        ];
+        extraPackages = with pkgs; [ i3lock-color ];
         configFile = import ./programconfigs/i3config.nix;
       };
       
-#      desktopManager.mate.enable = true;
     };
   };
 
@@ -984,10 +845,7 @@ in with lib; {
 
       polybar = polybar.override {
         i3GapsSupport = true;
-        #i3Support = true;
-        #pulseSupport = true;
       };
-
 
       ### HIEs #################
       # The Haskell IDE Engine #

@@ -68,20 +68,12 @@ self: super: {
       };
   });
 
-
   ### Minecraft Launcher ####################
   # The new Minecraft Launcher (executable) #
   # as opposed to the Java-based launcher   #
   ###########################################
 
-  minecraft-launcher = super.callPackage ./../extrapackages/minecraft-launcher.nix {};
-  minecraft-launcher2 = super.callPackage ./../extrapackages/minecraft-launcher2.nix {};
-
-  ### Breeze Adapta #############################
-  # Some cursor inspired by Breeze or something #
-  ###############################################
-
-  breeze-adapta = super.callPackage ./../extrapackages/breezeAdaptaCursor.nix {};
+  minecraft-launcher = super.callPackage ./../extrapackages/minecraft-launcher2.nix {};
 
   ### Freetube ################
   # An alternative to YouTube #
@@ -89,43 +81,41 @@ self: super: {
   
   freetube = import ./../extrapackages/freetube.nix ;
 
-#  polybar = super.polybar.override {
-#    i3Support = true;
-#    pulseSupport = true;
-#    i3GapsSupport = true;
-#  };
+  ### VSCode ###############
+  # VSCode with extensions #
+  ##########################
 
+  code = super.vscode-with-extensions.override {
+    # When the extension is already available in the default extensions set.
+    vscodeExtensions = with super.vscode-extensions; [
+        ms-vscode.cpptools
 
+        # Elm support
+        (super.vscode-utils.buildVscodeMarketplaceExtension {
+            mktplcRef = {
+              name = "elm";
+              publisher = "sbrink";
+              version = "0.25.0";
+              sha256 = "1djsif15s13k762f1yyffiprlsm18p4b8fmc8cxs5w5z8xfb2wp8";
+            };
+            meta = {
+              license = stdenv.lib.licenses.mit;
+            };
+          })
 
-  mycode = super.vscode-with-extensions.override {
-        # When the extension is already available in the default extensions set.
-        vscodeExtensions = with super.vscode-extensions; [
-            ms-vscode.cpptools
-
-            (super.vscode-utils.buildVscodeMarketplaceExtension {
-                mktplcRef = {
-                  name = "elm";
-                  publisher = "sbrink";
-                  version = "0.25.0";
-                  sha256 = "1djsif15s13k762f1yyffiprlsm18p4b8fmc8cxs5w5z8xfb2wp8";
-                };
-                meta = {
-                  license = stdenv.lib.licenses.mit;
-                };
-              })
-
-            (super.vscode-utils.buildVscodeMarketplaceExtension {
-               mktplcRef = {
-                 name = "pico8vscodeeditor";
-                 publisher = "Grumpydev";
-                 version = "0.2.3";
-                 sha256 = "0xaaxddljcv2jf47nriwkrmdb4v26qi9lh5yvd0947sg0b0sqm32";
-               };
-               meta = {
-                 license = stdenv.lib.licenses.mit;
-               };
-             })
-        ];
-    };
+        # Pico-8 support
+        (super.vscode-utils.buildVscodeMarketplaceExtension {
+           mktplcRef = {
+             name = "pico8vscodeeditor";
+             publisher = "Grumpydev";
+             version = "0.2.3";
+             sha256 = "0xaaxddljcv2jf47nriwkrmdb4v26qi9lh5yvd0947sg0b0sqm32";
+           };
+           meta = {
+             license = stdenv.lib.licenses.mit;
+           };
+         })
+    ];
+  };
 
 }

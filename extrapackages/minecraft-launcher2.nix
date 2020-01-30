@@ -13,7 +13,7 @@ let
   };
 in stdenv.mkDerivation rec {
   name = "minecraft-launcher-${version}";
-  version = "2.1.5410";
+  version = "2.1.9618";
   
   src = fetchurl {
     url = "https://launcher.mojang.com/download/linux/x86_64/minecraft-launcher_2.1.9618.tar.gz";
