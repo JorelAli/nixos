@@ -192,6 +192,7 @@ in {
                   vim-latex-live-preview # LaTeX compiling for vim
 
                   vimtex
+                  swift-vim
 
                   vim-illuminate         # Highlights similar words
                 ];    

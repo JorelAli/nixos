@@ -5,9 +5,9 @@ let color = id: (import ./../../programconfigs/configutil.nix).getColor id true;
 
     monitor = 0
     follow = mouse
-    geometry = "0x5-20+20"
+    geometry = "300x5-20+20"
     indicate_hidden = yes
-    shrink = no
+    shrink = yes
     transparency = 20
     notification_height = 0
     separator_height = 2

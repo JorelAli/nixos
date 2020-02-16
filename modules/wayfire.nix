@@ -37,8 +37,8 @@ in
       waybar
     ];
 
-    nixpkgs.overlays = [
-      (import (builtins.fetchTarball "https://github.com/colemickens/nixpkgs-wayland/archive/master.tar.gz"))
-    ];
+#    nixpkgs.overlays = [
+#      (import (builtins.fetchTarball "https://github.com/colemickens/nixpkgs-wayland/archive/master.tar.gz"))
+#    ];
   };
 }

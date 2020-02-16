@@ -35,6 +35,13 @@ in let
     sha256 = "0x86w7lxhfdchnqfan6fqpj6j09mjz2sq1plmbwchnqfjg37akfa";
   }) {};
 
+  gMusicPin = import (pkgs.fetchFromGitHub {
+    owner = "NixOS";
+    repo = "nixpkgs";
+    rev = "c1b3b6f8b22fe11b894c236bcfe6522c6a46dc5d";
+    sha256 = "04i4iy26pa585bwy43487k27arigyrsdh6vv0khz5n58ixswgkfa";
+  }) {};
+
   #  https://github.com/NixOS/nixpkgs/archive/083d0890f50c7bff87419b88465af6589faffa2e.tar.gz
 
 ##### Nix expressions ##########################################################
@@ -62,7 +69,7 @@ in with lib; {
     ./modules/dunst.nix
 #    ./modules/emojione.nix
     ./modules/xcompmgr.nix
-    ./modules/wayfire.nix
+#    ./modules/wayfire.nix
   ];
 
 ##### Boot Settings ############################################################
@@ -132,7 +139,7 @@ in with lib; {
 
     TERMINAL = "kitty";
 
-    NIX_AUTO_RUN = "1";
+    #NIX_AUTO_RUN = "1";
   };
 
 ##### /etc/ Files ##############################################################
@@ -292,7 +299,7 @@ in with lib; {
     filelight                           # View disk usage
     gimp                                # Image editor
     gnome3.nautilus                     # File browser
-    google-play-music-desktop-player    # Google Play Music for desktop
+    gMusicPin.google-play-music-desktop-player    # Google Play Music for desktop
     inkscape                            # Vector artwork
     kitty                               # Terminal
     libsForQt5.vlc                      # Video player (VLC)
@@ -416,6 +423,23 @@ in with lib; {
 
     texlive.combined.scheme-full        # TeX + TeX packages
     texstudio                           # Solely as a backup. I use vim.
+
+      wayfire
+      wf-config
+      xwayland
+      #wf-recorder
+      #wl-clipboard
+      #waypipe
+      wofi
+      grim
+      #cage
+      oguri
+      #kanshi
+      dmenu
+      #wlay
+      #wldash
+      wlroots
+      #waybar
 
     ### Custom Bash Scripts ####################################################
 
@@ -822,6 +846,10 @@ in with lib; {
   nixpkgs.overlays = [
     (import ./overlays/programs.nix)
     (import ./overlays/wrappers)
+    (import (builtins.fetchTarball {
+      url = "https://github.com/colemickens/nixpkgs-wayland/archive/0ca16b137e0251c873af68d89c26078848ca8cc5.tar.gz";
+      sha256 = "00q9g6ab4rnf5w9jxsfj31s4jx0z84qmkivgnhbh1ilgmgv0fdwy";
+    }))
   ];
 
   nixpkgs.config = {
