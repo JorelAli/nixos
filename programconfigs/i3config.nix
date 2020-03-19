@@ -86,6 +86,10 @@ let
   mac = "E8:AB:FA:24:9F:09"
 
   [[block]]
+  block = "bluetooth"
+  mac = "CC:C5:0A:24:0C:E6"
+
+  [[block]]
   block = "battery"
   driver = "upower"
   #upower = true

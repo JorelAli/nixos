@@ -263,7 +263,6 @@ in with lib; {
     gotop                               # Shows processes, CPU usage etc.
     htop                                # A better 'top' command
     iw                                  # Wireless device info
-    lynx                                # Terminal web browser
     mdbook                              # A markdown to web "book" generator
     moc                                 # Music player in a terminal
     neofetch                            # screenfetch, but better
@@ -384,6 +383,10 @@ in with lib; {
 
     unstable.elmPackages.elm            # Elm programming language
     unstable.elmPackages.elm-live       # An alternative to the Elm reactor
+    unstable.elmPackages.elm-test
+    unstable.elmPackages.elm-format
+    unstable.elmPackages.elm-analyse
+    unstable.elmPackages.elm-language-server
     webkitgtk                           # Library to display native web views
     
     ### System tools ###########################################################
@@ -676,8 +679,15 @@ in with lib; {
   
   services = {
 
+    mysql = {
+      enable = true;
+      package = pkgs.mariadb;
+    };
+
     dunst.enable = true;                # Notification service
     devmon.enable = true;               # Auto mount USBs
+    searx.enable = false;
+#    searx.configFile = builtins.toFile "settings.yml" (import ./programconfigs/searx.nix).asYaml;
     syncthing = {
       enable = true;
       openDefaultPorts = true;

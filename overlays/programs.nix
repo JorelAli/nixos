@@ -91,12 +91,26 @@ self: super: {
         ms-vscode.cpptools
 
         # Elm support
+        
         (super.vscode-utils.buildVscodeMarketplaceExtension {
             mktplcRef = {
               name = "elm";
               publisher = "sbrink";
               version = "0.25.0";
               sha256 = "1djsif15s13k762f1yyffiprlsm18p4b8fmc8cxs5w5z8xfb2wp8";
+            };
+            meta = {
+              license = stdenv.lib.licenses.mit;
+            };
+          })
+
+        # Elm support
+        (super.vscode-utils.buildVscodeMarketplaceExtension {
+            mktplcRef = {
+              name = "elm-ls-vscode";
+              publisher = "Elmtooling";
+              version = "0.9.4";
+              sha256 = "12w3nmjvzg6740q2y3diw7s2q9vs50wiahwh9915r389ngyb020r";
             };
             meta = {
               license = stdenv.lib.licenses.mit;
@@ -110,6 +124,19 @@ self: super: {
              publisher = "Grumpydev";
              version = "0.2.3";
              sha256 = "0xaaxddljcv2jf47nriwkrmdb4v26qi9lh5yvd0947sg0b0sqm32";
+           };
+           meta = {
+             license = stdenv.lib.licenses.mit;
+           };
+         })
+        
+        # Git Graph
+        (super.vscode-utils.buildVscodeMarketplaceExtension {
+           mktplcRef = {
+             name = "git-graph";
+             publisher = "mhutchie";
+             version = "1.21.0";
+             sha256 = "0prj1ymv5f9gwm838jwdi2gbqh40gc0ndpi17yysngcyz9fzym98";
            };
            meta = {
              license = stdenv.lib.licenses.mit;
