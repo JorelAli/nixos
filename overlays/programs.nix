@@ -105,17 +105,17 @@ self: super: {
           })
 
         # Elm support
-        (super.vscode-utils.buildVscodeMarketplaceExtension {
-            mktplcRef = {
-              name = "elm-ls-vscode";
-              publisher = "Elmtooling";
-              version = "0.9.4";
-              sha256 = "12w3nmjvzg6740q2y3diw7s2q9vs50wiahwh9915r389ngyb020r";
-            };
-            meta = {
-              license = stdenv.lib.licenses.mit;
-            };
-          })
+        #(super.vscode-utils.buildVscodeMarketplaceExtension {
+        #    mktplcRef = {
+        #      name = "elm-ls-vscode";
+        #      publisher = "Elmtooling";
+        #      version = "0.9.4";
+        #      sha256 = "12w3nmjvzg6740q2y3diw7s2q9vs50wiahwh9915r389ngyb020r";
+        #    };
+        #    meta = {
+        #      license = stdenv.lib.licenses.mit;
+        #    };
+        #  })
 
         # Pico-8 support
         (super.vscode-utils.buildVscodeMarketplaceExtension {

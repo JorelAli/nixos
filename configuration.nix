@@ -243,7 +243,7 @@ in with lib; {
     kdeApplications.kwalletmanager      # Manager for password manager
     ksshaskpass                         # Password manager
     libsForQt5.kwallet                  # Password manager
-
+    
     ### Command line utilities #################################################
     # A very exhaustive list of command-line commands                          #
     ############################################################################
@@ -285,6 +285,7 @@ in with lib; {
     unzip                               # Command to unzip files
     urlview                             # View URLs in a document (for rtv)
     wget                                # Download web files
+    xclip
     youtube-dl                          # YouTube downloader
     zip                                 # Command to zip files
 

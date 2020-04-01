@@ -204,7 +204,7 @@ bindsym $mod+Shift+t exec notify-send "$(date -u +%I:%M:%S)"
 
 bindsym Print exec escrotum '~/Pictures/screenshots/%Y-%m-%d-%H%M%S-screenshot.png' -e 'notify-send "Screenshot" "Saved at $f"'
 bindsym Shift+Print exec escrotum -sC
-bindsym $mod+Shift+s exec escrotum -sC
+bindsym $mod+Shift+s exec import png:- | xclip -selection clipboard -t image/png
 
 bindsym $mod+Shift+o exec compton-trans 100
 
