@@ -7,7 +7,7 @@ with builtins; let
 
 ##### Important settings #######################################################
 
-  haskellSetup = true;                 # Haskell, GHC, Stack, Atom ...
+  haskellSetup = false;                 # Haskell, GHC, Stack, Atom ...
   unfreePermitted = true;               # Allow installing unfree packages
 
 in let
@@ -138,8 +138,6 @@ in with lib; {
     DCS = (import ./secrets.nix).DCS;
 
     TERMINAL = "kitty";
-
-    #NIX_AUTO_RUN = "1";
   };
 
 ##### /etc/ Files ##############################################################
@@ -234,16 +232,6 @@ in with lib; {
         x2goclient
       ]; })
 
-    ### KDE Applications #######################################################
-    # Despite the fact that I don't (really) use a desktop environment, I do   #
-    # like KDE's password management system, kwallet, to manage various        #
-    # passwords, for things such as pushing to git.                            #
-    ############################################################################
-
-    kdeApplications.kwalletmanager      # Manager for password manager
-    ksshaskpass                         # Password manager
-    libsForQt5.kwallet                  # Password manager
-    
     ### Command line utilities #################################################
     # A very exhaustive list of command-line commands                          #
     ############################################################################
@@ -309,19 +297,13 @@ in with lib; {
     x2goclient                          # An x2go client (Similar to VNC)
     zathura                             # PDF viewer
 
-
     ### Backup Applications (You never know when you might need them...) #######
 
     abiword                             # Word processing
-    android-studio                      # Android development environment
-    ant                                 # Java building tool
     deluge                              # Torrent client
-    freetube                            # Alternative to YouTube
-    gnumeric                            # Spreadsheets
     gparted                             # Partition manager
     libreoffice                         # More word processing
     pavucontrol                         # Pulse Audio controller
-    redshift                            # Screen temperature changer
     sqlitebrowser                       # SQLite .db file browser
 
     ### System-wide theming ####################################################
@@ -330,7 +312,6 @@ in with lib; {
     clairvoyance                        # SDDM greeter theme
     gnome3.adwaita-icon-theme           # Adwaita icon theme
     lxappearance-062                    # Program that manages themeing 
-    numix-solarized-gtk-theme           # Numix solarized theme for GTK & Qt
     papirus-icon-theme                  # Papirus theme icons
     wmctrl                              # Budspencer requirement for fish shell
     xsel                                # Budspencer requirement for fish shell
@@ -355,7 +336,6 @@ in with lib; {
     bundler                             # Bundle command for Ruby
     gcc                                 # C/C++ compiler
     gdb                                 # C code debugger
-    idris                               # Idris programming language
     llvm_8                              # LLVM 
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
@@ -427,6 +407,8 @@ in with lib; {
 
     texlive.combined.scheme-full        # TeX + TeX packages
     texstudio                           # Solely as a backup. I use vim.
+
+    ### Other complete nonsense ################################################
 
       wayfire
       wf-config
@@ -679,11 +661,6 @@ in with lib; {
 ##### Services #################################################################
   
   services = {
-
-    mysql = {
-      enable = true;
-      package = pkgs.mariadb;
-    };
 
     dunst.enable = true;                # Notification service
     devmon.enable = true;               # Auto mount USBs
