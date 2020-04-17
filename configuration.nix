@@ -219,7 +219,12 @@ in with lib; {
 
     (buildFHSUserEnv {
       name = "fhs";
-      runScript = "bash";
+      runScript =  let
+        gsettings_schemas = 
+          "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
+          + ":"
+          + "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}";
+        in "bash --rcfile <(echo 'export XDG_DATA_DIRS=${gsettings_schemas}')";
       targetPkgs = pkgs: with pkgs; [
         alsaLib atk cairo cups dbus expat file fontconfig freetype gdb git glib 
         gnome3.gdk_pixbuf gnome3.gtk libnotify libxml2 libxslt
@@ -229,7 +234,8 @@ in with lib; {
         xorg.libXtst xorg.libxcb xorg.xcbutilkeysyms zlib zsh
         curlFull openjdk libglvnd valgrind gnome2.pango gnome2.GConf gtk2-x11
         xdg_utils flite fuse ncurses5 clang_8 llvm_8 libgit2
-        x2goclient
+        x2goclient glibc gnulib gnome3.nautilus gnome3.gsettings_desktop_schemas
+        gnome3.dconf gtk3
       ]; })
 
     ### Command line utilities #################################################
@@ -407,6 +413,7 @@ in with lib; {
 
     texlive.combined.scheme-full        # TeX + TeX packages
     texstudio                           # Solely as a backup. I use vim.
+    python37Packages.pygments
 
     ### Other complete nonsense ################################################
 
@@ -442,7 +449,7 @@ in with lib; {
     (writeShellScriptBin "ding" "${mpv}/bin/mpv /home/jorel/.config/dunst/notifsound.mp3")
     (writeShellScriptBin "ding2" "${mpv}/bin/mpv ${builtins.fetchurl "https://notificationsounds.com/notification-sounds/quite-impressed-565/download/mp3"}")
 
-    (writeShellScriptBin "lock" "${feh}/bin/feh ~/.background-image --full-screen & ${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --ring-width=6 -n; pkill feh; postlock")
+    (writeShellScriptBin "lock" "${feh}/bin/feh ~/.background-image --full-screen & ${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --timestr=\"%I:%M:%S %p\" --radius=120 --ring-width=6 -n; pkill feh; postlock")
 
     (writeShellScriptBin "postlock" ''
       nmcli connection up NordVPN

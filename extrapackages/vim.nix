@@ -33,6 +33,16 @@ let
       sha256 = "1xwy89qhcp0sfr61xv02iq90ayd8wky6p2vbnj57xqc1yk1rzbrm";
     };
   };
+  
+  customPlugins.kotlin-vim = pkgs.vimUtils.buildVimPlugin {
+    name = "kotlinvim";
+    src = pkgs.fetchFromGitHub {
+      owner = "udalov";
+      repo = "kotlin-vim";
+      rev = "b9fa728701a0aa0b9a2ffe92f10880348fc27a8f";
+      sha256 = "1yqzxabhpc4jbdlzhsysp0vi1ayqg0vnpysvx4ynd9961q2fk3sz";
+    };
+  };
 
 in {
 
@@ -349,6 +359,7 @@ in {
                   swift-vim
 
                   vim-illuminate         # Highlights similar words
+                  kotlin-vim
                 ];    
               };
           };
