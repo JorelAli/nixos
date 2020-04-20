@@ -238,6 +238,16 @@ in with lib; {
         gnome3.dconf gtk3
       ]; })
 
+    ### KDE Applications #######################################################
+    # Despite the fact that I don't (really) use a desktop environment, I do   #
+    # like KDE's password management system, kwallet, to manage various        #
+    # passwords, for things such as pushing to git.                            #
+    ############################################################################
+
+    kdeApplications.kwalletmanager      # Manager for password manager
+    ksshaskpass                         # Password manager
+    libsForQt5.kwallet                  # Password manager
+
     ### Command line utilities #################################################
     # A very exhaustive list of command-line commands                          #
     ############################################################################

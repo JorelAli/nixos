@@ -35,8 +35,9 @@ let
 
   [[block]]
   block = "memory"
-  clickable = false
+  clickable = true 
   format_mem = "{Mum}/{MTm}MB ({Mupi}%)"
+  format_swap = "{SUm}MB/{STm}MB ({SUp}%)"
   interval = 2
 
   [[block]]
@@ -86,10 +87,6 @@ let
   mac = "E8:AB:FA:24:9F:09"
 
   [[block]]
-  block = "bluetooth"
-  mac = "CC:C5:0A:24:0C:E6"
-
-  [[block]]
   block = "battery"
   driver = "upower"
   #upower = true
@@ -109,14 +106,6 @@ let
   buttons = ["prev", "play", "next"]
   # player = "google-play-music-desktop-player"
   # on_collapsed_click = "google-play-music-desktop-player"
-
-  [[block]]
-  block = "pomodoro"
-  length = 35
-  break_length = 15
-  use_nag = true
-  message = "Break time!"
-  break_message = "Back to work then!"
 
   [[block]]
   block = "time"
@@ -167,8 +156,8 @@ bindsym XF86AudioRaiseVolume exec amixer set Master 5%+
 bindsym XF86AudioLowerVolume exec amixer set Master 5%-
 bindsym XF86AudioMute exec amixer set Master toggle
 
-bindsym XF86MonBrightnessUp exec brightnessctl s +20% # xbacklight -inc 20 # increase screen brightness
-bindsym XF86MonBrightnessDown exec brightnessctl s 20%- # xbacklight -dec 20 # decrease screen brightness
+bindsym XF86MonBrightnessUp exec brightnessctl s +5% # xbacklight -inc 5 # increase screen brightness
+bindsym XF86MonBrightnessDown exec brightnessctl s 5%- # xbacklight -dec 5 # decrease screen brightness
 
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
