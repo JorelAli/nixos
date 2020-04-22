@@ -120,7 +120,7 @@ in stdenv.mkDerivation rec {
   meta = with stdenv.lib; {
     homepage = https://minecraft.net/;
     description = "Minecraft launcher";
-    license = licenses.proprietary;
+    license = licenses.unfree;
     platforms = platforms.linux;
     maintainers = [ jorelali ];
   };

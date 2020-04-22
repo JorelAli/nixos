@@ -79,10 +79,25 @@ in with lib; {
     loader.efi.canTouchEfiVariables = true;   # Allow EFI variable modifications
     loader.grub.useOSProber = true;           # Search for other OSs
 
-    extraTTYs = [ "tty8" "tty9" "tty10" ];            # More ttys!
     extraModulePackages = [ 
       config.boot.kernelPackages.exfat-nofuse # exFAT format for USBs/HDDs
     ];
+  };
+
+##### Console Settings #########################################################
+
+  console = {
+    extraTTYs = [ "tty8" "tty9" "tty10" ];            # More ttys!
+    font = with pkgs;            # Set default TTY font as powerline
+      "${powerline-fonts}/share/fonts/psf/ter-powerline-v28b.psf.gz";
+    keyMap = "uk";               # TTY keyboard layout = UK layout
+    colors = [                   # The 16 terminal colors 
+      "${color 0}" "${color 1}" "${color 2}" "${color 3}" 
+      "${color 4}" "${color 5}" "${color 6}" "${color 7}" 
+      "${color 8}" "${color 9}" "${color 10}" "${color 11}" 
+      "${color 12}" "${color 13}" "${color 14}" "${color 15}"
+    ];
+    earlySetup = true;
   };
 
 ##### Containers ###############################################################
@@ -112,11 +127,11 @@ in with lib; {
 ##### Environment Variables ####################################################
 
   environment.variables = {
-    XCURSOR_PATH = [
-      "${config.system.path}/share/icons"
-      "$HOME/.icons"
-      "$HOME/.nix-profile/share/icons"
-    ];
+    #XCURSOR_PATH = [
+    #  "${config.system.path}/share/icons"
+    #  "$HOME/.icons"
+    #  "$HOME/.nix-profile/share/icons"
+    #];
 
     GTK_DATA_PREFIX = [
       "${config.system.path}"
@@ -622,16 +637,7 @@ in with lib; {
 
   i18n = {
     defaultLocale = "en_GB.UTF-8";      # Set default TTY locale as English
-    consoleFont = with pkgs;            # Set default TTY font as powerline
-      "${powerline-fonts}/share/fonts/psf/ter-powerline-v28b.psf.gz";
-    consoleKeyMap = "uk";               # TTY keyboard layout = UK layout
-    consoleColors = [                   # The 16 terminal colors 
-      "${color 0}" "${color 1}" "${color 2}" "${color 3}" 
-      "${color 4}" "${color 5}" "${color 6}" "${color 7}" 
-      "${color 8}" "${color 9}" "${color 10}" "${color 11}" 
-      "${color 12}" "${color 13}" "${color 14}" "${color 15}"
-    ];
-  };
+   };
 
 ##### Hardware Settings ########################################################
 
@@ -678,6 +684,11 @@ in with lib; {
 ##### Services #################################################################
   
   services = {
+
+    kmscon = {
+      enable = true;
+      hwRender = true;
+    };
 
     dunst.enable = true;                # Notification service
     devmon.enable = true;               # Auto mount USBs

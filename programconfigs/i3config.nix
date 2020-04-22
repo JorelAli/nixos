@@ -81,6 +81,7 @@ let
   [[block]]
   block = "sound"
   step_width = 1
+  show_volume_when_muted = true
 
   [[block]]
   block = "bluetooth"

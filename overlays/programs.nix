@@ -100,7 +100,7 @@ self: super: {
               sha256 = "1djsif15s13k762f1yyffiprlsm18p4b8fmc8cxs5w5z8xfb2wp8";
             };
             meta = {
-              license = stdenv.lib.licenses.mit;
+              license = self.stdenv.lib.licenses.mit;
             };
           })
 
@@ -126,7 +126,7 @@ self: super: {
              sha256 = "0xaaxddljcv2jf47nriwkrmdb4v26qi9lh5yvd0947sg0b0sqm32";
            };
            meta = {
-             license = stdenv.lib.licenses.mit;
+             license = self.stdenv.lib.licenses.mit;
            };
          })
         
@@ -139,7 +139,7 @@ self: super: {
              sha256 = "0prj1ymv5f9gwm838jwdi2gbqh40gc0ndpi17yysngcyz9fzym98";
            };
            meta = {
-             license = stdenv.lib.licenses.mit;
+             license = self.stdenv.lib.licenses.mit;
            };
          })
     ];
