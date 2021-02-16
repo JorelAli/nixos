@@ -41,6 +41,11 @@ let
   interval = 2
 
   [[block]]
+  block = "docker"
+  interval = 2
+  format = "{running}/{total}"
+
+  [[block]]
   block = "net"
   device = "wlp3s0"
   signal_strength = true

@@ -42,6 +42,20 @@ in let
     sha256 = "04i4iy26pa585bwy43487k27arigyrsdh6vv0khz5n58ixswgkfa";
   }) {};
 
+  mdbookPin = import (pkgs.fetchFromGitHub {
+    owner = "NixOS";
+    repo = "nixpkgs";
+    rev = "a7e63f2eee45dbd92a2ddbc5dd579ee9c07b087e";
+    sha256 = "0makb1kwxghdx3fqcqa2ixs4njs76j9jj90d80kxq5ls80assl0c";
+  }) {};
+
+  nix-2003 = import (pkgs.fetchFromGitHub {
+    owner = "NixOS";
+    repo = "nixpkgs";
+    rev = "929768261a3ede470eafb58d5b819e1a848aa8bf";
+    sha256 = "0zi54vbfi6i6i5hdd4v0l144y1c8rg6hq6818jjbbcnm182ygyfa";
+  }) {};
+  
   #  https://github.com/NixOS/nixpkgs/archive/083d0890f50c7bff87419b88465af6589faffa2e.tar.gz
 
 ##### Nix expressions ##########################################################
@@ -72,6 +86,12 @@ in with lib; {
 #    ./modules/wayfire.nix
   ];
 
+## Docker
+
+  virtualisation = {
+    docker.enable = true;
+  };
+
 ##### Boot Settings ############################################################
 
   boot = {
@@ -89,7 +109,7 @@ in with lib; {
   console = {
     extraTTYs = [ "tty8" "tty9" "tty10" ];            # More ttys!
     font = with pkgs;            # Set default TTY font as powerline
-      "${powerline-fonts}/share/fonts/psf/ter-powerline-v28b.psf.gz";
+      "${powerline-fonts}/share/consolefonts/ter-powerline-v28b.psf.gz";
     keyMap = "uk";               # TTY keyboard layout = UK layout
     colors = [                   # The 16 terminal colors 
       "${color 0}" "${color 1}" "${color 2}" "${color 3}" 
@@ -113,8 +133,8 @@ in with lib; {
       enable = true;                    # Enable firewall
       allowedTCPPorts = [ 
         25565                           # Minecraft
-        22070                           # Syncthing relay
-        22067                           # Syncthing relay
+        #22070                           # Syncthing relay
+        #22067                           # Syncthing relay
       ];
       allowedUDPPorts = [ 25565 ];      # Minecraft
     };
@@ -141,7 +161,7 @@ in with lib; {
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_CACHE_HOME = "$HOME/.cache";
 
-    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd"; # Java font antialiasing
+#    _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd"; # Java font antialiasing
     QT_XCB_GL_INTEGRATION = "xcb_egl";
     QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase.bin}/lib/qt-${pkgs.qt5.qtbase.qtCompatVersion}/plugins/platforms";
 
@@ -267,6 +287,8 @@ in with lib; {
     # A very exhaustive list of command-line commands                          #
     ############################################################################
 
+    docker-compose
+
     bat                                 # cat command, but better
     cht-sh                              # Everything cheat sheet
     escrotum                            # Screenshot tool (what a name...)
@@ -282,7 +304,7 @@ in with lib; {
     gotop                               # Shows processes, CPU usage etc.
     htop                                # A better 'top' command
     iw                                  # Wireless device info
-    mdbook                              # A markdown to web "book" generator
+    mdbookPin.mdbook                              # A markdown to web "book" generator
     moc                                 # Music player in a terminal
     neofetch                            # screenfetch, but better
     neovim-remote                       # Remotely control neovim
@@ -318,13 +340,17 @@ in with lib; {
     filelight                           # View disk usage
     gimp                                # Image editor
     gnome3.nautilus                     # File browser
+    gnome3.sushi
     gMusicPin.google-play-music-desktop-player    # Google Play Music for desktop
     inkscape                            # Vector artwork
     kitty                               # Terminal
-    libsForQt5.vlc                      # Video player (VLC)
+    #libsForQt5.vlc                      # Video player (VLC)
+    vlc
     mpv                                 # Video player
     simplescreenrecorder                # ... A simple screen recorder (duh)
-    syncthing                           # File syncing program across devices
+    #syncthing                           # File syncing program across devices
+    typora
+    thunderbird
     x2goclient                          # An x2go client (Similar to VNC)
     zathura                             # PDF viewer
 
@@ -358,6 +384,15 @@ in with lib; {
     ### Programming (Java) #####################################################
     
     eclipses.eclipse-java               # Eclipse Java IDE
+#    (with eclipses; buildEclipse {
+#    name = "eclipse-java-oxygen";
+#    description = "Eclipse IDE for Java Developers";
+#    src =
+#      fetchurl {
+#        url = "http://mirror.tspu.ru/eclipse/technology/epp/downloads/release/oxygen/3a/eclipse-java-oxygen-3a-linux-gtk-x86_64.tar.gz";
+#        sha512 = "0hmm2c0nv2lk406x4a3yd5rpzswm89l9zdd1rjz7cwg5byvdnbq7lawvbc45fgxx7bkzq2nq0hlrifqmwmh6if0dxhdjrv6ansfscv3";
+#      };
+#  })
     maven                               # Java dependency manager
     gradle                              # Java dependency manager
     openjdk                             # Java Development Kit for Java 
@@ -365,12 +400,14 @@ in with lib; {
     ### Programming (Other) ####################################################
 
     bundler                             # Bundle command for Ruby
+    ccls                                # C/C++ language server protocol
     gcc                                 # C/C++ compiler
     gdb                                 # C code debugger
     llvm_8                              # LLVM 
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
+    python37Packages.pylint             # Python linter
     valgrind                            # C/C++ memory debugging tool
 
     ### Programming (Node.JS) ##################################################
@@ -442,7 +479,7 @@ in with lib; {
 
     ### Other complete nonsense ################################################
 
-      wayfire
+      /*#wayfire
       wf-config
       xwayland
       #wf-recorder
@@ -457,7 +494,8 @@ in with lib; {
       #wlay
       #wldash
       wlroots
-      #waybar
+      #waybar*/
+      dmenu
 
     ### Custom Bash Scripts ####################################################
 
@@ -573,6 +611,7 @@ in with lib; {
     fish.shellAliases = {               
       arc = "ark";
       batf = "bat (fzf)";
+      code = "codium";
       config = "sudo vim /etc/nixos/configuration.nix";
       cp = "rsync -ahv --progress";
       dirsize = "du -sh";
@@ -610,6 +649,8 @@ in with lib; {
 
   fonts = {
     fonts = with pkgs; [
+      #noto-fonts-emoji
+      joypixels
       font-awesome_4                    # Fancy icons font
       ipafont                           # Japanese font
       siji                              # Iconic bitmap font
@@ -630,6 +671,10 @@ in with lib; {
       "Fira Code Medium"                # Set default font as Fira Code Medium
       "Symbola"                         # Use Symbola as fallback font
       "IPAGothic"                       # Use IPAGothic as fallback font
+    ];
+    fontconfig.defaultFonts.emoji = [
+      #"Noto Color Emoji"
+      "JoyPixels"
     ];
   };
 
@@ -681,6 +726,19 @@ in with lib; {
 
   security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without a password
 
+#### Docker setup
+
+  /*docker-containers = {
+    whoogle-search = {
+      image = "benbusby/whoogle-search:latest";
+      ports = [ "5000:5000" ];
+    };
+  };*/
+
+
+##### Other ####
+  documentation.nixos.enable = false;
+
 ##### Services #################################################################
   
   services = {
@@ -688,6 +746,9 @@ in with lib; {
     kmscon = {
       enable = true;
       hwRender = true;
+      extraConfig = ''
+        font-size=18
+      '';
     };
 
     dunst.enable = true;                # Notification service
@@ -700,17 +761,20 @@ in with lib; {
       relay.enable = true;
       user = "jorel";
     };
-    lorri.enable = true;
+    #lorri.enable = true;
     xcompmgr.enable = false;
 
-    ### Compton ###########################################
+    ### Compton/picom ###########################################
     # Compositing effects for windows (Blur backgrounds!) #
     #######################################################
-    compton = {
+    picom = {
       enable = true;                    # Application transparency
-      vSync = true;                     # Remove screen tearing
-      backend = "glx";
-      inactiveOpacity = "0.85";         # Make programs blur on unfocus
+      shadow = true;
+      fade = true;
+      fadeDelta = 2;
+      vSync = "opengl-swc";                     # Remove screen tearing
+      backend = "glx"; 
+      inactiveOpacity = 0.8;         # Make programs blur on unfocus
       opacityRules = [ 
         "100: class_g = 'kitty' && !focused"
         "100: class_g = 'kitty' && focused"
@@ -719,11 +783,11 @@ in with lib; {
       settings = {
         blur-background = true;
         blur-background-fixed = true;
-        glx-no-stencil = true;
-        paint-on-overlay = true;
+        glx-no-comptonstencil = true;
+        #paint-on-overlay = true;
         unredir-if-possible = false;
-        blur-kern = "3x3box";
-        blur-method = "kawase";
+        #blur-kern = "3x3box";
+        #blur-method = "kawase";
         blur-strength = 10;
         focus-exclude = [ 
           "class_g = 'Eclipse'"
@@ -745,9 +809,10 @@ in with lib; {
       '';
     };
     
-    nixosManual.showManual = false;     # Disable the NixOS manual in tty 8
+#    nixosManual.showManual = false;     # Disable the NixOS manual in tty 8
     printing.enable = true;             # Printing (You know, to a printer...)
-    rogue.enable = true;                # Enable the rogue game in tty 9 
+    #rogue.enable = true;                # Enable the rogue game in tty 9 
+    
     upower.enable = true;               # Battery info
 
     # Adds support for scrolling to change the brightness for i3status-rs
@@ -785,7 +850,13 @@ in with lib; {
       ########################################
 
       displayManager = {
-        sessionCommands = ''xmodmap .Xmodmap'';
+        sessionCommands = ''
+          xmodmap .Xmodmap
+          xmodmap -e "keycode 110 = Prior"
+          xmodmap -e "keycode 115 = Next"
+          xmodmap -e "keycode 112 = Home"
+          xmodmap -e "keycode 117 = End"
+        '';
         sddm.enable = true;             # Login screen manager
         sddm.theme = "clairvoyance";    # Clairvoyance theme for sddm
         sddm.extraConfig = ''
@@ -822,6 +893,7 @@ in with lib; {
     extraGroups = [ 
       "audio"                           # Access sound hardware
       "disk"                            # Access /dev/sda /dev/sdb etc.
+      "docker"
       "kvm"                             # Access virtual machines
       "networkmanager"                  # Access network manager
       "storage"                         # Access storage devices 

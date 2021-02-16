@@ -318,6 +318,7 @@ in {
                 """ Custom coc keyboard shortcuts!
                 inoremap <C-_> :Comment<CR>
                 nnoremap <C-_> :Comment<CR>
+
               '';
 
               ### Vim packages #################################################
@@ -353,6 +354,7 @@ in {
                   vim-snippets
                   coc-snippets
                   coc-html
+                  (import <unstable> {}).pkgs.vimPlugins.vim-which-key        # Never forget vim keybindings
 
 
                   vimtex

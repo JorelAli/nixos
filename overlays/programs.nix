@@ -86,9 +86,15 @@ self: super: {
   ##########################
 
   code = super.vscode-with-extensions.override {
+    vscode = super.vscodium;
     # When the extension is already available in the default extensions set.
     vscodeExtensions = with super.vscode-extensions; [
         ms-vscode.cpptools
+        ms-python.python
+#        vscodevim.vim
+        skyapps.fish-vscode
+        redhat.vscode-yaml
+        llvm-org.lldb-vscode
 
         # Elm support
         
