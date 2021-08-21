@@ -111,17 +111,17 @@ self: super: {
           })
 
         # Elm support
-        #(super.vscode-utils.buildVscodeMarketplaceExtension {
-        #    mktplcRef = {
-        #      name = "elm-ls-vscode";
-        #      publisher = "Elmtooling";
-        #      version = "0.9.4";
-        #      sha256 = "12w3nmjvzg6740q2y3diw7s2q9vs50wiahwh9915r389ngyb020r";
-        #    };
-        #    meta = {
-        #      license = stdenv.lib.licenses.mit;
-        #    };
-        #  })
+        (super.vscode-utils.buildVscodeMarketplaceExtension {
+            mktplcRef = {
+              name = "elm-ls-vscode";
+              publisher = "Elmtooling";
+              version = "0.9.4";
+              sha256 = "12w3nmjvzg6740q2y3diw7s2q9vs50wiahwh9915r389ngyb020r";
+            };
+            meta = {
+              license = self.stdenv.lib.licenses.mit;
+            };
+          })
 
         # Pico-8 support
         (super.vscode-utils.buildVscodeMarketplaceExtension {
@@ -148,6 +148,46 @@ self: super: {
              license = self.stdenv.lib.licenses.mit;
            };
          })
+
+        # SQLite 
+          (super.vscode-utils.buildVscodeMarketplaceExtension {
+           mktplcRef = {
+             name = "vscode-sqlite";
+             publisher = "alexcvzz";
+             version = "0.11.1";
+             sha256 = "1qcszjmjady47vggfa93wr6pl2iqvp66hxf75gf9iz2l5wmz267w";
+           };
+           meta = {
+             license = self.stdenv.lib.licenses.mit;
+           };
+         })
+
+         # Code spell checker
+          (super.vscode-utils.buildVscodeMarketplaceExtension {
+           mktplcRef = {
+             name = "code-spell-checker";
+             publisher = "streetsidesoftware";
+             version = "1.10.2";
+             sha256 = "1ll046rf5dyc7294nbxqk5ya56g2bzqnmxyciqpz2w5x7j75rjib";
+           };
+           meta = {
+             license = self.stdenv.lib.licenses.mit;
+           };
+         })
+ 
+         # TOML syntax support
+         (super.vscode-utils.buildVscodeMarketplaceExtension {
+           mktplcRef = {
+             name = "even-better-toml";
+             publisher = "tamasfe";
+             version = "0.9.1";
+             sha256 = "09fa7kxrp7jiw7s800hkhbfwhqr1dfn6yfkw03ng4ilk2zps66x6";
+           };
+           meta = {
+             license = self.stdenv.lib.licenses.mit;
+           };
+         })
+
     ];
   };
 

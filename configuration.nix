@@ -39,7 +39,7 @@ in let
     owner = "NixOS";
     repo = "nixpkgs";
     rev = "c1b3b6f8b22fe11b894c236bcfe6522c6a46dc5d";
-    sha256 = "04i4iy26pa585bwy43487k27arigyrsdh6vv0khz5n58ixswgkfa";
+   sha256 = "04i4iy26pa585bwy43487k27arigyrsdh6vv0khz5n58ixswgkfa";
   }) {};
 
   mdbookPin = import (pkgs.fetchFromGitHub {
@@ -52,8 +52,8 @@ in let
   nix-2003 = import (pkgs.fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "929768261a3ede470eafb58d5b819e1a848aa8bf";
-    sha256 = "0zi54vbfi6i6i5hdd4v0l144y1c8rg6hq6818jjbbcnm182ygyfa";
+    rev = "1db42b7fe3878f3f5f7a4f2dc210772fd080e205";
+    sha256 = "05k9y9ki6jhaqdhycnidnk5zrdzsdammbk5lsmsbz249hjhhgcgh";
   }) {};
   
   #  https://github.com/NixOS/nixpkgs/archive/083d0890f50c7bff87419b88465af6589faffa2e.tar.gz
@@ -100,14 +100,14 @@ in with lib; {
     loader.grub.useOSProber = true;           # Search for other OSs
 
     extraModulePackages = [ 
-      config.boot.kernelPackages.exfat-nofuse # exFAT format for USBs/HDDs
+      #config.boot.kernelPackages.exfat-nofuse # exFAT format for USBs/HDDs
     ];
   };
 
 ##### Console Settings #########################################################
 
   console = {
-    extraTTYs = [ "tty8" "tty9" "tty10" ];            # More ttys!
+    #extraTTYs = [ "tty8" "tty9" "tty10" ];            # More ttys!
     font = with pkgs;            # Set default TTY font as powerline
       "${powerline-fonts}/share/consolefonts/ter-powerline-v28b.psf.gz";
     keyMap = "uk";               # TTY keyboard layout = UK layout
@@ -132,6 +132,8 @@ in with lib; {
     firewall = {
       enable = true;                    # Enable firewall
       allowedTCPPorts = [ 
+        80
+        9925
         25565                           # Minecraft
         #22070                           # Syncthing relay
         #22067                           # Syncthing relay
@@ -170,9 +172,16 @@ in with lib; {
     BAT_PAGER = "less -RF";             # Use less -RF as the pager for bat
     PAGER = "less -RF";                 # Use less -RF as the pager for git
 
+    JAVA_HOME = "${unstable.jdk16_headless}";
+
     DCS = (import ./secrets.nix).DCS;
 
     TERMINAL = "kitty";
+    /*KITTY_CONFIG_DIRECTORY = 
+      let 
+        kitty-config = import ./programconfigs/kittyconf.nix;
+        kittyConfigPath = toFile "kitty.conf" kitty-config;
+      in "${dirOf kittyConfigPath}";*/
   };
 
 ##### /etc/ Files ##############################################################
@@ -279,7 +288,9 @@ in with lib; {
     # passwords, for things such as pushing to git.                            #
     ############################################################################
 
-    kdeApplications.kwalletmanager      # Manager for password manager
+    #nix-2003.kdeApplications.kwalletmanager
+    #kdeApplications.kwalletmanager      # Manager for password manager
+    libsForQt5.kwalletmanager
     ksshaskpass                         # Password manager
     libsForQt5.kwallet                  # Password manager
 
@@ -304,16 +315,21 @@ in with lib; {
     gotop                               # Shows processes, CPU usage etc.
     htop                                # A better 'top' command
     iw                                  # Wireless device info
-    mdbookPin.mdbook                              # A markdown to web "book" generator
+    jq                                  # Command-line JSON processor
+    unstable.mdbook                              # A markdown to web "book" generator
     moc                                 # Music player in a terminal
     neofetch                            # screenfetch, but better
     neovim-remote                       # Remotely control neovim
     p7zip                               # 7z zip manager
     pdfgrep                             # Grep, but for PDF files
     playerctl                           # Control media player (e.g. play/pause)
+    pup                                 # Streaming HTML processor/selector
     ranger                              # Terminal file manager
     ripgrep                             # Better grep (use rg command)
-    rofi                                # Window switcher & App launcher
+    #rofi                                # Window switcher & App launcher
+    #rofi-emoji
+    (rofi.override {plugins=[rofi-file-browser rofi-emoji rofi-calc];})
+
     rsync                               # Better cp command
     rtv                                 # Reddit in terminal
     ruby                                # Ruby (Programming language)
@@ -327,6 +343,7 @@ in with lib; {
     urlview                             # View URLs in a document (for rtv)
     wget                                # Download web files
     xclip
+    yaml2json
     youtube-dl                          # YouTube downloader
     zip                                 # Command to zip files
 
@@ -343,10 +360,13 @@ in with lib; {
     gnome3.sushi
     gMusicPin.google-play-music-desktop-player    # Google Play Music for desktop
     inkscape                            # Vector artwork
-    kitty                               # Terminal
+    #kitty                               # Terminal
+    unstable.kitty
     #libsForQt5.vlc                      # Video player (VLC)
+    pinta                               # Paint.NET for Linux
     vlc
     mpv                                 # Video player
+    peek                                # Easy gif creator
     simplescreenrecorder                # ... A simple screen recorder (duh)
     #syncthing                           # File syncing program across devices
     typora
@@ -383,7 +403,7 @@ in with lib; {
 
     ### Programming (Java) #####################################################
     
-    eclipses.eclipse-java               # Eclipse Java IDE
+    unstable.eclipses.eclipse-java               # Eclipse Java IDE
 #    (with eclipses; buildEclipse {
 #    name = "eclipse-java-oxygen";
 #    description = "Eclipse IDE for Java Developers";
@@ -393,9 +413,9 @@ in with lib; {
 #        sha512 = "0hmm2c0nv2lk406x4a3yd5rpzswm89l9zdd1rjz7cwg5byvdnbq7lawvbc45fgxx7bkzq2nq0hlrifqmwmh6if0dxhdjrv6ansfscv3";
 #      };
 #  })
-    maven                               # Java dependency manager
+    unstable.maven                               # Java dependency manager
     gradle                              # Java dependency manager
-    openjdk                             # Java Development Kit for Java 
+    unstable.jdk16_headless                             # Java Development Kit for Java 
 
     ### Programming (Other) ####################################################
 
@@ -408,7 +428,11 @@ in with lib; {
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
     python37Packages.pylint             # Python linter
+    sqlite
     valgrind                            # C/C++ memory debugging tool
+
+    # Other
+    gvfs # trash support for VSCode?
 
     ### Programming (Node.JS) ##################################################
 
@@ -444,6 +468,7 @@ in with lib; {
     polybar
     alsaUtils
     brightnessctl                       # Brightness change for NixOS 19.03
+#    clipmenu
     dunst                               # Notification manager
     libnotify                           # Notification library
     imlib2                              # Image manipulation library (for feh)
@@ -510,7 +535,7 @@ in with lib; {
     (writeShellScriptBin "caln" "${libnotify}/bin/notify-send \"$(cal)\"")
 
     (writeShellScriptBin "ding" "${mpv}/bin/mpv /home/jorel/.config/dunst/notifsound.mp3")
-    (writeShellScriptBin "ding2" "${mpv}/bin/mpv ${builtins.fetchurl "https://notificationsounds.com/notification-sounds/quite-impressed-565/download/mp3"}")
+    (writeShellScriptBin "ding2" "${mpv}/bin/mpv ${builtins.fetchurl "https://github.com/JorelAli/dotfiles/blob/master/.config/dunst/notifsound.mp3?raw=true"}")
 
     (writeShellScriptBin "lock" "${feh}/bin/feh ~/.background-image --full-screen & ${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --timestr=\"%I:%M:%S %p\" --radius=120 --ring-width=6 -n; pkill feh; postlock")
 
@@ -532,6 +557,7 @@ in with lib; {
     '')
 
     (writeShellScriptBin "jshell" "${pkgs.openjdk11}/bin/jshell")
+    (writeShellScriptBin "emoji" "rofi -modi emoji -show emoji; sleep 0.01; xdotool type $(xclip -o -selection clipboard)")
 
   ] ++ optionals unfreePermitted [
     
@@ -621,7 +647,7 @@ in with lib; {
       hash = "nix-hash --type sha256 --flat --base32";
       history = "history | bat";
       icat = "kitty +kitten icat";
-      kitty = "kittyw";
+#      kitty = "kittyw";
       ls = "exa";
       mocp = "mocp --theme solarized";
       neofetchnix = "neofetch --ascii_colors 68 110 --kitty ${nixSnowflake}";
@@ -649,12 +675,16 @@ in with lib; {
 
   fonts = {
     fonts = with pkgs; [
+
+      migmix
       #noto-fonts-emoji
       joypixels
       font-awesome_4                    # Fancy icons font
       ipafont                           # Japanese font
       siji                              # Iconic bitmap font
       symbola                           # Braille support for gotop command
+
+      kochi-substitute
 
       ### Programming ligatures ################################################
       # *This means that -> will look like an actual arrow and >= and <=       #
@@ -682,6 +712,8 @@ in with lib; {
 
   i18n = {
     defaultLocale = "en_GB.UTF-8";      # Set default TTY locale as English
+    inputMethod.enabled = "fcitx";
+    inputMethod.fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
    };
 
 ##### Hardware Settings ########################################################
@@ -743,6 +775,13 @@ in with lib; {
   
   services = {
 
+    mattermost = {
+      enable = false;
+      siteUrl = "localhost";
+    };
+
+    clipmenu.enable = true;
+
     kmscon = {
       enable = true;
       hwRender = true;
@@ -756,7 +795,7 @@ in with lib; {
     searx.enable = false;
 #    searx.configFile = builtins.toFile "settings.yml" (import ./programconfigs/searx.nix).asYaml;
     syncthing = {
-      enable = true;
+      enable = false;
       openDefaultPorts = true;
       relay.enable = true;
       user = "jorel";
@@ -772,13 +811,14 @@ in with lib; {
       shadow = true;
       fade = true;
       fadeDelta = 2;
-      vSync = "opengl-swc";                     # Remove screen tearing
+      vSync = true;                     # Remove screen tearing
       backend = "glx"; 
       inactiveOpacity = 0.8;         # Make programs blur on unfocus
       opacityRules = [ 
         "100: class_g = 'kitty' && !focused"
         "100: class_g = 'kitty' && focused"
         "100: class_g = 'Eclipse'"
+        "100: class_g = 'Peek'"
       ];
       settings = {
         blur-background = true;
@@ -795,6 +835,7 @@ in with lib; {
         blur-background-exclude = [
           "name = 'Screenshot'"
           "class_g = 'Escrotum'"
+          "class_g = 'Peek'"
         ];
       };
     };
@@ -859,10 +900,10 @@ in with lib; {
         '';
         sddm.enable = true;             # Login screen manager
         sddm.theme = "clairvoyance";    # Clairvoyance theme for sddm
-        sddm.extraConfig = ''
-          [General]
-          InputMethod=
-        '';
+        #sddm.settings = ''
+        #  [General]
+        #  InputMethod=
+        #'';
       };
 
       ### Window Manager ##########################################
@@ -943,6 +984,7 @@ in with lib; {
   nixpkgs.config = {
 
     allowUnfree = unfreePermitted;    # Allow unfree/proprietary packages
+    joypixels.acceptLicense = true;
 
     # This lets you override package derivations for the entire list of 
     # packages for this configuration.nix file. For example, below, I redefine

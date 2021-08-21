@@ -171,6 +171,7 @@ in {
                 autocmd VimEnter *.tex SoftPencil
                 autocmd VimEnter *.tex set spell spelllang=en_gb
                 let g:vimtex_compiler_progname = 'nvr'
+                let g:tex_flavor = 'latex'
 
                 """""""" COC CONFIG """"""
 

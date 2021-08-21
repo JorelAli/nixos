@@ -128,7 +128,7 @@ in let
 set $mod Mod4
 set $terminal kitty
 
-font pango:Fira Code Medium 12
+font pango:Fira Code 12
 
 # Fix any keybindings whenever i3 starts
 exec_always xmodmap ~/.Xmodmap
@@ -139,13 +139,13 @@ exec_always nmcli connection up NordVPN
 for_window [class="^.*"] border pixel 0
 for_window [title="^feh.*$"] floating enable
 gaps inner 20                           # Default gap size is 20 
-default_border none                     # No borders!
+#default_border none                     # No borders!
 
-#default_border pixel 1
+default_border pixel 1
 
 # Apparently this can do colors as well!
 # class                 border  backgr. text    indicator child_border
-#client.focused          #ff0000 #00ff00 #ffffff ${color "fg"}   ${color "ac"}
+client.focused          #ff0000 #00ff00 #ffffff ${color "fg"}   ${color "ac"}
 #client.focused_inactive #ff0000 #00ff00 #ffffff ${color "fg"}   ${color "ac"}
 #client.unfocused        #ff0000 #00ff00 #888888 ${color "fg"}   ${color "bg"}
 #client.urgent           #ff0000 #00ff00 #ffffff ${color "fg"}   ${color "ac"}
@@ -194,6 +194,7 @@ bindsym $mod+e exec nautilus
 # dolphin 
 #-stylesheet ~/.config/qt5ct/qss/DolphinFix.qss 
 bindsym $mod+m exec google-play-music-desktop-player
+bindsym $mod+c exec CM_LAUNCHER=rofi clipmenu
 
 bindsym $mod+Shift+t exec notify-send "$(date -u +%I:%M:%S)"
 
@@ -218,6 +219,8 @@ bindsym $mod+d exec rofi -show run
 bindsym $mod+Shift+d exec rofi -show drun
 bindsym $mod+Tab exec rofi -show window
 bindsym $mod+Shift+m exec ws
+bindsym $mod+period exec emoji
+bindsym $mod+Shift+x exec rofi -show calc -modi calc -no-show-match -no-sort
 # What if I have something like
 # mod + shift + m = "move"
 # which executes a rofi with 
@@ -361,7 +364,7 @@ bindsym $mod+w mode "workspace"
 bar {
     #status_command ~/github/i3status-rust/target/release/i3status-rs ${toFile "i3statusrust.toml" i3statusRustConfig}
     status_command ~/github/greshake-i3status-rust/target/release/i3status-rs ${toFile "i3statusrust.toml" i3statusRustConfig}
-    font pango: Fira Code Medium, FontAwesome 12
+    font pango: Fira Code, FontAwesome 12
     position bottom
     colors {
         separator ${color "bg"}
