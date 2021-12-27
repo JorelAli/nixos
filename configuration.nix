@@ -314,7 +314,7 @@ in with lib; {
     ark                                 # Archive manager
     blueman                             # Bluetooth manager
     brave                               # Chromium based browser
-    code                                # VSCode with extensions
+#    code                                # VSCode with extensions
     filelight                           # View disk usage
     gimp                                # Image editor
     gnome3.nautilus                     # File browser
@@ -472,7 +472,7 @@ in with lib; {
     (writeShellScriptBin "caln" "${libnotify}/bin/notify-send \"$(cal)\"")
 
     (writeShellScriptBin "ding" "${mpv}/bin/mpv /home/jorel/.config/dunst/notifsound.mp3")
-    (writeShellScriptBin "ding2" "${mpv}/bin/mpv ${builtins.fetchurl "https://notificationsounds.com/notification-sounds/quite-impressed-565/download/mp3"}")
+# For some reason, thing don't work #    (writeShellScriptBin "ding2" "${mpv}/bin/mpv ${builtins.fetchurl "https://notificationsounds.com/notification-sounds/quite-impressed-565/download/mp3"}")
 
     (writeShellScriptBin "lock" "${feh}/bin/feh ~/.background-image --full-screen & ${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --timestr=\"%I:%M:%S %p\" --radius=120 --ring-width=6 -n; pkill feh; postlock")
 
