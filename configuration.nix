@@ -314,7 +314,7 @@ in with lib; {
     ark                                 # Archive manager
     blueman                             # Bluetooth manager
     brave                               # Chromium based browser
-#    code                                # VSCode with extensions
+    code                                # VSCode with extensions
     filelight                           # View disk usage
     gimp                                # Image editor
     gnome3.nautilus                     # File browser

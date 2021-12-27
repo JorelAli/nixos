@@ -1,4 +1,20 @@
-self: super: {
+self: super: rec {
+
+    unstable = import <unstable> {};
+
+  # https://discourse.nixos.org/t/cant-install-vscode-due-to-bad-url/12228/
+  codePin = import (self.fetchFromGitHub {
+    owner = "NixOS";
+    repo = "nixpkgs";
+    rev = "528fff9a5e8a250a29da51f624a13c1dbbd1382b";
+    sha256 = "13gs3gf1v5ha8zp58l9hv5aa49p0k5mcav4jyz1ljmvm818z9wm8";
+  }) {
+
+    config.allowUnfree = true;
+
+  };
+
+
 
   ### Clairvoyance SDDM Theme ###########################
   # Custom nix derivation for the Clairvoyance SDDM     #
@@ -86,9 +102,22 @@ self: super: {
   ##########################
 
   code = super.vscode-with-extensions.override {
+    # I tried, I really did, but for some completely unknown
+    # reason, using vscodium produces this error message:
+    #  [17044:1227/163145.815613:ERROR:sandbox_linux.cc(374)] InitializeSandbox() called with multiple threads in process gpu-process.
+    #  [main 2021-12-27T16:31:45.892Z] Error: ENOENT: no such file or directory, mkdir '/nix/store/r9vq8xqpjqcvdvlmihw1fczd47n3qm36-vscodium-extensions-1.57.1/share/vscodium'
+    #   [main 2021-12-27T16:31:45.894Z] Lifecycle#kill()
+    # and for some other reason, absolutely nobody appears
+    # to know why this is dead?
+    # vscode = unstable.vscodium; 
+    vscode = codePin.vscode;
     # When the extension is already available in the default extensions set.
     vscodeExtensions = with super.vscode-extensions; [
         ms-vscode.cpptools
+        ms-python.python
+        skyapps.fish-vscode
+        redhat.vscode-yaml
+        llvm-org.lldb-vscode
 
         # Elm support
         
@@ -137,6 +166,45 @@ self: super: {
              publisher = "mhutchie";
              version = "1.21.0";
              sha256 = "0prj1ymv5f9gwm838jwdi2gbqh40gc0ndpi17yysngcyz9fzym98";
+           };
+           meta = {
+             license = self.stdenv.lib.licenses.mit;
+           };
+         })
+
+         # SQLite 
+          (super.vscode-utils.buildVscodeMarketplaceExtension {
+           mktplcRef = {
+             name = "vscode-sqlite";
+             publisher = "alexcvzz";
+             version = "0.11.1";
+             sha256 = "1qcszjmjady47vggfa93wr6pl2iqvp66hxf75gf9iz2l5wmz267w";
+           };
+           meta = {
+             license = self.stdenv.lib.licenses.mit;
+           };
+         })
+
+         # Code spell checker
+          (super.vscode-utils.buildVscodeMarketplaceExtension {
+           mktplcRef = {
+             name = "code-spell-checker";
+             publisher = "streetsidesoftware";
+             version = "1.10.2";
+             sha256 = "1ll046rf5dyc7294nbxqk5ya56g2bzqnmxyciqpz2w5x7j75rjib";
+           };
+           meta = {
+             license = self.stdenv.lib.licenses.mit;
+           };
+         })
+ 
+         # TOML syntax support
+         (super.vscode-utils.buildVscodeMarketplaceExtension {
+           mktplcRef = {
+             name = "even-better-toml";
+             publisher = "tamasfe";
+             version = "0.9.1";
+             sha256 = "09fa7kxrp7jiw7s800hkhbfwhqr1dfn6yfkw03ng4ilk2zps66x6";
            };
            meta = {
              license = self.stdenv.lib.licenses.mit;
