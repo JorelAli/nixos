@@ -128,7 +128,7 @@ in let
 set $mod Mod4
 set $terminal kitty
 
-font pango:Fira Code 12
+font pango:Fira Code Medium 12
 
 # Fix any keybindings whenever i3 starts
 exec_always xmodmap ~/.Xmodmap

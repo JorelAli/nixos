@@ -8,8 +8,8 @@ let color = id: (import ./configutil.nix).getColor id true; in
 #: individual font faces and even specify special fonts for particular
 #: characters.
 
-font_family      Fira Code
-bold_font        Fira Code Bold
+font_family      Fira Code Medium
+bold_font        Fira Code Medium Bold
 italic_font      DejaVu Sans Mono Oblique
 bold_italic_font DejaVu Sans Mono Bold Oblique
 

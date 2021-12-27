@@ -55,6 +55,13 @@ in let
     rev = "1db42b7fe3878f3f5f7a4f2dc210772fd080e205";
     sha256 = "05k9y9ki6jhaqdhycnidnk5zrdzsdammbk5lsmsbz249hjhhgcgh";
   }) {};
+
+  firacode52Pin = import (pkgs.fetchFromGitHub {
+    owner = "NixOS";
+    repo = "nixpkgs";
+    rev = "33a7767fa1951dfda001f0313ea12eb37b43eb8e";
+    sha256 = "0r02k8l4f19gl3glinhijfqrr4yfzm1iv4q03ac5kdfj2qdvk8ml";
+  }) {};
   
   #  https://github.com/NixOS/nixpkgs/archive/083d0890f50c7bff87419b88465af6589faffa2e.tar.gz
 
@@ -693,7 +700,7 @@ in with lib; {
       ##########################################################################
       
       fira-code-symbols                 # Fancy font with programming ligatures
-      fira-code                         # Fancy font with programming ligatures
+      firacode52Pin.fira-code                         # Fancy font with programming ligatures
       powerline-fonts                   # Fonts for powerlines (Used in my tty)
     ];
 
