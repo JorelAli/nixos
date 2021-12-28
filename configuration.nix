@@ -15,34 +15,21 @@ in let
   ### Nix channels #############################################################
   # These are channels defined using the `sudo nix-channel --list` command.    #
   # They are as follows:                                                       #
-  #   nixos https://nixos.org/channels/nixos-19.03                             #
+  #   nixos https://nixos.org/channels/nixos-20.03                             #
   #   unstable https://nixos.org/channels/nixos-unstable                       #
   ##############################################################################
 
-  unstable   = import <unstable>       { config.allowUnfree = unfreePermitted; };
+  unstable   = import <unstable> { config.allowUnfree = unfreePermitted; };
 
-  reallyOld = import (pkgs.fetchFromGitHub {
+  dummyhash = "0000000000000000000000000000000000000000000000000000";
+  pin = rev: sha256: import (pkgs.fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "083d0890f50c7bff87419b88465af6589faffa2e";
-    sha256 = "13gldascq0wjifcpd8sh0rq0gx074x1n2ybx5mwq6hinjplgfi50";
+    inherit rev sha256;
   }) {};
 
-  polybarPin = import (pkgs.fetchFromGitHub {
-    owner = "NixOS";
-    repo = "nixpkgs";
-    rev = "9543e3553719894e71591c5905889fc4ffaa5932";
-    sha256 = "0x86w7lxhfdchnqfan6fqpj6j09mjz2sq1plmbwchnqfjg37akfa";
-  }) {};
-
-  gMusicPin = import (pkgs.fetchFromGitHub {
-    owner = "NixOS";
-    repo = "nixpkgs";
-    rev = "c1b3b6f8b22fe11b894c236bcfe6522c6a46dc5d";
-    sha256 = "04i4iy26pa585bwy43487k27arigyrsdh6vv0khz5n58ixswgkfa";
-  }) {};
-
-  #  https://github.com/NixOS/nixpkgs/archive/083d0890f50c7bff87419b88465af6589faffa2e.tar.gz
+  pin-jdk17 = pin "c8f846893c6c7b415864433a0d6f29790d96716a" "0pviy8a0bnhrl8krsybxsfibli95z99jf8c03ddskmnicqg67597"; # 21.11
+  pin-onlyoffice = pin "c75c37de7ef775bd9eb2fb4402d0ebb31e378668" "0h5vfw0m05ly0ccnhkjv3yjqbm5g38qbd6i5j4k3300pmvjqp7yx"; # 21.11
 
 ##### Nix expressions ##########################################################
   
@@ -63,12 +50,11 @@ in with lib; {
     ./hardware-configuration.nix        # Import hardware configuration
     ./cachix.nix                        # Import cached nixpkg locations
     ./extrapackages/vim.nix             # Import neovim setup
-    ./programthemes.nix
+    ./programthemes.nix                 # Import program theme config files in /etc/configs/
     ./glib-networking.nix
-  ] ++ [
-    ./modules/dunst.nix
-#    ./modules/emojione.nix
+    ./modules/dunst.nix                 # Import dunst as a service
     ./modules/xcompmgr.nix
+#    ./modules/emojione.nix
 #    ./modules/wayfire.nix
   ];
 
@@ -87,17 +73,16 @@ in with lib; {
 ##### Console Settings #########################################################
 
   console = {
-    extraTTYs = [ "tty8" "tty9" "tty10" ];            # More ttys!
-    font = with pkgs;            # Set default TTY font as powerline
-      "${powerline-fonts}/share/fonts/psf/ter-powerline-v28b.psf.gz";
-    keyMap = "uk";               # TTY keyboard layout = UK layout
-    colors = [                   # The 16 terminal colors 
+    font = "${pkgs.powerline-fonts}/share/fonts/psf/ter-powerline-v28b.psf.gz"; # Set default TTY font as powerline
+    extraTTYs = [ "tty8" "tty9" "tty10" ];    # More ttys!
+    keyMap = "uk";                            # TTY keyboard layout = UK layout
+    earlySetup = true;                        # Sets console options as early as possible (in initrd)
+    colors = [                                # The 16 terminal colors 
       "${color 0}" "${color 1}" "${color 2}" "${color 3}" 
       "${color 4}" "${color 5}" "${color 6}" "${color 7}" 
       "${color 8}" "${color 9}" "${color 10}" "${color 11}" 
       "${color 12}" "${color 13}" "${color 14}" "${color 15}"
     ];
-    earlySetup = true;
   };
 
 ##### Containers ###############################################################
@@ -111,11 +96,7 @@ in with lib; {
 
     firewall = {
       enable = true;                    # Enable firewall
-      allowedTCPPorts = [ 
-        25565                           # Minecraft
-        22070                           # Syncthing relay
-        22067                           # Syncthing relay
-      ];
+      allowedTCPPorts = [ 25565 ];      # Minecraft
       allowedUDPPorts = [ 25565 ];      # Minecraft
     };
   };
@@ -133,9 +114,7 @@ in with lib; {
     #  "$HOME/.nix-profile/share/icons"
     #];
 
-    GTK_DATA_PREFIX = [
-      "${config.system.path}"
-    ];
+    GTK_DATA_PREFIX = [ "${config.system.path}" ];
 
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_DATA_HOME = "$HOME/.local/share";
@@ -149,8 +128,6 @@ in with lib; {
     
     BAT_PAGER = "less -RF";             # Use less -RF as the pager for bat
     PAGER = "less -RF";                 # Use less -RF as the pager for git
-
-    DCS = (import ./secrets.nix).DCS;
 
     TERMINAL = "kitty";
   };
@@ -251,7 +228,8 @@ in with lib; {
         xdg_utils flite fuse ncurses5 clang_8 llvm_8 libgit2
         x2goclient glibc gnulib gnome3.nautilus gnome3.gsettings_desktop_schemas
         gnome3.dconf gtk3
-      ]; })
+      ];
+    })
 
     ### KDE Applications #######################################################
     # Despite the fact that I don't (really) use a desktop environment, I do   #
@@ -304,7 +282,7 @@ in with lib; {
     unzip                               # Command to unzip files
     urlview                             # View URLs in a document (for rtv)
     wget                                # Download web files
-    xclip
+    xclip                               # Read/write to/from the clipboard
     youtube-dl                          # YouTube downloader
     zip                                 # Command to zip files
 
@@ -318,23 +296,20 @@ in with lib; {
     filelight                           # View disk usage
     gimp                                # Image editor
     gnome3.nautilus                     # File browser
-    gMusicPin.google-play-music-desktop-player    # Google Play Music for desktop
     inkscape                            # Vector artwork
     kitty                               # Terminal
     libsForQt5.vlc                      # Video player (VLC)
     mpv                                 # Video player
     simplescreenrecorder                # ... A simple screen recorder (duh)
-    syncthing                           # File syncing program across devices
     x2goclient                          # An x2go client (Similar to VNC)
     zathura                             # PDF viewer
 
     ### Backup Applications (You never know when you might need them...) #######
 
-    abiword                             # Word processing
     deluge                              # Torrent client
     gparted                             # Partition manager
-    libreoffice                         # More word processing
     pavucontrol                         # Pulse Audio controller
+    pin-onlyoffice.onlyoffice-bin       # dOCUMENTS, spreadsheets, presentations
     sqlitebrowser                       # SQLite .db file browser
 
     ### System-wide theming ####################################################
@@ -358,9 +333,9 @@ in with lib; {
     ### Programming (Java) #####################################################
     
     eclipses.eclipse-java               # Eclipse Java IDE
-    maven                               # Java dependency manager
+    pin-jdk17.maven                     # Java dependency manager
     gradle                              # Java dependency manager
-    openjdk                             # Java Development Kit for Java 
+    pin-jdk17.jdk17_headless            # Java Development Kit for Java 17
 
     ### Programming (Other) ####################################################
 
@@ -371,6 +346,9 @@ in with lib; {
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
     python3                             # Python 3.6.8
+
+    # Note to self: If you're looking for the tool which lets you see what files
+    # a program is accessing, you're probably looking for "strace", not valgrind
     valgrind                            # C/C++ memory debugging tool
 
     ### Programming (Node.JS) ##################################################
@@ -403,7 +381,6 @@ in with lib; {
     
     ### System tools ###########################################################
 
-#    polybarPin.polybar
     polybar
     alsaUtils
     brightnessctl                       # Brightness change for NixOS 19.03
@@ -438,7 +415,7 @@ in with lib; {
 
     texlive.combined.scheme-full        # TeX + TeX packages
     texstudio                           # Solely as a backup. I use vim.
-    python37Packages.pygments
+    python37Packages.pygments           # Pygments support for LaTeX
 
     ### Other complete nonsense ################################################
 
@@ -461,27 +438,43 @@ in with lib; {
 
     ### Custom Bash Scripts ####################################################
 
+    # Searches my little nix documentation in NixDoc.md
     (writeShellScriptBin "nixdoc" "${ripgrep}/bin/rg $1 /etc/nixos/NixDoc.md")
+
+    # Uses mimeopen to set the default application to use to open a file type
     (writeShellScriptBin "default" "${perl530Packages.FileMimeInfo}/bin/mimeopen -d $1")
+
+    # Sets up a TTY with lovely purple colours instead of a black background
     (writeShellScriptBin "setuptty" ''
       echo -en "\e]PB657b83" # S_base00
       echo -en "\e]PA586e75" # S_base01
       echo -en "\e]P0073642" # S_base02
     '')
+
+    # Automatically fish in Minecraft
     (writeShellScriptBin "autofish" "${xdotool}/bin/xdotool mousedown 3")
+
+    # Calendar notification
     (writeShellScriptBin "caln" "${libnotify}/bin/notify-send \"$(cal)\"")
 
+    # Plays a ding sound
     (writeShellScriptBin "ding" "${mpv}/bin/mpv /home/jorel/.config/dunst/notifsound.mp3")
-# For some reason, thing don't work #    (writeShellScriptBin "ding2" "${mpv}/bin/mpv ${builtins.fetchurl "https://notificationsounds.com/notification-sounds/quite-impressed-565/download/mp3"}")
 
+    # Plays a ding sound
+    (writeShellScriptBin "ding2" "${mpv}/bin/mpv ${builtins.fetchurl "https://github.com/JorelAli/dotfiles/blob/master/.config/dunst/notifsound.mp3?raw=true"}")
+
+    # Locks the computer using i3lock-color
     (writeShellScriptBin "lock" "${feh}/bin/feh ~/.background-image --full-screen & ${i3lock-color}/bin/i3lock-color --ringcolor=${color 15}ff i3lock-color -c ${color "bg"} --ringcolor=${color "bgl"}ff --indicator -k --timecolor=${color 15}ff --datecolor=${color 15}ff --insidecolor=00000000 --insidevercolor=00000000 --insidewrongcolor=00000000 --ringvercolor=${color 4}ff --ringwrongcolor=${color 1}ff --linecolor=00000000 --keyhlcolor=${color 2}ff --separatorcolor=00000000 --wrongtext=\"\" --veriftext=\"\" --timestr=\"%I:%M:%S %p\" --radius=120 --ring-width=6 -n; pkill feh; postlock")
 
+    # Commands to run after the computer locks (separated by a new line)
     (writeShellScriptBin "postlock" ''
       nmcli connection up NordVPN
     '')
 
+    # Creates a new terminal (kitty) process in the current directory
     (writeShellScriptBin "fork" "kittyw --detach fish -c \"cd $(pwd) && fish\"")
 
+    # A script to move a window to a specific workspace (with optional name)
     (writeShellScriptBin "ws" ''
       function gen_workspaces() {
         i3-msg -t get_workspaces | tr ',' '\n' | grep "name" | sed 's/"name":"\(.*\)"/\1/g' | sort -n
@@ -492,8 +485,6 @@ in with lib; {
         i3-msg move container to workspace "''${WORKSPACE}"
       fi
     '')
-
-    (writeShellScriptBin "jshell" "${pkgs.openjdk11}/bin/jshell")
 
   ] ++ optionals unfreePermitted [
     
@@ -574,6 +565,7 @@ in with lib; {
       arc = "ark";
       batf = "bat (fzf)";
       config = "sudo vim /etc/nixos/configuration.nix";
+      vsconfig = "sudo code --user-data-dir /root/ /etc/nixos /etc/nixos/configuration.nix";
       cp = "rsync -ahv --progress";
       dirsize = "du -sh";
       evalnix = "nix-instantiate --eval";
@@ -679,7 +671,12 @@ in with lib; {
 
 ##### Security Settings ########################################################
 
-  security.sudo.wheelNeedsPassword = false;  # Use 'sudo' without a password
+  # Use 'sudo' without a password. Yes, this is super duper secure and should
+  # never be used in practice, BUT this is on my personal laptop and this
+  # doesn't get used by anyone other than myself. Also, due to the keyboard
+  # shortcuts and lack of standard UI, good luck trying to use this device
+  # even with full on access to it
+  security.sudo.wheelNeedsPassword = false;
 
 ##### Services #################################################################
   
@@ -692,14 +689,6 @@ in with lib; {
 
     dunst.enable = true;                # Notification service
     devmon.enable = true;               # Auto mount USBs
-    searx.enable = false;
-#    searx.configFile = builtins.toFile "settings.yml" (import ./programconfigs/searx.nix).asYaml;
-    syncthing = {
-      enable = true;
-      openDefaultPorts = true;
-      relay.enable = true;
-      user = "jorel";
-    };
     lorri.enable = true;
     xcompmgr.enable = false;
 
@@ -767,9 +756,7 @@ in with lib; {
     xserver = {
       enable = true;                    # GUI for the entire computer
       exportConfiguration = true;       # symlink the config to /etc/X11/xorg.conf
-      gdk-pixbuf.modulePackages = [ 
-        pkgs.librsvg 
-      ];
+      gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
       layout = "gb";                    # Use the GB English keyboard layout
       libinput.enable = true;           # Touchpad support
 
@@ -784,8 +771,19 @@ in with lib; {
       # turned on for the first time         #
       ########################################
 
+      # https://nixos.wiki/wiki/Keyboard_Layout_Customization
+
       displayManager = {
-        sessionCommands = ''xmodmap .Xmodmap'';
+        sessionCommands = 
+          let layout = ''
+            keycode 110 = Prior NoSymbol Prior
+            keycode 112 = Home NoSymbol Home
+            keycode 115 = Next NoSymbol Next
+            keycode 117 = End NoSymbol End
+            disable capslock
+            remove Lock = Caps_Lock
+          ''; in
+            "${pkgs.xorg.xmodmap}/bin/xmodmap ${layout}";
         sddm.enable = true;             # Login screen manager
         sddm.theme = "clairvoyance";    # Clairvoyance theme for sddm
         sddm.extraConfig = ''
@@ -853,8 +851,7 @@ in with lib; {
     # nix's garbage collector) whenever the system does so. This should #
     # only be toggled for development testing purposes ONLY.            #
     #####################################################################
-    
-    readOnlyStore = true;            # Allows writing access to /nix/store
+    readOnlyStore = true;            # Prevents writing access to /nix/store
   };
 
 ##### NixPkgs Configuration ####################################################
@@ -879,12 +876,7 @@ in with lib; {
     # above.
     packageOverrides = pkgs: with pkgs; {
 
-      jshEnv = buildEnv {
-        name = "jsh";
-        paths = [ pkgs.openjdk11 ];
-      };
-
-      vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+      vaapiIntel = vaapiIntel.override { enableHybridCodec = true; };
 
       polybar = polybar.override {
         i3GapsSupport = true;
@@ -893,7 +885,6 @@ in with lib; {
       ### HIEs #################
       # The Haskell IDE Engine #
       ##########################
-
       all-hies = import (
         fetchTarball "https://github.com/infinisil/all-hies/tarball/master"
       ) {};

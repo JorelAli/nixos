@@ -119,6 +119,19 @@ self: super: rec {
         redhat.vscode-yaml
         llvm-org.lldb-vscode
 
+        # Nix support
+        (super.vscode-utils.buildVscodeMarketplaceExtension {
+          mktplcRef = {
+            name = "nix";
+            publisher = "bbenoist";
+            version = "1.0.1";
+            sha256 = "0zd0n9f5z1f0ckzfjr38xw2zzmcxg1gjrava7yahg5cvdcw6l35b";
+          };
+          meta = {
+            license = self.stdenv.lib.licenses.mit;
+          };
+        })
+
         # Elm support
         
         (super.vscode-utils.buildVscodeMarketplaceExtension {

@@ -31,10 +31,6 @@
     text = import ./programconfigs/qt5ctconf.nix;
   };
 
-  environment.etc."configs/DolphinFix.qss" = {
-    text = import ./programconfigs/dolphinqss.nix;
-  };
-
   environment.etc."configs/gtkrc" = {
     text = import ./programconfigs/gtk2theme.nix;
   };

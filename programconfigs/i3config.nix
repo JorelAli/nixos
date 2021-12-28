@@ -131,12 +131,12 @@ exec_always nmcli connection up NordVPN
 #exec_always --no-startup-id dunst
 
 # Use i3Gaps!
-for_window [class="^.*"] border pixel 0
+for_window [class="^.*"] border pixel 1
 for_window [title="^feh.*$"] floating enable
 gaps inner 20                           # Default gap size is 20 
-default_border none                     # No borders!
+# default_border none                     # No borders!
 
-#default_border pixel 1
+default_border pixel 1
 
 # Apparently this can do colors as well!
 # class                 border  backgr. text    indicator child_border
