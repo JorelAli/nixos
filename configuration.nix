@@ -28,8 +28,10 @@ in let
     inherit rev sha256;
   }) {};
 
-  pin-jdk17 = pin "c8f846893c6c7b415864433a0d6f29790d96716a" "0pviy8a0bnhrl8krsybxsfibli95z99jf8c03ddskmnicqg67597"; # 21.11
-  pin-onlyoffice = pin "c75c37de7ef775bd9eb2fb4402d0ebb31e378668" "0h5vfw0m05ly0ccnhkjv3yjqbm5g38qbd6i5j4k3300pmvjqp7yx"; # 21.11
+  pin-jdk17 = pin "c8f846893c6c7b415864433a0d6f29790d96716a" "0pviy8a0bnhrl8krsybxsfibli95z99jf8c03ddskmnicqg67597"; # JDK @ 17.0.1
+  pin-onlyoffice = pin "c75c37de7ef775bd9eb2fb4402d0ebb31e378668" "0h5vfw0m05ly0ccnhkjv3yjqbm5g38qbd6i5j4k3300pmvjqp7yx"; # OnlyOffice @ 6.3.1.56
+  pin-joplin = pin "fcf045e691912ef908a0ee91fb0209daa6ca4377" "0cd1f7m20hkwfvazjmisy9r859crpl7hwsild9vyyvk44i34h4vc"; # Joplin @ 2.5.12
+  pin-python = pin "5d0972c63b95954e8f834efa1ffc38c739d8f089" "03mbvflha4bgz20c9y4rwxndbxyc8lc4zvcni47bcxzbwr5m630z"; # Python @ 3.10.0
 
 ##### Nix expressions ##########################################################
   
@@ -197,6 +199,7 @@ in with lib; {
     ############################################################################
 
     unstable.qutebrowser                # Lightweight minimal browser (v1.7.0)
+    pin-joplin.joplin-desktop           # Desktop notes app with cloud storage
 
     ### FHS user environment ###################################################
     # A very glorious sandbox that uses the Linux FHS-compatible sandbox. As   #
@@ -345,7 +348,7 @@ in with lib; {
     llvm_8                              # LLVM 
     python                              # Python 2.7.15
     python27Packages.debian             # Python 2.7 'debian' package
-    python3                             # Python 3.6.8
+    pin-python.python310                # Python 3.10.0
 
     # Note to self: If you're looking for the tool which lets you see what files
     # a program is accessing, you're probably looking for "strace", not valgrind
